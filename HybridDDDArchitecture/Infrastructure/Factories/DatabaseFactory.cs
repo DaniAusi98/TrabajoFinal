@@ -1,10 +1,18 @@
-﻿using Application.Repositories;
+using Application.ActividadMuseo.Repositories;
+using Application.ApplicationMuseo.Repositories;
+using Application.Repositories;
+using Application.VisitaGrupal.Repositories;
+
 using Domain.Others.Utils;
+
 using Infrastructure.Constants;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
 using MongoDB.Bson.Serialization.Conventions;
+
 using static Domain.Enums.Enums;
 
 namespace Infrastructure.Factories
@@ -16,6 +24,8 @@ namespace Infrastructure.Factories
             switch (dbType.ToEnum<DatabaseType>())
             {
                 case DatabaseType.MYSQL:
+                    services.AddMySqlRepositories(configuration);
+                    break;
                 case DatabaseType.MARIADB:
                 case DatabaseType.SQLSERVER:
                     services.AddSqlServerRepositories(configuration);
@@ -30,17 +40,21 @@ namespace Infrastructure.Factories
 
         private static IServiceCollection AddSqlServerRepositories(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<Repositories.Sql.StoreDbContext>(options =>
+            services.AddDbContext<Repositories.Sql.MuseoDbContext>(options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("SqlConnection"));
             }, ServiceLifetime.Scoped);
 
             //Habilitar para trabajar con Migrations
-            var context = services.BuildServiceProvider().GetRequiredService<Repositories.Sql.StoreDbContext>();
+            var context = services.BuildServiceProvider().GetRequiredService<Repositories.Sql.MuseoDbContext>();
             context.Database.Migrate();
 
             /* Sql Repositories */
             services.AddTransient<IDummyEntityRepository, Repositories.Sql.DummyEntityRepository>();
+
+            //services.AddTransient<IRepositorioUsuarioVisitante,RepositorioUsuario>();
+        
+
 
             return services;
         }
@@ -57,5 +71,46 @@ namespace Infrastructure.Factories
 
             return services;
         }
+
+        private static IServiceCollection AddMySqlRepositories(
+            this IServiceCollection services,
+            IConfiguration configuration)
+        {
+            services.AddDbContext<Repositories.Sql.MuseoDbContext>(options =>
+            {
+                options.UseMySql(
+                    configuration.GetConnectionString("MySqlConnection"),
+                    ServerVersion.AutoDetect(
+                        configuration.GetConnectionString("MySqlConnection")
+                    )
+                );
+            });
+
+            /* Repositories */
+            services.AddTransient<IDummyEntityRepository, Repositories.Sql.DummyEntityRepository>();
+            // services.AddTransient<IRepositorioUsuarioVisitante, RepositorioUsuario>();
+            services.AddTransient<IRepositorioVisitaGuiada, Repositories.Sql.VisitaGrupal.RepositorioVisitaGuiada>();
+            services.AddTransient<IRepositorioTematicas, Repositories.Sql.VisitaGrupal.RepositorioTematicasVisita>();
+            services.AddTransient<IRepositorioGuia,Repositories.Sql.VisitaGrupal.RepositorioGuia>();
+            services.AddTransient<IRepositorioDiaCierreMuseo, Repositories.Sql.DisponibilidadActividades.RepositorioDiaCierreMuseo>();
+            services.AddTransient<IRepositorioActividadMuseo,Repositories.Sql.DisponibilidadActividades.RepositorioActividadMuseo>();
+            // 🔥 Migraciones automáticas al levantar la app (infra pura)
+            var context = services.BuildServiceProvider()
+               .GetRequiredService<Repositories.Sql.MuseoDbContext>();
+
+            context.Database.Migrate();
+
+
+            return services;
+        }
+
     }
 }
+
+
+
+
+/* services.AddTransient<IRepositorioVisitaGuiada, Repositories.Sql.VisitaGrupal.RepositorioVisitaGuiada>();
+            services.AddTransient<IRepositorioTematicas, Repositories.Sql.VisitaGrupal.RepositorioTematicasVisita>();
+            services.AddTransient<IRepositorioGuia,Repositories.Sql.VisitaGrupal.RepositorioGuia>();
+            services.AddTransient<IRepositorioDiaCierreMuseo, Repositories.Sql.DisponibilidadActividades.RepositorioDiaCierreMuseo>();*/

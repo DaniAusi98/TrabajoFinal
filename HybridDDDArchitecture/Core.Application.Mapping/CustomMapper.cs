@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Core.Domain.Entities;
 
 namespace Core.Application
@@ -20,9 +20,10 @@ namespace Core.Application
             return mapper.Map<T>(input);
         }
 
-        public static IEnumerable<T> To<T>(this IEnumerable<IValidate> input)
+        public static IEnumerable<T> To<T>(this IEnumerable<object> input)
         {
             IMapper mapper = Instance;
+
             return mapper.Map<IEnumerable<T>>(input);
         }
     }

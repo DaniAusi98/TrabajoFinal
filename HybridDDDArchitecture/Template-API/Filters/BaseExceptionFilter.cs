@@ -1,4 +1,6 @@
-﻿using Controllers;
+using Application.Exceptions;
+using Controllers;
+using Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Net;
@@ -12,12 +14,30 @@ namespace Filters
     {
         public void OnException(ExceptionContext context)
         {
+            // Log full exception to console to help debugging in Development
+            try
+            {
+                Console.WriteLine(context.Exception.ToString());
+            }
+            catch
+            {
+                // ignore logging failures
+            }
             //generamos el mensaje de error
             HttpResponse response = context.HttpContext.Response;
             response.StatusCode = (int)GetErrorCode(context.Exception.GetType());
             response.ContentType = "application/json";
 
-            string resultMessage = context.Exception.Message;
+            string resultMessage;
+            if (context.Exception is InvalidEntityDataException invalidEntity && invalidEntity.Messages != null && invalidEntity.Messages.Count > 0)
+            {
+                resultMessage = string.Join(" | ", invalidEntity.Messages);
+            }
+            else
+            {
+                resultMessage = context.Exception.Message;
+            }
+
             string errorCode = Guid.NewGuid().ToString();
 
             var result = new ObjectResult(new HttpMessageResult()
@@ -44,6 +64,7 @@ namespace Filters
                     case Exceptions.BussinessException:
                     case Exceptions.EntityDoesExistException:
                     case Exceptions.InvalidEntityDataException:
+                    case Exceptions.DomainException:
                         return HttpStatusCode.BadRequest;
 
                     case Exceptions.EntityDoesNotExistException:
@@ -61,7 +82,7 @@ namespace Filters
 
         private bool IsManagedException(Exception ex)
         {
-            return ex is ApplicationException;
+            return ex is ApplicationException || ex is DomainException;
         }
     }
 
@@ -71,6 +92,7 @@ namespace Filters
         BussinessException,
         EntityDoesExistException,
         EntityDoesNotExistException,
-        InvalidEntityDataException
+        InvalidEntityDataException,
+        DomainException
     }
 }

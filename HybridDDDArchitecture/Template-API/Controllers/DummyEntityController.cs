@@ -1,8 +1,8 @@
-﻿using Application.UseCases.DummyEntity.Commands.CreateDummyEntity;
-using Application.UseCases.DummyEntity.Commands.DeleteDummyEntity;
-using Application.UseCases.DummyEntity.Commands.UpdateDummyEntity;
-using Application.UseCases.DummyEntity.Queries.GetAllDummyEntities;
-using Application.UseCases.DummyEntity.Queries.GetDummyEntityBy;
+﻿ using Application.ApplicationMuseo.UseCases.DummyEntity.Commands.CreateDummyEntity;
+using Application.ApplicationMuseo.UseCases.DummyEntity.Commands.UpdateDummyEntity;
+using Application.ApplicationMuseo.UseCases.DummyEntity.Commands.DeleteDummyEntity;
+using Application.ApplicationMuseo.UseCases.DummyEntity.Queries.GetAllDummyEntities;
+using Application.ApplicationMuseo.UseCases.DummyEntity.Queries.GetDummyEntityBy;
 using Core.Application;
 using Microsoft.AspNetCore.Mvc;
 

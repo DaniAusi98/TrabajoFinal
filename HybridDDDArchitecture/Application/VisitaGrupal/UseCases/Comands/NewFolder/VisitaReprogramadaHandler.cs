@@ -1,0 +1,71 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+using Application.ApplicationMuseo.Constants;
+using Application.Exceptions;
+using Application.VisitaGrupal.Repositories;
+
+using Core.Application;
+
+using Domain.Entities.VisitasGrupalesMuseo;
+using Domain.ValueObjets;
+
+using Microsoft.IdentityModel.Tokens.Experimental;
+
+namespace Application.VisitaGrupal.UseCases.Comands.NewFolder
+{
+    internal sealed class VisitaReprogramadaHandler(IRepositorioVisitaGuiada repositorioVisitaGuiada,IRepositorioTematicas repositorioTematicas) : IRequestCommandHandler<ReprogramarCommand, string>
+    {
+        private readonly IRepositorioVisitaGuiada _repositorioVisitaGuiada = repositorioVisitaGuiada ?? throw new ArgumentNullException(nameof(repositorioVisitaGuiada));
+        private readonly IRepositorioTematicas repositorioTematicas1 = repositorioTematicas ?? throw new ArgumentNullException(nameof(repositorioTematicas));
+        public async  Task<string> Handle(ReprogramarCommand request, CancellationToken cancellationToken)
+        {
+            var visitaReprogramada = await _repositorioVisitaGuiada.FindOneAsync(request.VisitaReprogramadaId) ?? throw new Exception("Visita no encontrada");
+            
+
+            var timeSlot = new TimeSlot(
+               request.Inicio,
+               request.Fin
+           );
+            var tematicas = await repositorioTematicas1.GetByIdsAsync(request.TematicasIds);
+            var visita = new VisitaGrupalGuiada(
+                usuarioVisitanteId: request.UsuarioVisitanteId,
+                nivelEducativo: request.NivelEducativo,
+                anioGrado: request.AnioGrado,
+                cantidadPersonas: request.CantidadPersonas,
+                institucion: request.Institucion,
+                emailInstitucion: new Email(request.EmailInstitucion),
+                telefonoInstitucion: new Telefono(request.TelefonoInstitucion),
+                provinciaInstitucion: request.ProvinciaInstitucion,
+                departamamentoInstitucion: request.DepartamentoInstitucion,
+                ciudadInstitucion: request.LocalidadInstitucion,
+                descripcionDiversidad: request.DiversidadFuncionalDescripcion,
+                motivoVisita: request.MotivoRelacionVisita,
+                observaciones: request.Observaciones,
+                timeSlots: [timeSlot],
+                tematicas: tematicas
+            );
+            if (!visita.IsValid)
+                throw new InvalidEntityDataException(visita.GetErrors());
+            try
+            {
+                visitaReprogramada.CambiarEstadoAReprogramada();
+                _repositorioVisitaGuiada.Update(request.VisitaReprogramadaId, visitaReprogramada);
+
+                object createdId = await _repositorioVisitaGuiada.AddAsync(visita);
+
+                //await _domainBus.Publish(visita.To<VisitaGuiadaReprogramada>(), cancellationToken);
+
+                return createdId.ToString();
+            }
+            catch (Exception ex)
+            {
+                throw new BussinessException(ApplicationConstants.PROCESS_EXECUTION_EXCEPTION, ex.InnerException);
+            }
+
+        }
+    }
+}

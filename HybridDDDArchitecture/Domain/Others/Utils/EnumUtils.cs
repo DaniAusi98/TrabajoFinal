@@ -1,4 +1,4 @@
-﻿using Domain.Constants;
+using Domain.Constants;
 
 namespace Domain.Others.Utils
 {

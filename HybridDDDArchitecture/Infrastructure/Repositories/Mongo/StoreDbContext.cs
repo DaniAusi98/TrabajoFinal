@@ -1,6 +1,9 @@
-﻿using Core.Infraestructure.Repositories.MongoDb;
+using Core.Infraestructure.Repositories.MongoDb;
+
 using Domain.Entities;
+
 using Infrastructure.Repositories.Mongo.Maps;
+
 using MongoDB.Driver;
 
 namespace Infrastructure.Repositories.Mongo

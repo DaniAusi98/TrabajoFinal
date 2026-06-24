@@ -1,5 +1,7 @@
-﻿using Core.Domain.Entities;
+using Core.Domain.Entities;
+
 using Domain.Validators;
+
 using static Domain.Enums.Enums;
 
 namespace Domain.Entities

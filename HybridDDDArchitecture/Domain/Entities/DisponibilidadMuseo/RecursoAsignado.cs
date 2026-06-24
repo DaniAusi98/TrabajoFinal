@@ -1,0 +1,32 @@
+using Core.Domain.Entities;
+
+using Domain.Entities.RecursoMuseo;
+using Domain.Validators.DisponibilidadMuseo;
+
+namespace Domain.Entities.DisponibilidadMuseo
+{
+    public class RecursoAsignado:DomainEntity<int,RecursoAsignadoValidator>
+    {
+        public int ActividadId { get; private set; }
+        public ActividadMuseo Actividad { get; private set; }
+
+        public int RecursoId { get; private set; }
+        public Recurso Recurso { get; private set; }
+
+        public int CantidadAsignada { get; private set; }
+
+        public RecursoAsignado(int recursoId, int cantidadAsignada)
+        {
+            RecursoId = recursoId;
+            CantidadAsignada = cantidadAsignada;
+        }
+
+        public void ActualizarCantidad(int nuevaCantidad)
+        {
+            CantidadAsignada = nuevaCantidad;
+        }
+
+        private RecursoAsignado() { }
+    }
+}
+

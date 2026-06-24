@@ -1,5 +1,4 @@
-﻿using Core.Application;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Polly;
 using Polly.CircuitBreaker;
@@ -7,8 +6,9 @@ using Polly.Retry;
 using Polly.Wrap;
 using System.Net;
 using System.Text;
+using Core.Application.Adapters.Http;
 
-namespace Core.Infraestructure
+namespace Core.Infraestructure.Adapters.Http
 {
     public class ExternalApiHttpAdapter : IExternalApiClient
     {

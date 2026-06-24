@@ -1,4 +1,4 @@
-﻿namespace Domain.Enums
+namespace Domain.Enums
 {
     /// <summary>
     /// Las enumeraciones deben ir definidas aqui
@@ -22,6 +22,15 @@
             MARIADB,
             SQLSERVER, 
             MONGODB
+        }
+
+        public enum Frecuencia
+        {
+            Diaria,
+            Semanal,
+            Mensual,
+            RangoFechas,
+            DiasHabiles
         }
     }
 }

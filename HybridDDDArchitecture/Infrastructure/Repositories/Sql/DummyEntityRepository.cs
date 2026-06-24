@@ -1,5 +1,7 @@
-﻿using Application.Repositories;
+using Application.ApplicationMuseo.Repositories;
+
 using Core.Infraestructure.Repositories.Sql;
+
 using Domain.Entities;
 
 namespace Infrastructure.Repositories.Sql
@@ -10,7 +12,7 @@ namespace Infrastructure.Repositories.Sql
     /// creada en la capa de aplicacion, y heredar de <see cref="BaseRepository{TEntity}"/>
     /// donde <c TEntity> es la entidad de dominio que queremos persistir
     /// </summary>
-    internal sealed class DummyEntityRepository(StoreDbContext context) : BaseRepository<DummyEntity>(context), IDummyEntityRepository
+    internal sealed class DummyEntityRepository(MuseoDbContext context) : BaseRepository<DummyEntity>(context), IDummyEntityRepository
     {
     }
 }

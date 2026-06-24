@@ -7,14 +7,27 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DomainServices\" />
-    <Folder Include="Aggregators\" />
-    <Folder Include="Contracts\" />
-    <Folder Include="ValueObjects\" />
+    <Compile Remove="Aggregators\**" />
+    <Compile Remove="Contracts\**" />
+    <Compile Remove="ValueObjects\**" />
+    <EmbeddedResource Remove="Aggregators\**" />
+    <EmbeddedResource Remove="Contracts\**" />
+    <EmbeddedResource Remove="ValueObjects\**" />
+    <None Remove="Aggregators\**" />
+    <None Remove="Contracts\**" />
+    <None Remove="ValueObjects\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="9.0.14" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Core.Domain\Core.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Entities\UsuarioMuseo\UsuarioVisitante\" />
   </ItemGroup>
 
 </Project>

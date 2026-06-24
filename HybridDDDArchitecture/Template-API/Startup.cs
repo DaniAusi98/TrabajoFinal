@@ -1,16 +1,23 @@
-﻿using Application;
+using Application.ApplicationMuseo.Integrations.Events;
+using Application.ApplicationMuseo.Integrations.Handlers.Subscribers;
 using Application.Registrations;
 using AutoMapper;
 using Core.Application;
 using Filters;
 using Infrastructure.Registrations;
+using Infrastructure.Repositories.Sql;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
-
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Infrastructure.Identity;
 namespace API
 {
     public class Startup
     {
         public IConfiguration Configuration;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -18,18 +25,66 @@ namespace API
 
         public void ConfigureServices(IServiceCollection services)
         {
+           
             services.AddControllers();
             services.AddEndpointsApiExplorer();
-            services.AddApplicationServices();
+
+            services.AddApplicationServices(Configuration);
             services.AddInfrastructureServices(Configuration);
+
+            services.AddIdentity<UsuarioSistema, IdentityRole>()
+                .AddEntityFrameworkStores<MuseoDbContext>()
+                .AddDefaultTokenProviders();
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequiredLength = 6;
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireNonAlphanumeric = true;
+
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.AllowedForNewUsers = true;
+
+                options.User.RequireUniqueEmail = true;
+            });
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+               {
+                   var jwtSettings = Configuration.GetSection("Jwt");
+                   options.TokenValidationParameters = new TokenValidationParameters
+                   {
+                       ValidateIssuer = true,
+                       ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = jwtSettings["Issuer"],
+                        ValidAudience = jwtSettings["Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(jwtSettings["Key"])) 
+                        // Configure your issuer, audience, and signing key here
+                    };
+                });
+
+            services.AddAuthorization();
+
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Hybrid Architecture Project", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Hybrid Architecture Project",
+                    Version = "v1"
+                });
             });
-            services.AddMvc().AddMvcOptions(options =>
+
+            services.AddMvc(options =>
             {
                 options.Filters.Add<BaseExceptionFilter>();
             });
+
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowSpecificOrigin", builder => builder
@@ -42,7 +97,6 @@ namespace API
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -52,22 +106,34 @@ namespace API
             }
 
             CustomMapper.Instance = app.ApplicationServices.GetRequiredService<IMapper>();
+            // 🔽 AGREGAR ESTO - Una línea simple
+            app.SeedIdentityRoles();
+            // 🔼
 
             app.UseHttpsRedirection();
+
             app.UseRouting();
+
             app.UseCors("AllowSpecificOrigin");
+
             app.UseAuthentication();
             app.UseAuthorization();
-            UseEventBus(app);
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+
+            //UseEventBus(app);
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
         }
 
         private void UseEventBus(IApplicationBuilder app)
         {
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
-            // Aqui se registran las subscripciones a eventos del bus de eventos, vinculando
-            //eventos con sus respectivos handlers
-            eventBus.Subscribe<DummyEntityCreatedIntegrationEvent, DummyEntityCreatedIntegrationEventHandlerSub>();
+
+            eventBus.Subscribe<
+                DummyEntityCreatedIntegrationEvent,
+                DummyEntityCreatedIntegrationEventHandlerSub>();
         }
     }
 }

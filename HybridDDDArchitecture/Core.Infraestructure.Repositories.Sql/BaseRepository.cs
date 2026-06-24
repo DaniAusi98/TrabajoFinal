@@ -1,5 +1,7 @@
-﻿using Core.Application.Repositories;
+using Core.Application.Repositories;
+
 using Microsoft.EntityFrameworkCore;
+
 using System.Linq.Expressions;
 
 namespace Core.Infraestructure.Repositories.Sql
@@ -76,11 +78,18 @@ namespace Core.Infraestructure.Repositories.Sql
         {
             TEntity foundEntity = FindOne(id);
 
-            if(foundEntity!=null)
+            if (foundEntity != null)
             {
                 Repository.Update(entity);
                 Context.SaveChanges();
             }
+        }
+
+        public async Task<List<TEntity>> FindAsync(Expression<Func<TEntity, bool>> filter)
+        {
+            return await Repository
+                .Where(filter)
+                .ToListAsync();
         }
     }
 }

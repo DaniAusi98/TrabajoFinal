@@ -1,4 +1,7 @@
-﻿using Application.Constants;
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
+using Application.ApplicationMuseo.Constants;
 using FluentValidation.Results;
 
 namespace Application.Exceptions
@@ -57,7 +60,9 @@ namespace Application.Exceptions
         public IList<string> Messages { get; private set; }
         public InvalidEntityDataException(IList<ValidationFailure> failures) : base()
         {
-            Messages = [.. (from item in failures select item.ErrorMessage)];
+            Messages = failures?.Select(f => f.ErrorMessage)
+                                .Where(m => !string.IsNullOrWhiteSpace(m))
+                                .ToList() ?? new List<string>();
         }
 
         public InvalidEntityDataException()

@@ -1,7 +1,23 @@
-﻿using Application.ApplicationServices;
-using Core.Application;
-using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+
+using Application.ApplicationMuseo.ApplicationServices;
+using Application.ApplicationMuseo.Integrations.Events;
+using Application.ApplicationMuseo.Integrations.Handlers.Publishers;
+using Application.ApplicationMuseo.Integrations.Handlers.Subscribers;
+using Application.Usuario.ApplicationServices;
+using Application.Usuario.ApplicationServices.ApplicationServiceInterfaces;
+
+using Core.Application;
+
+using Domain.DomainServices.VisitasGrupalesMuseo;
+using Domain.Entities.DisponibilidadMuseo;
+
+using FluentValidation;
+
+using MediatR;
+
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Registrations
 {
@@ -10,21 +26,40 @@ namespace Application.Registrations
     /// </summary>
     public static class ApplicationServicesRegistration
     {
-        public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+        public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
         {
             /* Automapper */
-            services.AddAutoMapper(config => config.AddMaps(Assembly.GetExecutingAssembly()));
+            services.AddAutoMapper(cfg =>
+            {
+                cfg.LicenseKey = configuration["LuckyPennySoftware:LicenseKey"];
+                cfg.AddMaps(Assembly.GetExecutingAssembly());
+            });
 
+            services.AddMediatR(cfg =>
+            {
+                cfg.LicenseKey = configuration["LuckyPennySoftware:LicenseKey"];
+                cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+            });
+            services.AddScoped<ICommandQueryBus, MediatrCommandQueryBus>();
             /* EventBus */
             services.AddPublishers();
             services.AddSubscribers();
 
             /* MediatR*/
-            services.AddMediatR(config => config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
-            services.AddScoped<ICommandQueryBus, MediatrCommandQueryBus>();
+            
 
             /* Application Services */
             services.AddScoped<IDummyEntityApplicationService, DummyEntityApplicationService>();
+            //services.AddScoped<IUsuarioApplicationService,UsuarioVisitanteApplicationService>();
+
+            services.AddScoped<ICalendarioMuseo, CalendarioMuseo>();
+
+
+
+            services.AddValidatorsFromAssembly(typeof(ApplicationServicesRegistration).Assembly);
+
+           // services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
 
             return services;
         }

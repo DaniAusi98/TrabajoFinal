@@ -1,0 +1,15 @@
+using Application.ApplicationMuseo.DataTransferObjects;
+
+namespace Application.VisitaGrupal.DataTransferObjets
+{
+    public class TurnoDisponibleDto
+    {
+       public TimeSlotDto HorarioTurno { get; set; } = default!;
+
+        public int CapacidadMaxima { get; set; }
+        public int CapacidadDisponible { get; set; }
+
+        public string EstadoTurno { get; set; } = default!;
+
+    }
+}

@@ -1,4 +1,6 @@
-﻿using FluentValidation;
+﻿using System;
+using System.Collections.Generic;
+using FluentValidation;
 using FluentValidation.Results;
 
 namespace Core.Domain.Entities
@@ -9,22 +11,35 @@ namespace Core.Domain.Entities
         IList<ValidationFailure> GetErrors();
     }
 
-
-    public class DomainEntity<TKey, TValidator> : IValidate
-        where TValidator : IValidator, new()
+    // New base entity that only provides identity and basic helpers.
+    public abstract class DomainEntity<TKey>
     {
         public TKey Id { get; protected set; }
+
+        protected DomainEntity() { }
+
+        public bool IsTransient()
+        {
+            return EqualityComparer<TKey>.Default.Equals(Id, default(TKey)!);
+        }
+    }
+
+    // Backwards-compatible validator-enabled entity. It now inherits from DomainEntity<TKey>.
+    public class DomainEntity<TKey, TValidator> : DomainEntity<TKey>, IValidate
+        where TValidator : IValidator, new()
+    {
+        protected TValidator Validator { get; }
+        private ValidationResult ValidationResult { get; set; }
+
         public bool IsValid
         {
             get
             {
-                Validate();
+                if (ValidationResult == null)
+                    Validate();
                 return ValidationResult.IsValid;
             }
         }
-
-        protected TValidator Validator { get; }
-        private ValidationResult ValidationResult { get; set; }
 
         protected DomainEntity()
         {
@@ -42,5 +57,10 @@ namespace Core.Domain.Entities
             Validate();
             return ValidationResult.Errors;
         }
+    }
+
+    // Convenience non-generic Id (int) base to simplify usage where TKey is int.
+    public abstract class DomainEntity : DomainEntity<int>
+    {
     }
 }
