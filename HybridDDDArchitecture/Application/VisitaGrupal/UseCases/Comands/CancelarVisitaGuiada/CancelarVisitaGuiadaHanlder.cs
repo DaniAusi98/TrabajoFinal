@@ -1,5 +1,8 @@
 using Application.VisitaGrupal.Repositories;
+
 using Core.Application;
+
+using Domain.VisitasGrupales.Entities;
 
 namespace Application.VisitaGrupal.UseCases.Comands.CancelarVisitaGuiada
 {
@@ -8,7 +11,7 @@ namespace Application.VisitaGrupal.UseCases.Comands.CancelarVisitaGuiada
         private readonly IRepositorioVisitaGuiada _repositorioVisitaGuiada = repositorioVisitaGuiada ?? throw new ArgumentNullException(nameof(repositorioVisitaGuiada));
         public async Task Handle(CancelarVisitaGuiadaCommand request, CancellationToken cancellationToken)
         {
-            Domain.Entities.VisitasGrupalesMuseo.VisitaGrupalGuiada visita = await _repositorioVisitaGuiada.FindByIdWithActividadAsync(request.ReservationId);
+            VisitaGrupalGuiada visita = await _repositorioVisitaGuiada.FindByIdWithActividadAsync(request.ReservationId);
             visita.CancelarVisitaGuiada();
             _repositorioVisitaGuiada.Update(request.ReservationId,visita);
 

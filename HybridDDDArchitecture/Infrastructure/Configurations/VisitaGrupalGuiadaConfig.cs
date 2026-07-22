@@ -1,4 +1,4 @@
-using Domain.Entities.VisitasGrupalesMuseo;
+using Domain.VisitasGrupales.Entities;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

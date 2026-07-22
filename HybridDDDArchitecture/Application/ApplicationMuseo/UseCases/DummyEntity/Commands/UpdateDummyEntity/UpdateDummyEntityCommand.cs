@@ -4,7 +4,7 @@ using MediatR;
 
 using System.ComponentModel.DataAnnotations;
 
-using static Domain.Enums.Enums;
+using static Domain.Common.Enums.Enums;
 
 namespace Application.ApplicationMuseo.UseCases.DummyEntity.Commands.UpdateDummyEntity
 {

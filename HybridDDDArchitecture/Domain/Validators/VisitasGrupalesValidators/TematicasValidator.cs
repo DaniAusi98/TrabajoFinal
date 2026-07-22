@@ -1,7 +1,7 @@
 
 using Core.Domain.Validators;
 
-using Domain.Entities.VisitasGrupalesMuseo;
+using Domain.VisitasGrupales.Entities;
 
 using FluentValidation;
 

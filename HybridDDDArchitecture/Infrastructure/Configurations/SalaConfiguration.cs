@@ -1,4 +1,4 @@
-using Domain.Entities.RecursoMuseo;
+using Domain.RecursoMuseo.Entities;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

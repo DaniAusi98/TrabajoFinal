@@ -2,7 +2,7 @@ using Application.VisitaGrupal.Repositories;
 
 using Core.Infraestructure.Repositories.Sql;
 
-using Domain.Entities.VisitasGrupalesMuseo.Guia;
+using Domain.VisitasGrupales.Entities.Guia;
 
 using Microsoft.EntityFrameworkCore;
 

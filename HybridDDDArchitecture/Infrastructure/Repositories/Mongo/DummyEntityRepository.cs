@@ -2,7 +2,7 @@ using Application.ApplicationMuseo.Repositories;
 
 using Core.Infraestructure.Repositories.MongoDb;
 
-using Domain.Entities;
+using Domain.Common.Entities;
 
 namespace Infrastructure.Repositories.Mongo
 {

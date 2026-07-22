@@ -1,6 +1,6 @@
 using Core.Domain.Validators;
 
-using Domain.Entities.DisponibilidadMuseo;
+using Domain.ActividadMuseo.Entities;
 
 using FluentValidation;
 namespace Domain.Validators.DisponibilidadMuseo

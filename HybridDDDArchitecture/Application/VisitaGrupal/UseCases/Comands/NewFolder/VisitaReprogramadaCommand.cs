@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 using Core.Application;
 
-using static Domain.Enums.VisitasGrupalesEnums.Enums;
+using static Domain.VisitasGrupales.Enums.Enums;
 
 namespace Application.VisitaGrupal.UseCases.Comands.NewFolder
 {

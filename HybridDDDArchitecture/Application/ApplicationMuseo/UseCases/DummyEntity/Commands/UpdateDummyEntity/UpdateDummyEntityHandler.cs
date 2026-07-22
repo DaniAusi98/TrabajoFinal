@@ -14,7 +14,7 @@ namespace Application.ApplicationMuseo.UseCases.DummyEntity.Commands.UpdateDummy
 
         public async Task Handle(UpdateDummyEntityCommand request, CancellationToken cancellationToken)
         {
-            Domain.Entities.DummyEntity entity = await _context.FindOneAsync(request.DummyIdProperty) ?? throw new EntityDoesNotExistException();
+            Domain.Common.Entities.DummyEntity entity = await _context.FindOneAsync(request.DummyIdProperty) ?? throw new EntityDoesNotExistException();
             entity.SetdummyPropertyOne(request.dummyPropertyOne);
             entity.SetdummyPropertyTwo(request.dummyPropertyTwo);
 

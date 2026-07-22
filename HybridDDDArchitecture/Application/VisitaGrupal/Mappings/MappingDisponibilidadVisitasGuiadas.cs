@@ -1,7 +1,8 @@
 using Application.VisitaGrupal.DataTransferObjets;
+
 using AutoMapper;
-using Domain.Entities.VisitasGrupalesMuseo;
-using Domain.ValueObjets.VisitaGrupalMuseo;
+
+using Domain.VisitasGrupales.Entities;
 
 namespace Application.VisitaGrupal.Mappings
 {

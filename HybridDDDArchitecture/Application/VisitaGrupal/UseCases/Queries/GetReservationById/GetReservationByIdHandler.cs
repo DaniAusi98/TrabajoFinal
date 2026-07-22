@@ -9,6 +9,8 @@ using Application.VisitaGrupal.Repositories;
 
 using Core.Application;
 
+using Domain.VisitasGrupales.Entities;
+
 namespace Application.VisitaGrupal.UseCases.Queries.GetReservationById
 {
     internal sealed class GetReservationByIdHandler(IRepositorioVisitaGuiada repositorioVisitaGuiada) : IRequestQueryHandler<GetReservationByIdQuery, GuidedTourReservationDto>
@@ -16,7 +18,7 @@ namespace Application.VisitaGrupal.UseCases.Queries.GetReservationById
         private readonly IRepositorioVisitaGuiada _repositorioVisitaGuiada = repositorioVisitaGuiada ?? throw new ArgumentNullException(nameof(repositorioVisitaGuiada));
         public async Task<GuidedTourReservationDto> Handle(GetReservationByIdQuery request, CancellationToken cancellationToken)
         {
-            Domain.Entities.VisitasGrupalesMuseo.VisitaGrupalGuiada visitaGrupal = await _repositorioVisitaGuiada.FindByIdWithActividadAsync(request.ReservationId);
+            VisitaGrupalGuiada visitaGrupal = await _repositorioVisitaGuiada.FindByIdWithActividadAsync(request.ReservationId);
 
             return visitaGrupal.To<GuidedTourReservationDto>();
         }

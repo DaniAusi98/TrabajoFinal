@@ -1,8 +1,12 @@
 using Application.Exceptions;
+
 using Controllers;
-using Domain.Exceptions;
+
+using Domain.Common.Exceptions;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+
 using System.Net;
 
 namespace Filters

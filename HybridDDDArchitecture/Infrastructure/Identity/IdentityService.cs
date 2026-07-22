@@ -145,5 +145,29 @@ namespace Infrastructure.Identity
                 Roles = roles.ToList()
             };
         }
+
+        public async Task<string> GenerateEmailConfirmationTokenAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+
+            return user is null
+                ? throw new DomainException("El usuario no existe.")
+                : await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        }
+        public async Task<bool> ConfirmEmailAsync(string userId,string token)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user is null)
+            {
+                return false;
+            }
+
+            var result = await _userManager.ConfirmEmailAsync(
+                user,
+                token);
+
+            return result.Succeeded;
+        }
     }
 }

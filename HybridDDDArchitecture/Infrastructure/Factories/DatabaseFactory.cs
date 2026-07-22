@@ -3,9 +3,10 @@ using Application.ApplicationMuseo.Repositories;
 using Application.Repositories;
 using Application.VisitaGrupal.Repositories;
 
-using Domain.Others.Utils;
+using Domain.Common.Others.Utils;
 
 using Infrastructure.Constants;
+using Infrastructure.Repositories.Sql.VisitaGrupal;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -13,7 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using MongoDB.Bson.Serialization.Conventions;
 
-using static Domain.Enums.Enums;
+using static Domain.Common.Enums.Enums;
 
 namespace Infrastructure.Factories
 {
@@ -94,6 +95,7 @@ namespace Infrastructure.Factories
             services.AddTransient<IRepositorioGuia,Repositories.Sql.VisitaGrupal.RepositorioGuia>();
             services.AddTransient<IRepositorioDiaCierreMuseo, Repositories.Sql.DisponibilidadActividades.RepositorioDiaCierreMuseo>();
             services.AddTransient<IRepositorioActividadMuseo,Repositories.Sql.DisponibilidadActividades.RepositorioActividadMuseo>();
+            services.AddTransient<IRepositorioVisitaGrupalAutoguiada, RepositorioVisitaGrupalAutoguiada>();
             // 🔥 Migraciones automáticas al levantar la app (infra pura)
             var context = services.BuildServiceProvider()
                .GetRequiredService<Repositories.Sql.MuseoDbContext>();

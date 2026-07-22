@@ -1,6 +1,6 @@
 using Core.Application.Repositories;
 
-using Domain.Entities.VisitasGrupalesMuseo;
+using Domain.VisitasGrupales.Entities;
 
 using System.Linq.Expressions;
 
@@ -10,7 +10,7 @@ namespace Application.VisitaGrupal.Repositories
     {
         //Task<List<VisitaGrupalGuiada>> FindByUserIdAsync(Expression<Func<VisitaGrupalGuiada, bool>> filter);
         
-        Task<List<VisitaGrupalGuiada>> ObtenerConActividadAsync(DateTime fechaDesde, DateTime fechaHasta);
+        Task<List<VisitaGrupalGuiada>> GetAllGroupVisitAsync(DateTime fechaDesde, DateTime fechaHasta);
         Task<List<VisitaGrupalGuiada>> ObtenerPorUsuarioIdAsync(string usuarioId,DateTime fechaActual);
         Task<VisitaGrupalGuiada> FindByIdWithActividadAsync(int id);
 

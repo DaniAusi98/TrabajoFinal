@@ -3,11 +3,11 @@ using Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Domain.Entities;
-using Domain.Entities.VisitasGrupalesMuseo.Guia;
-using Domain.Entities.VisitasGrupalesMuseo;
-using Domain.Entities.RecursoMuseo;
-using Domain.Entities.DisponibilidadMuseo;
+using Domain.VisitasGrupales.Entities.Guia;
+using Domain.VisitasGrupales.Entities;
+using Domain.ActividadMuseo.Entities;
+using Domain.RecursoMuseo.Entities;
+using Domain.Common.Entities;
 
 namespace Infrastructure.Repositories.Sql
 {

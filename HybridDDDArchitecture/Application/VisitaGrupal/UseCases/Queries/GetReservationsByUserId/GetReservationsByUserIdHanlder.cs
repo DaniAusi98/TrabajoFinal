@@ -4,7 +4,7 @@ using Application.VisitaGrupal.Repositories;
 
 using Core.Application;
 
-using Domain.Entities.VisitasGrupalesMuseo;
+using Domain.VisitasGrupales.Entities;
 
 namespace Application.VisitaGrupal.UseCases.Queries.GetReservationsById
 {

@@ -1,9 +1,11 @@
 using System.Security.Claims;
 
+using Application.ActividadMuseo.UseCases.ActividadesMuseo.Queries;
 using Application.VisitaGrupal.UseCases.Comands.CancelarVisitaGuiada;
 using Application.VisitaGrupal.UseCases.Comands.CrearVisitaGuiada;
 using Application.VisitaGrupal.UseCases.Comands.NewFolder;
 using Application.VisitaGrupal.UseCases.Queries.ConsultarDisponibilidadTurnosVisitaGuiada;
+using Application.VisitaGrupal.UseCases.Queries.GetAllGroupVisitCalendar;
 using Application.VisitaGrupal.UseCases.Queries.GetReservationById;
 using Application.VisitaGrupal.UseCases.Queries.GetReservationsById;
 using Application.VisitaGrupal.UseCases.Queries.GetTematicaVisitaGrupal;
@@ -122,7 +124,16 @@ public class VisitasGuiadasController(ICommandQueryBus commandQueryBus) : Contro
         return Created($"api/v1/VisitasGuiadas/{nuevaVisitaId}",new { Id = nuevaVisitaId });
     }
 
-     
+    [HttpGet("calendar")]
+    public async Task<IActionResult> GetAllGroupVisitCalendar(
+            DateTime fechaDesde,
+            DateTime fechaHasta)
+    {
+        var GroupVisits = await _commandQueryBus.Send(new GetAllGroupVisitCalendarQuery(fechaDesde, fechaHasta));
+        return Ok(GroupVisits);
+    }
+
+
 
     /*
 

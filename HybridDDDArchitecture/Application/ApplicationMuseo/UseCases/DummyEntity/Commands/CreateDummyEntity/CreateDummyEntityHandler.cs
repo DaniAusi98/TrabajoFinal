@@ -22,7 +22,7 @@ namespace Application.ApplicationMuseo.UseCases.DummyEntity.Commands.CreateDummy
         private readonly IDummyEntityApplicationService _dummyEntityApplicationService = dummyEntityApplicationService ?? throw new ArgumentNullException(nameof(dummyEntityApplicationService));
         public async Task<string> Handle(CreateDummyEntityCommand request, CancellationToken cancellationToken)
         {
-            Domain.Entities.DummyEntity entity = new(request.dummyPropertyOne, request.dummyPropertyTwo);
+            Domain.Common.Entities.DummyEntity entity = new(request.dummyPropertyOne, request.dummyPropertyTwo);
 
             if (!entity.IsValid) throw new InvalidEntityDataException(entity.GetErrors());
 

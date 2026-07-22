@@ -1,5 +1,5 @@
-using Domain.Entities.DisponibilidadMuseo;
-using Domain.Entities.RecursoMuseo;
+using Domain.ActividadMuseo.Entities;
+using Domain.RecursoMuseo.Entities;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

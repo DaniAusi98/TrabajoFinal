@@ -1,12 +1,10 @@
-
-using Domain.Entities.VisitasGrupalesMuseo.Guia;
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Linq;
 
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Domain.VisitasGrupales.Entities.Guia;
 
 namespace Infrastructure.Configurations
 {

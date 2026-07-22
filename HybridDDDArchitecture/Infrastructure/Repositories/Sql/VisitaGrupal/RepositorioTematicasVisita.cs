@@ -8,7 +8,7 @@ using Application.VisitaGrupal.Repositories;
 
 using Core.Infraestructure.Repositories.Sql;
 
-using Domain.Entities.VisitasGrupalesMuseo;
+using Domain.VisitasGrupales.Entities;
 
 using Microsoft.EntityFrameworkCore;
 

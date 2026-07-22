@@ -1,7 +1,7 @@
 using Core.Domain.Validators;
 
-using Domain.Entities.VisitasGrupalesMuseo.Guia;
-using Domain.Others.Helpers;
+using Domain.ActividadMuseo.Others;
+using Domain.VisitasGrupales.Entities.Guia;
 
 using FluentValidation;
 namespace Domain.Validators.VisitasGrupalesValidators

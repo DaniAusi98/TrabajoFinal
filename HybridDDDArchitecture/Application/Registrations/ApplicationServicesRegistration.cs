@@ -6,11 +6,11 @@ using Application.ApplicationMuseo.Integrations.Handlers.Publishers;
 using Application.ApplicationMuseo.Integrations.Handlers.Subscribers;
 using Application.Usuario.ApplicationServices;
 using Application.Usuario.ApplicationServices.ApplicationServiceInterfaces;
+using Application.Usuario.UseCases.Commands.UpdateUsuario;
 
 using Core.Application;
 
-using Domain.DomainServices.VisitasGrupalesMuseo;
-using Domain.Entities.DisponibilidadMuseo;
+using Domain.ActividadMuseo.Entities;
 
 using FluentValidation;
 
@@ -41,6 +41,7 @@ namespace Application.Registrations
                 cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
             });
             services.AddScoped<ICommandQueryBus, MediatrCommandQueryBus>();
+            services.AddScoped<IConfirmEmailService, ConfirmEmailServiceResponse>();
             /* EventBus */
             services.AddPublishers();
             services.AddSubscribers();

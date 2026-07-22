@@ -9,8 +9,7 @@ using Application.Repositories;
 
 using Core.Infraestructure.Repositories.Sql;
 
-using Domain.Entities;
-using Domain.Entities.DisponibilidadMuseo;
+using Domain.ActividadMuseo.Entities;
 
 namespace Infrastructure.Repositories.Sql.DisponibilidadActividades
 {

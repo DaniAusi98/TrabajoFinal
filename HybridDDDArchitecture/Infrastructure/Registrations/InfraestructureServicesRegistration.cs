@@ -1,21 +1,27 @@
 using Application.ApplicationMuseo.ApplicationServices;
 using Application.Usuario.ApplicationServices.ApplicationServiceInterfaces;
+
 using Core.Application.Adapters.Http;
 using Core.Infraestructure;
 using Core.Infraestructure.Adapters.Http;
+
 using Infrastructure.Adapters;
+using Infrastructure.Adapters.EmailSender.ResendEmailService;
+using Infrastructure.Adapters.EmailSender.ResendEmailService.User;
 using Infrastructure.Constants;
 using Infrastructure.Factories;
 using Infrastructure.Identity;
 
-using Microsoft.AspNetCore.Builder;  
+using Microsoft.AspNetCore.Builder;
 
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 
 using Microsoft.Extensions.DependencyInjection;
-                    
+
+using Resend;
+
 namespace Infrastructure.Registrations
 {
     /// <summary>
@@ -31,13 +37,24 @@ namespace Infrastructure.Registrations
             /* EventBus */
             services.AddEventBus(configuration);
 
+            services.Configure<ResendClientOptions>(options =>
+            {
+                options.ApiToken = configuration["Resend:ApiKey"]!;
+            });
+
+            services.AddHttpClient<ResendClient>();
+            services.AddTransient<IResend, ResendClient>();
+            services.AddScoped<IConfirmUserUrl, ConfirmUserUrl>();
+
+            services.AddScoped<IEmailService, ResendEmailService>();
+
             /* Adapters */
             services.AddSingleton<IExternalApiClient, ExternalApiHttpAdapter>();
             services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
-            services.AddSingleton<IUsuarioRegistradoEmailSender, UsuarioRegistradoEmailSender>();
             services.AddScoped<JwtTokenService>();
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddScoped<IClock,ArgentinaClock>();
+
 
             return services;
         }

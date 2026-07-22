@@ -5,11 +5,11 @@ using Application.VisitaGrupal.Repositories;
 
 using Core.Infraestructure.Repositories.Sql;
 
-using Domain.Entities.VisitasGrupalesMuseo;
+using Domain.VisitasGrupales.Entities;
 
 using Microsoft.EntityFrameworkCore;
 
-using static Domain.Enums.VisitasGrupalesEnums.Enums;
+using static Domain.VisitasGrupales.Enums.Enums;
 
 namespace Infrastructure.Repositories.Sql.VisitaGrupal
 {
@@ -24,7 +24,7 @@ namespace Infrastructure.Repositories.Sql.VisitaGrupal
                 .FirstOrDefaultAsync(v => v.Id == id);
         }
 
-        public async Task<List<VisitaGrupalGuiada>> ObtenerConActividadAsync(
+        public async Task<List<VisitaGrupalGuiada>> GetAllGroupVisitAsync(
             DateTime fechaDesde,
             DateTime fechaHasta)
         {

@@ -1,6 +1,6 @@
 using Core.Application;
 
-using static Domain.Enums.Enums;
+using static Domain.Common.Enums.Enums;
 
 namespace Application.ApplicationMuseo.DomainEvents
 {

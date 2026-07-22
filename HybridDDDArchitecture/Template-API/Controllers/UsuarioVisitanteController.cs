@@ -1,3 +1,4 @@
+using Application.Usuario.ApplicationServices.ApplicationServiceInterfaces;
 using Application.Usuario.UseCases.Commands.LoginUsuario;
 using Application.Usuario.UseCases.Commands.Register;
 using Application.Usuario.UseCases.Commands.UpdateUsuario;
@@ -15,10 +16,13 @@ namespace Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class UsuarioVisitanteController(ICommandQueryBus commandQueryBus) : BaseController
+    public class UsuarioVisitanteController(ICommandQueryBus commandQueryBus,IConfirmEmailService confirmarEmailService) : BaseController
     {
         private readonly ICommandQueryBus _commandQueryBus =
             commandQueryBus ?? throw new ArgumentNullException(nameof(commandQueryBus));
+        private readonly IConfirmEmailService IConfirmarEmailService =
+            confirmarEmailService ?? throw new ArgumentNullException(nameof(confirmarEmailService));
+
 
         /// <summary>
         /// Confirma el correo de un usuario a partir de un token recibido por email
@@ -112,6 +116,27 @@ namespace Controllers
                 return NotFound();
 
             return Ok(user);
+        }
+        [HttpPost("confirm-email")]
+        public async Task<IActionResult> ConfirmEmail(
+            [FromBody] ConfirmEmailRequest request)
+        {
+            var result = await IConfirmarEmailService.ExecuteAsync(
+                request.UserId,
+                request.Token);
+
+            if (!result)
+            {
+                return BadRequest(new
+                {
+                    message = "Error al confirmar el correo electrónico. El token puede ser inválido o haber expirado."
+                });
+            }
+
+            return Ok(new
+            {
+                message = "Correo confirmado correctamente."
+            });
         }
 
     }

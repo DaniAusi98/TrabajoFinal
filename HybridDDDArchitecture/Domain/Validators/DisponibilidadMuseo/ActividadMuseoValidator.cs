@@ -1,12 +1,10 @@
 using Core.Domain.Validators;
 
-using Domain.Entities.DisponibilidadMuseo;
-
 using FluentValidation;
 
 namespace Domain.Validators.DisponibilidadMuseo
 {
-    public class ActividadMuseoValidator : EntityValidator<ActividadMuseo>
+    public class ActividadMuseoValidator : EntityValidator<Domain.ActividadMuseo.Entities.ActividadMuseo>
     {
         public ActividadMuseoValidator()
         {

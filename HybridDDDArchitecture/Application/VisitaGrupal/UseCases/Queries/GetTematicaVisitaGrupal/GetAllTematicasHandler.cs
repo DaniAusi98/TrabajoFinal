@@ -9,6 +9,8 @@ using Application.VisitaGrupal.Repositories;
 
 using Core.Application;
 
+using Domain.VisitasGrupales.Entities;
+
 namespace Application.VisitaGrupal.UseCases.Queries.GetTematicaVisitaGrupal
 {
     internal class GetAllTematicasHandler(IRepositorioTematicas repositorioTematicas) :IRequestQueryHandler<GetAllTematicasQuery, QueryResult<TematicaVisitaGrupalDto>>
@@ -16,7 +18,7 @@ namespace Application.VisitaGrupal.UseCases.Queries.GetTematicaVisitaGrupal
         private readonly IRepositorioTematicas _repositorioTematicas = repositorioTematicas ?? throw new ArgumentNullException(nameof(repositorioTematicas));
         public async Task<QueryResult<TematicaVisitaGrupalDto>> Handle(GetAllTematicasQuery request, CancellationToken cancellationToken)
         {
-            IList<Domain.Entities.VisitasGrupalesMuseo.TematicaVisita> entities = await _repositorioTematicas.ObtenerDisponiblesAsync();
+            IList<TematicaVisita> entities = await _repositorioTematicas.ObtenerDisponiblesAsync();
             return new QueryResult<TematicaVisitaGrupalDto>(entities.To<TematicaVisitaGrupalDto>(), entities.Count, request.PageIndex, request.PageSize);
         }
     }

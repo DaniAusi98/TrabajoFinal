@@ -1,6 +1,6 @@
 using Core.Infraestructure.Repositories.MongoDb;
 
-using Domain.Entities;
+using Domain.Common.Entities;
 
 using Infrastructure.Repositories.Mongo.Maps;
 

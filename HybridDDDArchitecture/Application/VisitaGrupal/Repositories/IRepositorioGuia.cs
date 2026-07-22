@@ -1,6 +1,6 @@
 using Core.Application.Repositories;
 
-using Domain.Entities.VisitasGrupalesMuseo.Guia;
+using Domain.VisitasGrupales.Entities.Guia;
 
 using System;
 using System.Collections.Generic;

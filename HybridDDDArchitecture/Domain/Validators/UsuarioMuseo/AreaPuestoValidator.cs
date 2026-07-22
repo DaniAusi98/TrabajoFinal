@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using Core.Domain.Validators;
 
-using Domain.Entities.UsuarioMuseo.UsuarioInterno;
+using Domain.PersonalMuseo.Entities.UsuarioInterno;
 
 namespace Domain.Validators.UsuarioMuseo
 {

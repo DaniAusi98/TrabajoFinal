@@ -27,7 +27,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Entities\UsuarioMuseo\UsuarioVisitante\" />
+    <Folder Include="ActividadMuseo\Entities\Guia\" />
+    <Folder Include="Common\DomainServices\" />
+    <Folder Include="Common\Others\Helpers\" />
+    <Folder Include="VisitasGrupales\Exceptions\" />
+    <Folder Include="VisitasGrupales\Others\" />
   </ItemGroup>
 
 </Project>

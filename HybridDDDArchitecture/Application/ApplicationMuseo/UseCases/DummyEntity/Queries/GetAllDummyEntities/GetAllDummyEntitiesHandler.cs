@@ -12,7 +12,7 @@ namespace Application.ApplicationMuseo.UseCases.DummyEntity.Queries.GetAllDummyE
         public async Task<QueryResult<DummyEntityDto>> Handle(GetAllDummyEntitiesQuery request, CancellationToken cancellationToken)
         {
             
-            IList<Domain.Entities.DummyEntity> entities = await _context.FindAllAsync();
+            IList<Domain.Common.Entities.DummyEntity> entities = await _context.FindAllAsync();
 
             return new QueryResult<DummyEntityDto>(entities.To<DummyEntityDto>(), entities.Count, request.PageIndex, request.PageSize);
         }

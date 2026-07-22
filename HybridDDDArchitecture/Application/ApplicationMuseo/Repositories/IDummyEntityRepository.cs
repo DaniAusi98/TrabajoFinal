@@ -1,6 +1,6 @@
 using Core.Application.Repositories;
 
-using Domain.Entities;
+using Domain.Common.Entities;
 
 namespace Application.ApplicationMuseo.Repositories
 {

@@ -1,7 +1,7 @@
 using Core.Domain.Validators;
 
-using Domain.Constants;
-using Domain.Entities.RecursoMuseo;
+using Domain.Common.Constants;
+using Domain.RecursoMuseo.Entities;
 
 using FluentValidation;
 

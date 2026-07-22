@@ -3,7 +3,8 @@ using Application.ApplicationMuseo.DomainEvents;
 
 using AutoMapper;
 
-using Domain.Entities;
+using Domain.Common.Entities;
+using Domain.Common.ValueObjets;
 
 namespace Application.ApplicationMuseo.Mappings
 {
@@ -19,7 +20,7 @@ namespace Application.ApplicationMuseo.Mappings
             CreateMap<DummyEntity, DummyEntityDto>().ReverseMap();
 
             // TimeSlot es un ValueObject, por lo que no se mapea directamente a un DTO, sino que se mapea a sus propiedades individuales
-            CreateMap<Domain.ValueObjets.TimeSlot, TimeSlotDto>()
+            CreateMap<TimeSlot, TimeSlotDto>()
                .ForMember(dest => dest.Inicio, opt => opt.MapFrom(src => src.Inicio))
                .ForMember(dest => dest.Fin, opt => opt.MapFrom(src => src.Fin));
 

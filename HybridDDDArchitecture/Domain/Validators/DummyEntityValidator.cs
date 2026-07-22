@@ -1,7 +1,7 @@
 using Core.Domain.Validators;
 
-using Domain.Constants;
-using Domain.Entities;
+using Domain.Common.Constants;
+using Domain.Common.Entities;
 
 using FluentValidation;
 

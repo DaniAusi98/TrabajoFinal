@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using Core.Application.Repositories;
 
-using Domain.Entities.VisitasGrupalesMuseo;
+using Domain.VisitasGrupales.Entities;
 
 namespace Application.VisitaGrupal.Repositories
 {
