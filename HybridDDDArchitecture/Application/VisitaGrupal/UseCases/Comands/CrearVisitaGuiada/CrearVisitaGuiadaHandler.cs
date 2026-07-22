@@ -3,8 +3,9 @@ using Application.Exceptions;
 using Application.VisitaGrupal.Repositories;
 using Core.Application;
 
-using Domain.Entities.VisitasGrupalesMuseo;
-using Domain.ValueObjets;
+using Domain.Common.ValueObjets;
+using Domain.VisitasGrupales.Entities;
+using Domain.VisitasGrupales.Enums;
 
 
 namespace Application.VisitaGrupal.UseCases.Comands.CrearVisitaGuiada

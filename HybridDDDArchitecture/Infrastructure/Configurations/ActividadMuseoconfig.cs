@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Configurations
 {
-    public class ActividadMuseoConfiguration : IEntityTypeConfiguration<ActividadMuseo>
+    public class ActividadMuseoConfiguration : IEntityTypeConfiguration<Actividad>
     {
-        public void Configure(EntityTypeBuilder<ActividadMuseo> builder)
+        public void Configure(EntityTypeBuilder<Actividad> builder)
         {
             builder.ToTable("ActividadesMuseo");
 
@@ -56,7 +56,7 @@ namespace Infrastructure.Configurations
                         .WithMany()
                         .HasForeignKey("SalaId"),
                     j => j
-                        .HasOne<ActividadMuseo>()
+                        .HasOne<Actividad>()
                         .WithMany()
                         .HasForeignKey("ActividadMuseoId"),
                     j =>

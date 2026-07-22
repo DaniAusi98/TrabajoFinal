@@ -27,7 +27,7 @@ namespace Domain.VisitasGrupales.Entities
         public List<TematicaVisita> Tematicas { get; private set; } = [];            // clase TematicaVisita con Id y Nombre
         public EstadoConfirmacionVisita EstadoConfirmacion { get; private set; }
         public int ActividadMuseoId { get; private set; }
-        public Domain.ActividadMuseo.Entities.ActividadMuseo ActividadMuseo { get; private set; }   // composicion con la clase ActividadMuseo, que tiene el tipo de actividad, cantidad de personas, horarios, etc.
+        public Domain.ActividadMuseo.Entities.Actividad ActividadMuseo { get; private set; }   // composicion con la clase ActividadMuseo, que tiene el tipo de actividad, cantidad de personas, horarios, etc.
 
 
         protected VisitaGrupalGuiada()
@@ -79,7 +79,7 @@ namespace Domain.VisitasGrupales.Entities
                 : observaciones.Trim();
             EstadoConfirmacion = EstadoConfirmacionVisita.PendienteConfirmar;
 
-            ActividadMuseo = new Domain.ActividadMuseo.Entities.ActividadMuseo(
+            ActividadMuseo = new Domain.ActividadMuseo.Entities.Actividad(
             tipo: TipoActividad.VisitaGrupalGuiada,
             cantidadAsistentes: cantidadPersonas,
             timeSlots: timeSlots

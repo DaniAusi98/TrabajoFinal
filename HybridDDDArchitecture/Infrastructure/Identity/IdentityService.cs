@@ -1,7 +1,7 @@
 using Application.Usuario.ApplicationServices.ApplicationServiceInterfaces;
 using Application.Usuario.DataTransferObjets;
 
-using Domain.Exceptions;
+using Domain.Common.Exceptions;
 
 using Infrastructure.Adapters;
 

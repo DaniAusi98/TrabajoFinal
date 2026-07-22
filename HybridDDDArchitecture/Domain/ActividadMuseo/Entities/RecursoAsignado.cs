@@ -8,7 +8,7 @@ namespace Domain.ActividadMuseo.Entities
     public class RecursoAsignado:DomainEntity<int,RecursoAsignadoValidator>
     {
         public int ActividadId { get; private set; }
-        public ActividadMuseo Actividad { get; private set; }
+        public Actividad Actividad { get; private set; }
 
         public int RecursoId { get; private set; }
         public Recurso Recurso { get; private set; }

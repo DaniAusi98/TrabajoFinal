@@ -2,7 +2,7 @@ namespace Domain.ActividadMuseo.Others
 {
     public static class SeSolapaEnTiempo
     {
-        public static bool SolapaEnTiempo(Entities.ActividadMuseo nuevaActividad, Entities.ActividadMuseo actividadExistente)
+        public static bool SolapaEnTiempo(Entities.Actividad nuevaActividad, Entities.Actividad actividadExistente)
         {
             
                     

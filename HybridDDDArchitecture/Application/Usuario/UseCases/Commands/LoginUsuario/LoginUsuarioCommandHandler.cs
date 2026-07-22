@@ -6,7 +6,7 @@ using AutoMapper;
 
 using Core.Application;
 
-using Domain.Exceptions;
+using Domain.Common.Exceptions;
 
 namespace Application.Usuario.UseCases.Commands.LoginUsuario
 {

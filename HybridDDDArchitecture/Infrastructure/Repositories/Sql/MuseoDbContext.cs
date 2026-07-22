@@ -29,7 +29,7 @@ namespace Infrastructure.Repositories.Sql
 
        // public DbSet<VisitaGrupalAutoguiada> VisitaGrupalAutoguiada { get; set; }
 
-        public DbSet<ActividadMuseo> ActividadAgendaMuseo { get; set; }
+        public DbSet<Actividad> ActividadAgendaMuseo { get; set; }
         public DbSet<RecursoAsignado> RecursoAsignado { get; set; }
         public DbSet<Recurso> RecursoMuseo { get; set; }
         public DbSet<Sala> SalaMuseo { get; set; }

@@ -28,7 +28,7 @@ namespace Application.ActividadMuseo.Mappings
                 .ForMember(dest => dest.TipoSala, opt => opt.MapFrom(src => src.TipoSala.ToString()))
                 .ForMember(dest => dest.Ubicacion, opt => opt.MapFrom(src => src.Ubicacion.ToString()));
 
-            CreateMap<Domain.ActividadMuseo.Entities.ActividadMuseo,ActividadMuseoDto>()
+            CreateMap<Domain.ActividadMuseo.Entities.Actividad,ActividadMuseoDto>()
                 .ForMember(dest => dest.TipoActividad, opt => opt.MapFrom(src => src.TipoActividad.ToString()))
                 .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => src.Estado.ToString()))
                 .ForMember(dest => dest.CantidadPersonas, opt => opt.MapFrom(src => src.CantidadPersonas))

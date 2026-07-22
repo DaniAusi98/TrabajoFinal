@@ -8,11 +8,11 @@ namespace Domain.ActividadMuseo.DomainServices.EspecificacionesSolapamiento.Espe
 
     public class ConflictoEventoConVisitaGrupalSpecification : IEspecificacionConflictoActividad
     {
-        public bool AplicaA(Entities.ActividadMuseo existente)
+        public bool AplicaA(Entities.Actividad existente)
             => existente.TipoActividad == TipoActividad.VisitaGrupalGuiada ||
                existente.TipoActividad == TipoActividad.VisitaGrupalAutoguiada;
 
-        public bool HayConflicto(Entities.ActividadMuseo nueva, Entities.ActividadMuseo existente)
+        public bool HayConflicto(Entities.Actividad nueva, Entities.Actividad existente)
         {
 
             // 1. la nueva tiene que ser una actividad "tipo evento"

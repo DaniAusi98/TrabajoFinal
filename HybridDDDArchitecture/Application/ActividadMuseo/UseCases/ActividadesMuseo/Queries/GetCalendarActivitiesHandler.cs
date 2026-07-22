@@ -16,7 +16,7 @@ namespace Application.ActividadMuseo.UseCases.ActividadesMuseo.Queries
         private readonly IRepositorioActividadMuseo _repositorioActividadMuseo = repositorioActividad ?? throw new ArgumentNullException(nameof(repositorioActividad));
         public async Task<QueryResult<ActividadMuseoDto>> Handle(GetAllActivitiesQuery request, CancellationToken cancellationToken)
         {
-            IList<Domain.ActividadMuseo.Entities.ActividadMuseo> entities = await _repositorioActividadMuseo.FindAllAsync(request.FechaConsultaDesde, request.FechaConsultaHasta);
+            IList<Domain.ActividadMuseo.Entities.Actividad> entities = await _repositorioActividadMuseo.FindAllAsync(request.FechaConsultaDesde, request.FechaConsultaHasta);
             return new QueryResult<ActividadMuseoDto>(entities.To<ActividadMuseoDto>(), entities.Count, request.PageIndex, request.PageSize);
         }
     }

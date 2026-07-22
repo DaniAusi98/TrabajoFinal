@@ -7,7 +7,7 @@ using Domain.Common.ValueObjets;
 
 namespace Domain.ActividadMuseo.Entities
 {
-    public class ActividadMuseo : DomainEntity<int,ActividadMuseoValidator>
+    public class Actividad : DomainEntity<int,ActividadMuseoValidator>
     {
         public TipoActividad TipoActividad { get; private set; }
         public EstadoActividad Estado { get; private set; }
@@ -19,7 +19,7 @@ namespace Domain.ActividadMuseo.Entities
 
         public List<TimeSlot> TimeSlots = [];
 
-        public ActividadMuseo(
+        public Actividad(
             TipoActividad tipo,
             int? cantidadAsistentes,
             IEnumerable<TimeSlot> timeSlots,
@@ -49,7 +49,7 @@ namespace Domain.ActividadMuseo.Entities
         }
 
         // EF Core
-        protected ActividadMuseo() { }
+        protected Actividad() { }
 
         public void AgregarSala(Sala sala)
         {

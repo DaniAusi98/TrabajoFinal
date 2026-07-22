@@ -6,11 +6,11 @@ namespace Domain.ActividadMuseo.DomainServices.EspecificacionesSolapamiento.Espe
 {
     public class VisitaGrupalAutoguiadaVisitaGrupalGuiadaSpecification : IEspecificacionConflictoActividad
     {
-        public bool AplicaA(Entities.ActividadMuseo existente)
+        public bool AplicaA(Entities.Actividad existente)
         => existente.TipoActividad == TipoActividad.VisitaGrupalGuiada;
 
      
-        public bool HayConflicto(Entities.ActividadMuseo nueva, Entities.ActividadMuseo existente)
+        public bool HayConflicto(Entities.Actividad nueva, Entities.Actividad existente)
         {
             
                 return  nueva.TipoActividad == TipoActividad.VisitaGrupalAutoguiada

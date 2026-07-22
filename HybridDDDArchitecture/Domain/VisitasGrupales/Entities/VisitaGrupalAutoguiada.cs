@@ -20,7 +20,7 @@ namespace Domain.VisitasGrupales.Entities
         public string Observaciones { get; private set; }
         public EstadoConfirmacionVisita EstadoConfirmacion { get; private set; }
 
-        public Domain.ActividadMuseo.Entities.ActividadMuseo ActividadMuseo { get; private set; }
+        public Domain.ActividadMuseo.Entities.Actividad ActividadMuseo { get; private set; }
 
 
         protected VisitaGrupalAutoguiada()
@@ -52,7 +52,7 @@ namespace Domain.VisitasGrupales.Entities
             DiversidadFuncional = descripcionDiversidad ?? string.Empty;
             Observaciones = observaciones ?? string.Empty;
             EstadoConfirmacion = EstadoConfirmacionVisita.PendienteConfirmar;
-            ActividadMuseo = new Domain.ActividadMuseo.Entities.ActividadMuseo(
+            ActividadMuseo = new Domain.ActividadMuseo.Entities.Actividad(
             tipo: TipoActividad.VisitaGrupalAutoguiada,
             cantidadAsistentes: cantidadPersonas,
             timeSlots: timeSlots);

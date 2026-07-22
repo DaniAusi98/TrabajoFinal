@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace Domain.Validators.DisponibilidadMuseo
 {
-    public class ActividadMuseoValidator : EntityValidator<Domain.ActividadMuseo.Entities.ActividadMuseo>
+    public class ActividadMuseoValidator : EntityValidator<Domain.ActividadMuseo.Entities.Actividad>
     {
         public ActividadMuseoValidator()
         {
