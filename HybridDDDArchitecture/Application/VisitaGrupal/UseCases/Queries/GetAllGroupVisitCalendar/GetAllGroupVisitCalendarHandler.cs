@@ -26,11 +26,11 @@ namespace Application.VisitaGrupal.UseCases.Queries.GetAllGroupVisitCalendar
                     Tipo = "VisitaGrupalGuiada",
                     IdProvincia = visitasguiada.ProvinciaInstitucion,
                     IdLocalidad = visitasguiada.LocalidadInstitucion,
-                    CantidadPersonas = visitasguiada.ActividadMuseo.CantidadPersonas ?? 0,
+                    CantidadPersonas = visitasguiada.CantidadPersonas ?? 0,
                     Institucion = visitasguiada.Institucion,
                     DiversidadFuncional = visitasguiada.DiversidadFuncionalDescripcion,
-                    HoraInicio = visitasguiada.ActividadMuseo.TimeSlots.FirstOrDefault().Inicio,
-                    HoraFin = visitasguiada.ActividadMuseo.TimeSlots.FirstOrDefault().Fin
+                    HoraInicio = visitasguiada.TimeSlots.FirstOrDefault().Inicio,
+                    HoraFin = visitasguiada.TimeSlots.FirstOrDefault().Fin
 
                 });
 
@@ -44,11 +44,11 @@ namespace Application.VisitaGrupal.UseCases.Queries.GetAllGroupVisitCalendar
                     Tipo = "VisitaGrupalAutoguiada",
                     IdProvincia = visitaAutoguiada.ProvinciaInstitucion,
                     IdLocalidad = visitaAutoguiada.CiudadInstitucion,
-                    CantidadPersonas = visitaAutoguiada.ActividadMuseo.CantidadPersonas ?? 0,
+                    CantidadPersonas = visitaAutoguiada.CantidadPersonas ?? 0,
                     Institucion = visitaAutoguiada.Institucion,
                     DiversidadFuncional = visitaAutoguiada.DiversidadFuncional,
-                    HoraInicio = visitaAutoguiada.ActividadMuseo.TimeSlots.FirstOrDefault().Inicio,
-                    HoraFin = visitaAutoguiada.ActividadMuseo.TimeSlots.FirstOrDefault().Fin
+                    HoraInicio = visitaAutoguiada.TimeSlots.FirstOrDefault().Inicio,
+                    HoraFin = visitaAutoguiada.TimeSlots.FirstOrDefault().Fin
 
                 });
 

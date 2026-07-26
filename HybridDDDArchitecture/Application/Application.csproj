@@ -16,7 +16,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="ActividadMuseo\UseCases\ActividadesMuseo\Commnads\" />
 		<Folder Include="ActividadMuseo\UseCases\ActividadesMuseo\Notifications\" />
 		<Folder Include="Adapters\" />
 		<Folder Include="VisitaGrupal\UseCases\Notification\" />

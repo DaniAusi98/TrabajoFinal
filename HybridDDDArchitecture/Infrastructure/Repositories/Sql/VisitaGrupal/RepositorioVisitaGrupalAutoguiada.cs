@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using Application.VisitaGrupal.Repositories;
 
 using Core.Infraestructure.Repositories.Sql;
@@ -14,7 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories.Sql.VisitaGrupal
 {
-    internal  sealed class RepositorioVisitaGrupalAutoguiada(MuseoDbContext context):BaseRepository<VisitaGrupalAutoguiada>(context),IRepositorioVisitaGrupalAutoguiada
+    internal sealed class RepositorioVisitaGrupalAutoguiada(MuseoDbContext context)
+        : BaseRepository<VisitaGrupalAutoguiada>(context),
+          IRepositorioVisitaGrupalAutoguiada
     {
         public async Task<List<VisitaGrupalAutoguiada>> GetAllGroupVisitAuAsync(
             DateTime fechaDesde,
@@ -23,19 +19,17 @@ namespace Infrastructure.Repositories.Sql.VisitaGrupal
             try
             {
                 return await Repository
-                    .Include(v => v.ActividadMuseo)
-                        .ThenInclude(a => a.TimeSlots)
-
+                    .Include(v => v.TimeSlots)
+                    .Include(v => v.Salas)
                     .Where(v =>
-                        v.ActividadMuseo.TimeSlots.Any(ts =>
+                        v.TimeSlots.Any(ts =>
                             ts.Inicio >= fechaDesde &&
                             ts.Fin <= fechaHasta))
                     .ToListAsync();
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
-
+                Console.WriteLine(ex);
                 throw;
             }
         }

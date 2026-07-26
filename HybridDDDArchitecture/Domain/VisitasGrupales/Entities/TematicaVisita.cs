@@ -1,45 +1,113 @@
 using Core.Domain.Entities;
 
 using Domain.Common.Exceptions;
-using Domain.Validators.VisitasGrupalesValidators;
+using Domain.RecursoMuseo.Entities;
 
 namespace Domain.VisitasGrupales.Entities
 {
-    public class TematicaVisita : DomainEntity<int, TematicasValidator>
+    public class TematicaVisita : DomainEntity<int>
     {
         public string Nombre { get; private set; } = string.Empty;
         public string Descripcion { get; private set; } = string.Empty;
         public bool Disponible { get; private set; } = true;
 
-        protected TematicaVisita() { }
+        public List<Sala> Salas { get; private set; } = new();
 
-        public TematicaVisita(string nombre, string descripcion = "")
+        protected TematicaVisita()
         {
-            if (string.IsNullOrWhiteSpace(nombre))
-                throw new DomainException("La temática es obligatoria.");
-
-            Nombre = nombre.Trim();
-            Descripcion = string.IsNullOrWhiteSpace(descripcion)
-                ? string.Empty
-                : descripcion.Trim();
+            // EF Core
         }
 
-        public void Actualizar(string nombre, string descripcion = "")
+        public TematicaVisita(
+            string nombre,
+            string descripcion,
+            IEnumerable<Sala> salas)
         {
             if (string.IsNullOrWhiteSpace(nombre))
-                throw new DomainException("La temática es obligatoria.");
+                throw new DomainException(
+                    "La temática es obligatoria.");
+
             Nombre = nombre.Trim();
-            Descripcion = string.IsNullOrWhiteSpace(descripcion)
-                ? string.Empty
-                : descripcion.Trim();
+
+            Descripcion = descripcion?.Trim() ?? string.Empty;
+
+            AsignarSalas(salas);
         }
+
+
+        public void AsignarSalas(IEnumerable<Sala> nuevasSalas)
+        {
+            ArgumentNullException.ThrowIfNull(nuevasSalas);
+
+            var listaSalas = nuevasSalas
+                .DistinctBy(s => s.Id)
+                .ToList();
+
+            if (!listaSalas.Any())
+                throw new DomainException(
+                    "Una temática debe tener al menos una sala asignada.");
+
+            Salas.Clear();
+
+            Salas.AddRange(listaSalas);
+        }
+
+
+        public void AgregarSala(Sala sala)
+        {
+            ArgumentNullException.ThrowIfNull(sala);
+
+            if (Salas.Any(s => s.Id == sala.Id))
+                throw new DomainException(
+                    "La sala ya está asignada a esta temática.");
+
+            Salas.Add(sala);
+        }
+
+
+        public void QuitarSala(int salaId)
+        {
+            var sala = Salas
+                .FirstOrDefault(s => s.Id == salaId);
+
+            if (sala is null)
+                throw new DomainException(
+                    "La sala indicada no pertenece a la temática.");
+
+            Salas.Remove(sala);
+        }
+
+
+        public void Actualizar(
+            string nombre,
+            string descripcion)
+        {
+            if (string.IsNullOrWhiteSpace(nombre))
+                throw new DomainException(
+                    "La temática es obligatoria.");
+
+            Nombre = nombre.Trim();
+            Descripcion = descripcion?.Trim() ?? string.Empty;
+        }
+
+
         public void MarcarComoNoDisponible()
         {
             if (!Disponible)
-            {
-                throw new DomainException("La temática ya está marcada como no disponible.");
-            }
+                throw new DomainException(
+                    "La temática ya está no disponible.");
+
             Disponible = false;
+        }
+
+
+        public void MarcarComoDisponible()
+        {
+            if (Disponible)
+                throw new DomainException(
+                    "La temática ya está disponible.");
+
+            Disponible = true;
         }
     }
 }

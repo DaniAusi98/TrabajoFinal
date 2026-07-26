@@ -35,9 +35,9 @@ namespace Application.VisitaGrupal.Mappings
                 .ForMember(dest => dest.MotivoVisita, opt => opt.MapFrom(src => src.MotivoRelacionVisita))
                 .ForMember(dest => dest.Observaciones, opt => opt.MapFrom(src => src.Observaciones))
                 .ForMember(dest => dest.TematicasDto, opt => opt.MapFrom(src => src.Tematicas))
-                .ForMember(dest => dest.FechaInicio, opt => opt.MapFrom(src => src.ActividadMuseo.TimeSlots.Select(t => t.Inicio).FirstOrDefault()))
-                .ForMember(dest => dest.FechaFin, opt => opt.MapFrom(src => src.ActividadMuseo.TimeSlots.Select(t => t.Fin).FirstOrDefault()))
-                .ForMember(dest => dest.CantidadPersonas, opt => opt.MapFrom(src => src.ActividadMuseo.CantidadPersonas))
+                .ForMember(dest => dest.FechaInicio, opt => opt.MapFrom(src => src.TimeSlots.Select(t => t.Inicio).FirstOrDefault()))
+                .ForMember(dest => dest.FechaFin, opt => opt.MapFrom(src => src.TimeSlots.Select(t => t.Fin).FirstOrDefault()))
+                .ForMember(dest => dest.CantidadPersonas, opt => opt.MapFrom(src => src.CantidadPersonas))
                 .ForMember(dest => dest.EstadoConfirmacion, opt => opt.MapFrom(src => src.EstadoConfirmacion));
 
         }   

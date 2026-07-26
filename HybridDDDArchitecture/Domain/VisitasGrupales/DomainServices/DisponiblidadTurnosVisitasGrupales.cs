@@ -1,7 +1,7 @@
 using Domain.ActividadMuseo.Entities;
 using Domain.Common.ValueObjets;
+using Domain.RecursoMuseo.Entities.Guia;
 using Domain.VisitasGrupales.Entities;
-using Domain.VisitasGrupales.Entities.Guia;
 
 using static Domain.VisitasGrupales.Enums.Enums;
 
@@ -65,7 +65,7 @@ namespace Domain.VisitasGrupales.DomainServices
 
                     var reservasGuiadas = visitasguiadas
                             .Where(v =>
-                                v.ActividadMuseo.TimeSlots.Any(ts =>
+                                v.TimeSlots.Any(ts =>
                                     ts.Inicio == horario.Inicio &&
                                     ts.Fin == horario.Fin))
                             .ToList();
@@ -123,7 +123,7 @@ namespace Domain.VisitasGrupales.DomainServices
                         }*/
                         else if (reservasGuiadas.Count == 1)
                         {
-                            var personas = reservasGuiadas[0].ActividadMuseo.CantidadPersonas;
+                            var personas = reservasGuiadas[0].CantidadPersonas;
 
                            /* if (personasAutoguiadas > 0)
                             {

@@ -2,6 +2,6 @@ namespace Domain.ActividadMuseo.DomainServices
 {
     public interface IValidadorDisponibilidad
     {
-        bool EstaDisponible(Entities.Actividad nueva, IReadOnlyCollection<Entities.Actividad> solapadas);
+        bool EstaDisponible(Entities.ActividadMuseo nueva, IReadOnlyCollection<Entities.ActividadMuseo> solapadas);
     }
 }

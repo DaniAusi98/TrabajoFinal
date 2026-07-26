@@ -1,122 +1,205 @@
-using Core.Domain.Entities;
-
-using Domain.Common.ValueObjets;
 using Domain.Common.Exceptions;
+using Domain.Common.ValueObjets;
+using Domain.RecursoMuseo.Entities;
 
 using static Domain.ActividadMuseo.Enums.Enums;
 using static Domain.VisitasGrupales.Enums.Enums;
 
 namespace Domain.VisitasGrupales.Entities
 {
-    public class VisitaGrupalAutoguiada:DomainEntity
+    public class VisitaGrupalAutoguiada : ActividadMuseo.Entities.ActividadMuseo
     {
         public int UsuarioVisitanteId { get; private set; }
-        public string Institucion { get; private set; }
-        public Email EmailInstitucion { get; private set; }
-        public string ProvinciaInstitucion { get; private set; }
-        public string DepartamentoInstitucion { get; private set; }
-        public string CiudadInstitucion { get; private set; }
-        public string DiversidadFuncional { get; private set; }
-        public string Observaciones { get; private set; }
-        public EstadoConfirmacionVisita EstadoConfirmacion { get; private set; }
 
-        public Domain.ActividadMuseo.Entities.Actividad ActividadMuseo { get; private set; }
+        public string Institucion { get; private set; }
+
+        public Email EmailInstitucion { get; private set; }
+
+        public string ProvinciaInstitucion { get; private set; }
+
+        public string DepartamentoInstitucion { get; private set; }
+
+        public string CiudadInstitucion { get; private set; }
+
+        public string DiversidadFuncional { get; private set; } = string.Empty;
+
+        public string Observaciones { get; private set; } = string.Empty;
+
+        public EstadoConfirmacionVisita EstadoConfirmacion { get; private set; }
 
 
         protected VisitaGrupalAutoguiada()
         {
-                
         }
+
+
         public VisitaGrupalAutoguiada(
             int usuarioVisitanteId,
             int cantidadPersonas,
             string institucion,
             Email emailInstitucion,
             string provinciaInstitucion,
-            string departamamentoInstitucion,
+            string departamentoInstitucion,
             string ciudadInstitucion,
             string descripcionDiversidad,
             string observaciones,
-            IEnumerable<TimeSlot> timeSlots
-            
-
-
-            )
+            IEnumerable<TimeSlot> timeSlots,
+            IEnumerable<Sala> salas
+        )
+        : base(
+            TipoActividad.VisitaGrupalAutoguiada,
+            cantidadPersonas,
+            timeSlots,
+            salas)
         {
+
+            if (usuarioVisitanteId <= 0)
+                throw new DomainException(
+                    "El id del usuario visitante debe ser válido.");
+
+
+            if (string.IsNullOrWhiteSpace(institucion))
+                throw new DomainException(
+                    "La institución es obligatoria.");
+
+
+            ArgumentNullException.ThrowIfNull(emailInstitucion);
+
+
+            if (string.IsNullOrWhiteSpace(provinciaInstitucion))
+                throw new DomainException(
+                    "La provincia de la institución es obligatoria.");
+
+
+            if (string.IsNullOrWhiteSpace(departamentoInstitucion))
+                throw new DomainException(
+                    "El departamento de la institución es obligatorio.");
+
+
+            if (string.IsNullOrWhiteSpace(ciudadInstitucion))
+                throw new DomainException(
+                    "La ciudad de la institución es obligatoria.");
+
+
             UsuarioVisitanteId = usuarioVisitanteId;
-            Institucion = institucion;
+
+            Institucion = institucion.Trim();
+
             EmailInstitucion = emailInstitucion;
-            ProvinciaInstitucion = provinciaInstitucion;
-            DepartamentoInstitucion = departamamentoInstitucion;
-            CiudadInstitucion = ciudadInstitucion;
-            DiversidadFuncional = descripcionDiversidad ?? string.Empty;
-            Observaciones = observaciones ?? string.Empty;
+
+            ProvinciaInstitucion = provinciaInstitucion.Trim();
+
+            DepartamentoInstitucion = departamentoInstitucion.Trim();
+
+            CiudadInstitucion = ciudadInstitucion.Trim();
+
+
+            DiversidadFuncional =
+                string.IsNullOrWhiteSpace(descripcionDiversidad)
+                ? string.Empty
+                : descripcionDiversidad.Trim();
+
+
+            Observaciones =
+                string.IsNullOrWhiteSpace(observaciones)
+                ? string.Empty
+                : observaciones.Trim();
+
+
             EstadoConfirmacion = EstadoConfirmacionVisita.PendienteConfirmar;
-            ActividadMuseo = new Domain.ActividadMuseo.Entities.Actividad(
-            tipo: TipoActividad.VisitaGrupalAutoguiada,
-            cantidadAsistentes: cantidadPersonas,
-            timeSlots: timeSlots);
-
-
-
-
         }
+
+
 
         public void ActualizarInstitucion(string nuevaInstitucion)
         {
-            Institucion = nuevaInstitucion ?? throw new ArgumentNullException(nameof(nuevaInstitucion), "La institución no puede ser nula.");
+            if (string.IsNullOrWhiteSpace(nuevaInstitucion))
+                throw new DomainException(
+                    "La institución es obligatoria.");
+
+            Institucion = nuevaInstitucion.Trim();
         }
+
 
         public void ActualizarEmailInstitucion(Email nuevoEmail)
         {
+            ArgumentNullException.ThrowIfNull(nuevoEmail);
+
             EmailInstitucion = nuevoEmail;
         }
 
- 
+
         public void ActualizarProvincia(string nuevaProvincia)
         {
-            ProvinciaInstitucion = nuevaProvincia ?? throw new ArgumentNullException(nameof(nuevaProvincia), "La provincia de la institución no puede ser nula.");
+            if (string.IsNullOrWhiteSpace(nuevaProvincia))
+                throw new DomainException(
+                    "La provincia de la institución es obligatoria.");
+
+            ProvinciaInstitucion = nuevaProvincia.Trim();
         }
+
 
         public void ActualizarDepartamento(string nuevoDepartamento)
         {
-            DepartamentoInstitucion = nuevoDepartamento ?? throw new ArgumentNullException(nameof(nuevoDepartamento), "El departamento de la institución no puede ser nulo.");
+            if (string.IsNullOrWhiteSpace(nuevoDepartamento))
+                throw new DomainException(
+                    "El departamento de la institución es obligatorio.");
+
+            DepartamentoInstitucion = nuevoDepartamento.Trim();
         }
+
+
         public void ActualizarCiudad(string nuevaCiudad)
         {
-            CiudadInstitucion = nuevaCiudad ?? throw new ArgumentNullException(nameof(nuevaCiudad), "La ciudad de la institución no puede ser nula.");
+            if (string.IsNullOrWhiteSpace(nuevaCiudad))
+                throw new DomainException(
+                    "La ciudad de la institución es obligatoria.");
+
+            CiudadInstitucion = nuevaCiudad.Trim();
         }
 
 
         public void ActualizarDiversidadFuncional(string diversidad)
         {
-            DiversidadFuncional = diversidad ?? string.Empty;
-
+            DiversidadFuncional =
+                string.IsNullOrWhiteSpace(diversidad)
+                ? string.Empty
+                : diversidad.Trim();
         }
+
+
         public void ActualizarObservaciones(string nuevasObservaciones)
         {
-            Observaciones = nuevasObservaciones ?? string.Empty;
+            Observaciones =
+                string.IsNullOrWhiteSpace(nuevasObservaciones)
+                ? string.Empty
+                : nuevasObservaciones.Trim();
         }
+
+
+
         public void Confirmar()
         {
-            if (ActividadMuseo.Estado == EstadoActividad.Cancelada)
-                throw new DomainException("No se puede confirmar una visita cancelada.");
+            if (Estado == EstadoActividad.Cancelada)
+                throw new DomainException(
+                    "No se puede confirmar una visita cancelada.");
 
             if (EstadoConfirmacion != EstadoConfirmacionVisita.PendienteConfirmar)
-                throw new DomainException("Solo se pueden confirmar visitas pendientes de confirmación.");
+                throw new DomainException(
+                    "Solo se pueden confirmar visitas pendientes.");
 
             EstadoConfirmacion = EstadoConfirmacionVisita.Confirmada;
         }
 
 
 
-
         public void Rechazar()
         {
-            if (ActividadMuseo.Estado == EstadoActividad.Cancelada)
-                throw new DomainException("La visita ya ha sido cancelada.");
+            if (Estado == EstadoActividad.Cancelada)
+                throw new DomainException(
+                    "La visita ya está cancelada.");
 
-            ActividadMuseo.CancelarActividad();
+            CancelarActividad();
         }
     }
 }

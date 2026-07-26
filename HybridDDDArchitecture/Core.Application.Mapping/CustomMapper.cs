@@ -13,12 +13,7 @@ namespace Core.Application
             return mapper.Map<T>(input);
         }
 
-        public static T To<T>(this IValidate input)
-        {
-            IMapper mapper = Instance;
-
-            return mapper.Map<T>(input);
-        }
+        
 
         public static IEnumerable<T> To<T>(this IEnumerable<object> input)
         {

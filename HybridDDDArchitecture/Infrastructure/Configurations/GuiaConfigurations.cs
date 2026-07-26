@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Domain.VisitasGrupales.Entities.Guia;
+using Domain.RecursoMuseo.Entities.Guia;
 
 namespace Infrastructure.Configurations
 {
@@ -15,6 +15,12 @@ namespace Infrastructure.Configurations
             builder.ToTable("Guias");
 
             builder.HasKey(g => g.Id);
+            builder.Property(g => g.NombreCompleto)
+                .HasMaxLength(150)
+                .IsRequired();
+
+            builder.Property(g => g.Activo)
+                .IsRequired();
 
             builder.Property(g => g.PersonalInternoId)
                 .IsRequired();

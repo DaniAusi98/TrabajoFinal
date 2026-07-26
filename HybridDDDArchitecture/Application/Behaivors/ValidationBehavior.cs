@@ -1,41 +1,39 @@
-﻿using FluentValidation;
-using Application.Exceptions;
+using FluentValidation;
 using MediatR;
-namespace Application.Behaivors
-{
-    public class ValidationBehavior<TRequest, TResponse>
+namespace Application.Behaviors;
+
+public class ValidationBehavior<TRequest, TResponse>
     : IPipelineBehavior<TRequest, TResponse>
+    where TRequest : notnull
+{
+    private readonly IEnumerable<IValidator<TRequest>> _validators;
+
+    public ValidationBehavior(IEnumerable<IValidator<TRequest>> validators)
     {
-        private readonly IEnumerable<IValidator<TRequest>> _validators;
+        _validators = validators;
+    }
 
-        public ValidationBehavior(IEnumerable<IValidator<TRequest>> validators)
+    public async Task<TResponse> Handle(
+        TRequest request,
+        RequestHandlerDelegate<TResponse> next,
+        CancellationToken cancellationToken)
+    {
+        if (_validators.Any())
         {
-            _validators = validators;
+            var context = new ValidationContext<TRequest>(request);
+
+            var results = await Task.WhenAll(
+                _validators.Select(v => v.ValidateAsync(context, cancellationToken)));
+
+            var failures = results
+                .SelectMany(r => r.Errors)
+                .Where(f => f != null)
+                .ToList();
+
+            if (failures.Any())
+                throw new ValidationException(failures);
         }
 
-        public async Task<TResponse> Handle(
-            TRequest request,
-            RequestHandlerDelegate<TResponse> next,
-            CancellationToken cancellationToken)
-        {
-            if (_validators.Any())
-            {
-                var context = new ValidationContext<TRequest>(request);
-
-                var results = await Task.WhenAll(
-                    _validators.Select(v => v.ValidateAsync(context, cancellationToken))
-                );
-
-                var failures = results
-                    .SelectMany(r => r.Errors)
-                    .Where(f => f != null)
-                    .ToList();
-
-                if (failures.Any())
-                    throw new InvalidEntityDataException(failures);
-            }
-
-            return await next(cancellationToken);
-        }
+        return await next();
     }
 }

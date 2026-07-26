@@ -4,14 +4,11 @@ using Application.ApplicationMuseo.ApplicationServices;
 using Application.ApplicationMuseo.Integrations.Events;
 using Application.ApplicationMuseo.Integrations.Handlers.Publishers;
 using Application.ApplicationMuseo.Integrations.Handlers.Subscribers;
-using Application.Usuario.ApplicationServices;
+using Application.Behaviors;
 using Application.Usuario.ApplicationServices.ApplicationServiceInterfaces;
 using Application.Usuario.UseCases.Commands.UpdateUsuario;
-
 using Core.Application;
-
 using Domain.ActividadMuseo.Entities;
-
 using FluentValidation;
 
 using MediatR;
@@ -55,11 +52,14 @@ namespace Application.Registrations
 
             services.AddScoped<ICalendarioMuseo, CalendarioMuseo>();
 
+            services.AddValidatorsFromAssemblyContaining<CrearVisitaGuiadaCommandValidator>();
+
+            services.AddTransient(
+                typeof(IPipelineBehavior<,>),
+                typeof(ValidationBehavior<,>));
 
 
-            services.AddValidatorsFromAssembly(typeof(ApplicationServicesRegistration).Assembly);
-
-           // services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+            // services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
 
             return services;

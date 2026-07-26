@@ -1,33 +1,57 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using Domain.VisitasGrupales.Entities;
+
+using Domain.RecursoMuseo.Entities;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Configurations
 {
-    public class TematicasConfig : IEntityTypeConfiguration<TematicaVisita>
+    public class TematicaVisitaConfiguration : IEntityTypeConfiguration<TematicaVisita>
     {
-       
         public void Configure(EntityTypeBuilder<TematicaVisita> builder)
         {
-            // 1. Nombre de la tabla y clave primaria (heredada de DomainEntity)
             builder.ToTable("TematicasVisita");
+
             builder.HasKey(x => x.Id);
-            // 2. Configuración de textos obligatorios
+
             builder.Property(x => x.Nombre)
                 .HasMaxLength(100)
                 .IsRequired();
-             builder.Property(x => x.Descripcion)
+
+            builder.Property(x => x.Descripcion)
                 .HasMaxLength(500)
+                .IsRequired(false);
+
+            builder.Property(x => x.Disponible)
                 .IsRequired();
-             builder.Property(x => x.Disponible)
-                .IsRequired();
+
+
+            // Relación TematicaVisita - Sala
+            builder.HasMany(x => x.Salas)
+                .WithMany()
+                .UsingEntity<Dictionary<string, object>>(
+                    "TematicaSala",
+                    j => j
+                        .HasOne<Sala>()
+                        .WithMany()
+                        .HasForeignKey("SalaId")
+                        .OnDelete(DeleteBehavior.Cascade),
+
+                    j => j
+                        .HasOne<TematicaVisita>()
+                        .WithMany()
+                        .HasForeignKey("TematicaVisitaId")
+                        .OnDelete(DeleteBehavior.Cascade),
+
+                    j =>
+                    {
+                        j.ToTable("TematicaSalas");
+
+                        j.HasKey(
+                            "TematicaVisitaId",
+                            "SalaId");
+                    });
         }
     }
 }

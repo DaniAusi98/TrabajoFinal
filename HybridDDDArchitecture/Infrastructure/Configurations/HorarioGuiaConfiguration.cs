@@ -1,4 +1,4 @@
-using Domain.VisitasGrupales.Entities.Guia;
+using Domain.RecursoMuseo.Entities.Guia;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -10,7 +10,7 @@ using System.Text.Json.Serialization;
 namespace Infrastructure.Configurations
 {
     public class HorarioGuiaConfiguration
-        : IEntityTypeConfiguration<HorarioGuia>
+    : IEntityTypeConfiguration<HorarioGuia>
     {
         public void Configure(EntityTypeBuilder<HorarioGuia> builder)
         {
@@ -18,30 +18,20 @@ namespace Infrastructure.Configurations
 
             builder.HasKey(h => h.Id);
 
-            builder.Property(h => h.GuiaId)
-                .IsRequired();
-
             builder.Property(h => h.HoraInicio)
                 .IsRequired();
 
             builder.Property(h => h.HoraFin)
                 .IsRequired();
 
-            var jsonOptions = new JsonSerializerOptions();
 
-            jsonOptions.Converters.Add(
-                new JsonStringEnumConverter());
-
-            var converter = new ValueConverter<List<DayOfWeek>, string>(
-                v => JsonSerializer.Serialize(v, jsonOptions),
-
-                v => JsonSerializer.Deserialize<List<DayOfWeek>>(
-                    v,
-                    jsonOptions)!);
-
-            builder.Property(h => h.DiasLaborales)
-                .HasConversion(converter)
-                .HasColumnType("longtext");
+            builder.OwnsOne(h => h.DiaAsignado, dia =>
+            {
+                dia.Property(d => d.Dia)
+                    .HasConversion<string>()
+                    .HasMaxLength(20)
+                    .IsRequired();
+            });
         }
     }
 }

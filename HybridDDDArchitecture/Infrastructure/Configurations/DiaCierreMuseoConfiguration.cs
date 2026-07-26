@@ -11,7 +11,7 @@ namespace Infrastructure.Configurations
         {
             builder.ToTable("diascierremuseo");
 
-            builder.Property(a => a.Fecha)
+            builder.Property(a => a.FechaDesde)
                .IsRequired();
 
             builder.Property(a => a.FechaHasta)

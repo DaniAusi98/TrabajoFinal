@@ -3,11 +3,11 @@ using Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Domain.VisitasGrupales.Entities.Guia;
 using Domain.VisitasGrupales.Entities;
 using Domain.ActividadMuseo.Entities;
 using Domain.RecursoMuseo.Entities;
 using Domain.Common.Entities;
+using Domain.RecursoMuseo.Entities.Guia;
 
 namespace Infrastructure.Repositories.Sql
 {
@@ -29,7 +29,7 @@ namespace Infrastructure.Repositories.Sql
 
        // public DbSet<VisitaGrupalAutoguiada> VisitaGrupalAutoguiada { get; set; }
 
-        public DbSet<Actividad> ActividadAgendaMuseo { get; set; }
+        public DbSet<ActividadMuseo> ActividadAgendaMuseo { get; set; }
         public DbSet<RecursoAsignado> RecursoAsignado { get; set; }
         public DbSet<Recurso> RecursoMuseo { get; set; }
         public DbSet<Sala> SalaMuseo { get; set; }
@@ -79,8 +79,8 @@ namespace Infrastructure.Repositories.Sql
             modelBuilder.ApplyConfiguration(new HorarioGuiaConfiguration());
             modelBuilder.ApplyConfiguration(new AusenciaGuiaConfiguration());
             modelBuilder.ApplyConfiguration(new DiaCierreMuseoConfiguration());
-            modelBuilder.ApplyConfiguration(new SalaBloqueadaConfiguration());
-            modelBuilder.ApplyConfiguration(new TematicasConfig());
+            modelBuilder.ApplyConfiguration(new BloqueoSalaConfiguration());
+            modelBuilder.ApplyConfiguration(new TematicaVisitaConfiguration());
 
         }
     }

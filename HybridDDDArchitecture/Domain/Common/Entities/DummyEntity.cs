@@ -1,7 +1,4 @@
 using Core.Domain.Entities;
-
-using Domain.Validators;
-
 using static Domain.Common.Enums.Enums;
 
 namespace Domain.Common.Entities
@@ -11,7 +8,7 @@ namespace Domain.Common.Entities
     /// Toda entidad de dominio debe heredar de <see cref="DomainEntity{TEntity, TValidator}"/>
     /// Donde T es del tipo <see cref="Core.Domain.Validators.EntityValidator{TEntity}"/>
     /// </summary>
-    public class DummyEntity : DomainEntity<string, DummyEntityValidator>
+    public class DummyEntity : DomainEntity<string>
     {
         /// <summary>
         /// Las propiedades de una entidad de dominio deben tener el setter privado. Esto restringe modificaciones

@@ -2,58 +2,74 @@ using Core.Domain.Entities;
 
 using Domain.RecursoMuseo.Entities;
 using Domain.Common.Exceptions;
-using Domain.Validators.DisponibilidadMuseo;
 using Domain.RecursoMuseo.Enums;
 
 using static Domain.ActividadMuseo.Enums.Enums;
 
 namespace Domain.ActividadMuseo.Entities
 {
-    public class DiaCierreMuseo : DomainEntity<int, DiaCierreMuseoValidator>
+    public class DiaCierreMuseo : DomainEntity<int>
     {
-        public DateTime Fecha { get; private set; }
+        public DateTime FechaDesde { get; private set; }
+
         public DateTime FechaHasta { get; private set; }
+
         public MotivoCierreMuseo Motivo { get; private set; }
-        public string Observaciones { get; private set; }
+
+        public string Observaciones { get; private set; } = string.Empty;
         protected DiaCierreMuseo() { }
 
-        public DiaCierreMuseo(DateTime fecha, DateTime fechaHasta, MotivoCierreMuseo motivo, string observaciones)
+        public DiaCierreMuseo(
+            DateTime fecha,
+            DateTime fechaHasta,
+            MotivoCierreMuseo motivo,
+            string observaciones = "")
         {
             if (fechaHasta <= fecha)
-                throw new DomainException("La fecha de fin no puede ser anterior a la fecha de inicio.");
+                throw new DomainException("La fecha de fin debe ser posterior a la fecha de inicio.");
 
-            Fecha = fecha;
+            if (!Enum.IsDefined(typeof(MotivoCierreMuseo), motivo))
+                throw new DomainException("El motivo de cierre no es válido.");
+
+            if (!string.IsNullOrWhiteSpace(observaciones) &&
+                observaciones.Length > 500)
+                throw new DomainException("Las observaciones no pueden superar los 500 caracteres.");
+
+            FechaDesde = fecha;
             FechaHasta = fechaHasta;
             Motivo = motivo;
-            Observaciones = observaciones;
+            Observaciones = observaciones?.Trim() ?? string.Empty;
         }
 
         public void ActualizarFechas(DateTime nuevaFechaDesde, DateTime nuevaFechaHasta)
         {
-            if ( nuevaFechaHasta <= nuevaFechaDesde)
-                throw new DomainException("La fecha de fin no puede ser anterior a la fecha de inicio.");
-            Fecha = nuevaFechaDesde;
+            if (nuevaFechaHasta <= nuevaFechaDesde)
+                throw new DomainException("La fecha de fin debe ser posterior a la fecha de inicio.");
+
+            FechaDesde = nuevaFechaDesde;
             FechaHasta = nuevaFechaHasta;
         }
 
         public void ActualizarMotivo(MotivoCierreMuseo nuevoMotivo)
         {
-                Motivo = nuevoMotivo;
+            if (!Enum.IsDefined(typeof(MotivoCierreMuseo), nuevoMotivo))
+                throw new DomainException("El motivo de cierre no es válido.");
+
+            Motivo = nuevoMotivo;
         }
 
         public void ActualizarObservaciones(string nuevasObservaciones)
         {
-            if (nuevasObservaciones != null && nuevasObservaciones.Length > 500)
-                throw new DomainException("Las observaciones no pueden exceder los 500 caracteres.");
-            Observaciones = nuevasObservaciones;
+            if (!string.IsNullOrWhiteSpace(nuevasObservaciones) &&
+                nuevasObservaciones.Length > 500)
+                throw new DomainException("Las observaciones no pueden superar los 500 caracteres.");
+
+            Observaciones = nuevasObservaciones?.Trim() ?? string.Empty;
         }
 
-        public bool SolapaConFechas(DateTime inicio ,DateTime fin)
+        public bool SolapaConFechas(DateTime inicio, DateTime fin)
         {
-            return inicio < FechaHasta && fin > Fecha;
-            ;
-
+            return inicio < FechaHasta && fin > FechaDesde;
         }
-
     }
 }

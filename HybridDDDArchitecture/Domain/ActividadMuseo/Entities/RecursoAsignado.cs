@@ -1,14 +1,14 @@
 using Core.Domain.Entities;
 
+using Domain.Common.Exceptions;
 using Domain.RecursoMuseo.Entities;
-using Domain.Validators.DisponibilidadMuseo;
 
 namespace Domain.ActividadMuseo.Entities
 {
-    public class RecursoAsignado:DomainEntity<int,RecursoAsignadoValidator>
+    public class RecursoAsignado:DomainEntity<int>
     {
         public int ActividadId { get; private set; }
-        public Actividad Actividad { get; private set; }
+        public ActividadMuseo Actividad { get; private set; }
 
         public int RecursoId { get; private set; }
         public Recurso Recurso { get; private set; }
@@ -17,12 +17,21 @@ namespace Domain.ActividadMuseo.Entities
 
         public RecursoAsignado(int recursoId, int cantidadAsignada)
         {
+            if (recursoId <= 0)
+                throw new DomainException("El recurso es obligatorio.");
+
+            if (cantidadAsignada <= 0)
+                throw new DomainException("La cantidad asignada debe ser mayor a cero.");
+
             RecursoId = recursoId;
             CantidadAsignada = cantidadAsignada;
         }
 
         public void ActualizarCantidad(int nuevaCantidad)
         {
+            if (nuevaCantidad <= 0)
+                throw new DomainException("La cantidad asignada debe ser mayor a cero.");
+
             CantidadAsignada = nuevaCantidad;
         }
 

@@ -20,6 +20,7 @@ namespace Infrastructure.Repositories.Sql.VisitaGrupal
         public async Task<List<TematicaVisita>> ObtenerDisponiblesAsync()
         {
             return await Repository
+                .Include(t => t.Salas)
                 .Where(t => t.Disponible)
                 .ToListAsync();
         }
@@ -27,10 +28,11 @@ namespace Infrastructure.Repositories.Sql.VisitaGrupal
         public async Task<List<TematicaVisita>> GetByIdsAsync(List<int> tematicasIds)
         {
             return await Repository
+                .Include(t => t.Salas)
                 .Where(t => tematicasIds.Contains(t.Id))
                 .ToListAsync();
-
-
         }
+
+        
     }
 }

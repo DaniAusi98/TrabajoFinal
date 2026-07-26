@@ -13,15 +13,21 @@ namespace Domain.RecursoMuseo.Enums
         /// </summary>
         public enum TipoSala
         {
-            SalaExposicionPermanente,
-            SalaExposicionTemporal,
+            ExposicionPermanente,
+            ExposicionTemporal,
             Hall,
             Biblioteca,
             Auditorio,
             AulaEducativa,
             ReservaPatrimonial,
             Documentacion,
-            Multifuncion
+            Multifuncion,
+            ExposicionesFotograficas
+        }
+        public enum EstadoSala
+        {
+            Activa,
+            Inactiva
         }
 
         public enum DatabaseType

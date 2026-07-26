@@ -1,6 +1,3 @@
-using System.ComponentModel;
-using System.Linq.Expressions;
-
 using Application.VisitaGrupal.Repositories;
 
 using Core.Infraestructure.Repositories.Sql;
@@ -9,18 +6,17 @@ using Domain.VisitasGrupales.Entities;
 
 using Microsoft.EntityFrameworkCore;
 
-using static Domain.VisitasGrupales.Enums.Enums;
-
 namespace Infrastructure.Repositories.Sql.VisitaGrupal
 {
-    internal sealed class RepositorioVisitaGuiada(MuseoDbContext context) : BaseRepository<VisitaGrupalGuiada>(context), IRepositorioVisitaGuiada
+    internal sealed class RepositorioVisitaGuiada(MuseoDbContext context)
+        : BaseRepository<VisitaGrupalGuiada>(context), IRepositorioVisitaGuiada
     {
-        public Task<VisitaGrupalGuiada> FindByIdWithActividadAsync(int id)
+        public Task<VisitaGrupalGuiada?> FindByIdWithActividadAsync(int id)
         {
             return Repository
                 .Include(v => v.Tematicas)
-                .Include(v => v.ActividadMuseo)
-                    .ThenInclude(a => a.TimeSlots)
+                .Include(v => v.TimeSlots)
+                .Include(v => v.Salas)
                 .FirstOrDefaultAsync(v => v.Id == id);
         }
 
@@ -32,35 +28,32 @@ namespace Infrastructure.Repositories.Sql.VisitaGrupal
             {
                 return await Repository
                     .Include(v => v.Tematicas)
-                    .Include(v => v.ActividadMuseo)
-                        .ThenInclude(a => a.TimeSlots)
-
+                    .Include(v => v.TimeSlots)
+                    .Include(v => v.Salas)
                     .Where(v =>
-                        v.ActividadMuseo.TimeSlots.Any(ts =>
+                        v.TimeSlots.Any(ts =>
                             ts.Inicio >= fechaDesde &&
                             ts.Fin <= fechaHasta))
                     .ToListAsync();
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
-
+                Console.WriteLine(ex);
                 throw;
             }
         }
-        public async Task<List<VisitaGrupalGuiada>>ObtenerPorUsuarioIdAsync(
-             string usuarioId,
-             DateTime fechaActual
-        )
+
+        public async Task<List<VisitaGrupalGuiada>> ObtenerPorUsuarioIdAsync(
+            string usuarioId,
+            DateTime fechaActual)
         {
             return await Repository
                 .Include(v => v.Tematicas)
-                .Include(v => v.ActividadMuseo)
-                    .ThenInclude(a => a.TimeSlots)
+                .Include(v => v.TimeSlots)
+                .Include(v => v.Salas)
                 .Where(v =>
                     v.UsuarioVisitanteId == usuarioId &&
-                    v.ActividadMuseo.TimeSlots.Any(
-                        ts => ts.Inicio >= fechaActual))
+                    v.TimeSlots.Any(ts => ts.Inicio >= fechaActual))
                 .ToListAsync();
         }
     }

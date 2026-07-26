@@ -1,3 +1,4 @@
+using Domain.ActividadMuseo.Entities;
 using Domain.VisitasGrupales.Entities;
 
 using Microsoft.EntityFrameworkCore;
@@ -5,11 +6,14 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Configurations
 {
-    public class VisitaGrupalAutoguiadaConfiguration : IEntityTypeConfiguration<VisitaGrupalAutoguiada>
+    public class VisitaGrupalAutoguiadaConfiguration
+        : IEntityTypeConfiguration<VisitaGrupalAutoguiada>
     {
         public void Configure(EntityTypeBuilder<VisitaGrupalAutoguiada> builder)
         {
             builder.ToTable("VisitasGrupalesAutoguiadas");
+
+            builder.HasBaseType<ActividadMuseo>();
 
             builder.Property(x => x.UsuarioVisitanteId)
                 .IsRequired();
@@ -42,6 +46,7 @@ namespace Infrastructure.Configurations
                 .HasConversion<string>()
                 .HasMaxLength(50)
                 .IsRequired();
+
 
             builder.OwnsOne(x => x.EmailInstitucion, email =>
             {

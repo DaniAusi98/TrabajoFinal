@@ -24,7 +24,6 @@ namespace Application.ApplicationMuseo.UseCases.DummyEntity.Commands.CreateDummy
         {
             Domain.Common.Entities.DummyEntity entity = new(request.dummyPropertyOne, request.dummyPropertyTwo);
 
-            if (!entity.IsValid) throw new InvalidEntityDataException(entity.GetErrors());
 
             if (_dummyEntityApplicationService.DummyEntityExist(entity.Id)) throw new EntityDoesExistException();
 

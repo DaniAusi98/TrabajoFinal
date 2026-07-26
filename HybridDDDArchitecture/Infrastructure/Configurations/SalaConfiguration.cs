@@ -19,7 +19,11 @@ namespace Infrastructure.Configurations
                 .IsRequired();
 
             builder.Property(x => x.CodigoSala)
-                .HasMaxLength(20)
+                .HasMaxLength(50)
+                .IsRequired();
+            builder.Property(x => x.EstadoSala)
+                .HasConversion<string>()
+                .HasMaxLength(50)
                 .IsRequired();
 
             // 3. Configuración de Enums (los guardamos como texto en la BD)

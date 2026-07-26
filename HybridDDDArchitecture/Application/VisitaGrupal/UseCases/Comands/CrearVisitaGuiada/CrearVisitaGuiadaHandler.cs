@@ -23,7 +23,20 @@ namespace Application.VisitaGrupal.UseCases.Comands.CrearVisitaGuiada
                 request.Inicio,
                 request.Fin
             );
-            var tematicas = await _tematicaRepository.GetByIdsAsync(request.TematicasIds);
+
+            var tematicas = await _tematicaRepository
+                .GetByIdsAsync(request.TematicasIds);
+
+            if (tematicas.Count != request.TematicasIds.Count)
+            {
+                throw new BussinessException(
+                    "Una o más temáticas no existen.");
+            }
+            var salas = tematicas
+                .SelectMany(t => t.Salas)
+                .DistinctBy(s => s.Id)
+                .ToList();
+
             var visita = new VisitaGrupalGuiada(
                 usuarioVisitanteId: request.UsuarioVisitanteId,
                 nivelEducativo: request.NivelEducativo,
@@ -33,16 +46,16 @@ namespace Application.VisitaGrupal.UseCases.Comands.CrearVisitaGuiada
                 emailInstitucion: new Email(request.EmailInstitucion),
                 telefonoInstitucion: new Telefono(request.TelefonoInstitucion),
                 provinciaInstitucion: request.ProvinciaInstitucion,
-                departamamentoInstitucion: request.DepartamentoInstitucion,
+                departamentoInstitucion: request.DepartamentoInstitucion,
                 ciudadInstitucion: request.LocalidadInstitucion,
                 descripcionDiversidad: request.DiversidadFuncionalDescripcion,
                 motivoVisita: request.MotivoRelacionVisita,
                 observaciones: request.Observaciones,
                 timeSlots: [timeSlot],
-                tematicas: tematicas
+                tematicas: tematicas,
+                salas: salas
             );
-            if (!visita.IsValid)
-                throw new InvalidEntityDataException(visita.GetErrors());
+          
             try
             {
                 object createdId = await _repositorioVisitaGuiada.AddAsync(visita);

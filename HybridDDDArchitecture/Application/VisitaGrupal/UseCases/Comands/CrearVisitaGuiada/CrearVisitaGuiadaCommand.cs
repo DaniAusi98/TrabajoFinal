@@ -43,6 +43,8 @@ namespace Application.VisitaGrupal.UseCases.Comands.CrearVisitaGuiada
         public int CantidadPersonas { get; set; }
 
         public List<int> TematicasIds { get; set; } = [];
+
+        public List <int>SalasIds { get; set; } = [];
         [Required]
         public DateTime  Inicio { get; set; }
         [Required]

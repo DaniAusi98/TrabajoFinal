@@ -20,7 +20,7 @@ namespace Application.VisitaGrupal.UseCases.Comands.NewFolder
     internal sealed class VisitaReprogramadaHandler(IRepositorioVisitaGuiada repositorioVisitaGuiada,IRepositorioTematicas repositorioTematicas) : IRequestCommandHandler<ReprogramarCommand, string>
     {
         private readonly IRepositorioVisitaGuiada _repositorioVisitaGuiada = repositorioVisitaGuiada ?? throw new ArgumentNullException(nameof(repositorioVisitaGuiada));
-        private readonly IRepositorioTematicas repositorioTematicas1 = repositorioTematicas ?? throw new ArgumentNullException(nameof(repositorioTematicas));
+        private readonly IRepositorioTematicas _repositorioTematicas = repositorioTematicas ?? throw new ArgumentNullException(nameof(repositorioTematicas));
         public async  Task<string> Handle(ReprogramarCommand request, CancellationToken cancellationToken)
         {
             var visitaReprogramada = await _repositorioVisitaGuiada.FindOneAsync(request.VisitaReprogramadaId) ?? throw new Exception("Visita no encontrada");
@@ -30,7 +30,19 @@ namespace Application.VisitaGrupal.UseCases.Comands.NewFolder
                request.Inicio,
                request.Fin
            );
-            var tematicas = await repositorioTematicas1.GetByIdsAsync(request.TematicasIds);
+
+            var tematicas = await _repositorioTematicas
+                .GetByIdsAsync(request.TematicasIds);
+
+            if (tematicas.Count != request.TematicasIds.Count)
+            {
+                throw new BussinessException(
+                    "Una o más temáticas no existen.");
+            }
+            var salas = tematicas
+                .SelectMany(t => t.Salas)
+                .DistinctBy(s => s.Id)
+                .ToList();
             var visita = new VisitaGrupalGuiada(
                 usuarioVisitanteId: request.UsuarioVisitanteId,
                 nivelEducativo: request.NivelEducativo,
@@ -40,16 +52,16 @@ namespace Application.VisitaGrupal.UseCases.Comands.NewFolder
                 emailInstitucion: new Email(request.EmailInstitucion),
                 telefonoInstitucion: new Telefono(request.TelefonoInstitucion),
                 provinciaInstitucion: request.ProvinciaInstitucion,
-                departamamentoInstitucion: request.DepartamentoInstitucion,
+                departamentoInstitucion: request.DepartamentoInstitucion,
                 ciudadInstitucion: request.LocalidadInstitucion,
                 descripcionDiversidad: request.DiversidadFuncionalDescripcion,
                 motivoVisita: request.MotivoRelacionVisita,
                 observaciones: request.Observaciones,
                 timeSlots: [timeSlot],
-                tematicas: tematicas
+                tematicas: tematicas,
+                salas:salas
             );
-            if (!visita.IsValid)
-                throw new InvalidEntityDataException(visita.GetErrors());
+        
             try
             {
                 visitaReprogramada.CambiarEstadoAReprogramada();
