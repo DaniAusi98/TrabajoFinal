@@ -1,7 +1,13 @@
+using Domain.Common.ValueObjets;
+
 namespace Domain.ActividadMuseo.Entities
 {
     public interface ICalendarioMuseo
     {
-       public bool DiaOperativoMuseo(DateTime fechaDesde, DateTime fechaHasta, IReadOnlyCollection<DiaCierreMuseo> diasCierre);
+        bool EsDiaOperativo(DateTime fecha);
+
+        bool EstaAbierto(DateTime inicio, DateTime fin);
+
+        IEnumerable<TimeSlot> ObtenerFranjasOperativas(DateOnly fecha);
     }
 }

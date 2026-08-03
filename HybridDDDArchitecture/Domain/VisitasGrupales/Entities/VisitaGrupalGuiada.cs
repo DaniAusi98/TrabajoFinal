@@ -67,6 +67,7 @@ namespace Domain.VisitasGrupales.Entities
             IEnumerable<Sala> salas
         )
         : base(
+            CategoriaActividad.VisitaGrupal,
             TipoActividad.VisitaGrupalGuiada,
             cantidadPersonas,
             timeSlots,
@@ -116,6 +117,70 @@ namespace Domain.VisitasGrupales.Entities
         }
 
 
+        public void ActualizarInstitucion(string nuevaInstitucion)
+        {
+            if (string.IsNullOrWhiteSpace(nuevaInstitucion))
+                throw new DomainException(
+                    "La institución es obligatoria.");
+
+            Institucion = nuevaInstitucion.Trim();
+        }
+
+
+        public void ActualizarEmailInstitucion(Email nuevoEmail)
+        {
+            ArgumentNullException.ThrowIfNull(nuevoEmail);
+
+            EmailInstitucion = nuevoEmail;
+        }
+
+
+        public void ActualizarProvincia(string nuevaProvincia)
+        {
+            if (string.IsNullOrWhiteSpace(nuevaProvincia))
+                throw new DomainException(
+                    "La provincia de la institución es obligatoria.");
+
+            ProvinciaInstitucion = nuevaProvincia.Trim();
+        }
+
+
+        public void ActualizarDepartamento(string nuevoDepartamento)
+        {
+            if (string.IsNullOrWhiteSpace(nuevoDepartamento))
+                throw new DomainException(
+                    "El departamento de la institución es obligatorio.");
+
+            DepartamentoInstitucion = nuevoDepartamento.Trim();
+        }
+
+
+        public void ActualizarLocalidad(string nuevaLocalidad)
+        {
+            if (string.IsNullOrWhiteSpace(nuevaLocalidad))
+                throw new DomainException(
+                    "La localidad de la institución es obligatoria.");
+
+            LocalidadInstitucion = nuevaLocalidad.Trim();
+        }
+
+
+        public void ActualizarDiversidadFuncional(string descripcion)
+        {
+            DiversidadFuncionalDescripcion =
+                string.IsNullOrWhiteSpace(descripcion)
+                ? string.Empty
+                : descripcion.Trim();
+        }
+
+
+        public void ActualizarObservaciones(string nuevasObservaciones)
+        {
+            Observaciones =
+                string.IsNullOrWhiteSpace(nuevasObservaciones)
+                ? string.Empty
+                : nuevasObservaciones.Trim();
+        }
         private static void ValidarNivelEducativo(
             NivelEducativo? nivel,
             int? anioGrado)

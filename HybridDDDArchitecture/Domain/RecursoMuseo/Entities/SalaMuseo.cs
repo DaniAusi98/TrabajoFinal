@@ -10,7 +10,7 @@ namespace Domain.RecursoMuseo.Entities
     {
         public string Nombre { get; private set; }
 
-        public EstadoSala EstadoSala { get; private set; } 
+        public EstadoSala EstadoSala { get; private set; }
 
         public string CodigoSala { get; private set; }
 
@@ -36,6 +36,7 @@ namespace Domain.RecursoMuseo.Entities
             ActualizarCapacidad(capacidad);
             ActualizarUbicacion(ubicacion);
             ActualizarCodigoSala(codigoSala);
+            EstadoSala = EstadoSala.Activa; // Por defecto, la sala se crea como activa
         }
 
         public void ActualizarNombre(string nuevoNombre)
@@ -82,6 +83,19 @@ namespace Domain.RecursoMuseo.Entities
                 throw new DomainException("El código de la sala no puede superar los 50 caracteres.");
 
             CodigoSala = nuevoCodigo.Trim();
+        }
+        
+
+        public void CambiarEstado(EstadoSala nuevoEstado)
+        {
+            if (!Enum.IsDefined(typeof(EstadoSala), nuevoEstado))
+                throw new DomainException("El estado de la sala no es válido.");
+
+            // Si el estado es el mismo, no hacemos nada (operación idempotente).
+            if (EstadoSala == nuevoEstado)
+                return;
+
+            EstadoSala = nuevoEstado;
         }
     }
 }

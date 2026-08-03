@@ -30,6 +30,7 @@ namespace Application.ActividadMuseo.Mappings
 
             CreateMap<Domain.ActividadMuseo.Entities.ActividadMuseo,ActividadMuseoDto>()
                 .ForMember(dest => dest.TipoActividad, opt => opt.MapFrom(src => src.TipoActividad.ToString()))
+                .ForMember(dest => dest.CategoriaActividad, opt => opt.MapFrom(src => src.CategoriaActividad.ToString()))
                 .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => src.Estado.ToString()))
                 .ForMember(dest => dest.CantidadPersonas, opt => opt.MapFrom(src => src.CantidadPersonas))
                 .ForMember(dest => dest.TimeSlots, opt => opt.MapFrom(src => src.TimeSlots))

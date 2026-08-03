@@ -1,0 +1,16 @@
+using Domain.ActividadMuseo.Entities;
+using Domain.RecursoMuseo.Entities.Guia;
+using Domain.VisitasGrupales.Entities;
+
+namespace Domain.VisitasGrupales.DomainServices
+{
+    public interface IServicioDisponibilidadTurnosVisitasGuiadas
+    {
+       Task<List<TurnoDisponible>> CalcularDisponibilidad(
+            DateTime fechaDesde,
+            DateTime fechaHasta,
+            IReadOnlyCollection<Guia> guias,
+            IReadOnlyCollection<VisitaGrupalGuiada> visitasguiadas
+           );
+    }
+}

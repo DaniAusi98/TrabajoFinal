@@ -9,7 +9,7 @@ namespace Domain.VisitasGrupales.Entities
 {
     public class VisitaGrupalAutoguiada : ActividadMuseo.Entities.ActividadMuseo
     {
-        public int UsuarioVisitanteId { get; private set; }
+        public string UsuarioVisitanteId { get; private set; }
 
         public string Institucion { get; private set; }
 
@@ -19,7 +19,7 @@ namespace Domain.VisitasGrupales.Entities
 
         public string DepartamentoInstitucion { get; private set; }
 
-        public string CiudadInstitucion { get; private set; }
+        public string LocalidadInstitucion { get; private set; }
 
         public string DiversidadFuncional { get; private set; } = string.Empty;
 
@@ -34,7 +34,7 @@ namespace Domain.VisitasGrupales.Entities
 
 
         public VisitaGrupalAutoguiada(
-            int usuarioVisitanteId,
+            string usuarioVisitanteId,
             int cantidadPersonas,
             string institucion,
             Email emailInstitucion,
@@ -47,15 +47,16 @@ namespace Domain.VisitasGrupales.Entities
             IEnumerable<Sala> salas
         )
         : base(
+            CategoriaActividad.VisitaGrupal,
             TipoActividad.VisitaGrupalAutoguiada,
             cantidadPersonas,
             timeSlots,
             salas)
         {
 
-            if (usuarioVisitanteId <= 0)
-                throw new DomainException(
-                    "El id del usuario visitante debe ser válido.");
+            if (usuarioVisitanteId == null)
+                throw new ArgumentNullException(
+                    nameof(usuarioVisitanteId));
 
 
             if (string.IsNullOrWhiteSpace(institucion))
@@ -91,7 +92,7 @@ namespace Domain.VisitasGrupales.Entities
 
             DepartamentoInstitucion = departamentoInstitucion.Trim();
 
-            CiudadInstitucion = ciudadInstitucion.Trim();
+            LocalidadInstitucion = ciudadInstitucion.Trim();
 
 
             DiversidadFuncional =
@@ -149,13 +150,13 @@ namespace Domain.VisitasGrupales.Entities
         }
 
 
-        public void ActualizarCiudad(string nuevaCiudad)
+        public void ActualizarLocalidad(string nuevaCiudad)
         {
             if (string.IsNullOrWhiteSpace(nuevaCiudad))
                 throw new DomainException(
                     "La ciudad de la institución es obligatoria.");
 
-            CiudadInstitucion = nuevaCiudad.Trim();
+            LocalidadInstitucion = nuevaCiudad.Trim();
         }
 
 

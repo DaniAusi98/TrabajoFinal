@@ -14,6 +14,7 @@ namespace Application.VisitaGrupal.UseCases.Queries.ConsultarDisponibilidadTurno
         IRepositorioVisitaGuiada repositorioVisitaGuiada,
         IRepositorioDiaCierreMuseo repositorioDiaCierreMuseo,
         ICalendarioMuseo calendario,
+        Domain.VisitasGrupales.DomainServices.IServicioDisponibilidadTurnosVisitasGuiadas servicioDisponibilidad,
         AutoMapper.IMapper mapper)
                 : IRequestQueryHandler<
             ConsultarDisponibilidadTurnosDiaQuery,
@@ -23,6 +24,7 @@ namespace Application.VisitaGrupal.UseCases.Queries.ConsultarDisponibilidadTurno
         private readonly IRepositorioVisitaGuiada _repositorioVisitaGuiada = repositorioVisitaGuiada?? throw new ArgumentNullException(nameof(repositorioVisitaGuiada));
         private readonly IRepositorioDiaCierreMuseo _repositorioDiaCierreMuseo = repositorioDiaCierreMuseo?? throw new ArgumentNullException(nameof(repositorioDiaCierreMuseo));
         private readonly ICalendarioMuseo _calendario = calendario?? throw new ArgumentNullException(nameof(calendario));
+        private readonly Domain.VisitasGrupales.DomainServices.IServicioDisponibilidadTurnosVisitasGuiadas _servicioDisponibilidad = servicioDisponibilidad ?? throw new ArgumentNullException(nameof(servicioDisponibilidad));
         private readonly AutoMapper.IMapper _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 
         public async Task<QueryResult<TurnoDisponibleDto>> Handle(
@@ -45,14 +47,12 @@ namespace Application.VisitaGrupal.UseCases.Queries.ConsultarDisponibilidadTurno
 
            
 
-            var turnosDisponibles =
-                ServicioDisponibilidadTurnosVisitasGuiadas.DisponiblidadTurnosVisitasGuiadas(
+            var turnosDisponibles = await _servicioDisponibilidad.CalcularDisponibilidad(
                     request.FechaDesde,
                     request.FechaHasta,
                     guias,
                     visitas,
-                    diasCierre,
-                    _calendario
+                    diasCierre
                 );
 
             return new QueryResult<TurnoDisponibleDto>(turnosDisponibles.To<TurnoDisponibleDto>(), turnosDisponibles.Count, request.PageIndex, request.PageSize);

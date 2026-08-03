@@ -1,12 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-
-using Application.ApplicationMuseo.UseCases.MuseumGallery.Commands.CreateMuseumGallery;
-using Application.ApplicationMuseo.UseCases.MuseumGallery.Commands.UpdateMuseumGallery;
-using Application.ApplicationMuseo.UseCases.MuseumGallery.Commands.DeleteMuseumGallery;
-using Application.ApplicationMuseo.UseCases.MuseumGallery.Queries.GetAllMuseumGalleries;
-using Application.ApplicationMuseo.UseCases.MuseumGallery.Queries.GetMuseumGalleryBy;
 using Core.Application;
-using Microsoft.AspNetCore.Mvc;
+using Application.MuseumResources.UseCases.MuseumGallery.Commands.CreateMuseumGallery;
+using Application.MuseumResources.UseCases.MuseumGallery.Queries.GetAllSalas;
+using Application.MuseumResources.UseCases.MuseumGallery.Queries.GetSalaBy;
+using Application.MuseumResources.UseCases.MuseumGallery.Commands.UpdateMuseumGallery;
+using Application.MuseumResources.UseCases.MuseumGallery.Commands.DeleteMuseumGallery;
 
 namespace Controllers
 {
@@ -24,11 +22,11 @@ namespace Controllers
         }
 
         [HttpGet("api/v1/[Controller]/{id}")]
-        public async Task<IActionResult> GetById(string id)
+        public async Task<IActionResult> GetById(int id)
         {
-            if (string.IsNullOrEmpty(id)) return BadRequest();
+            if (id<0 || id>int.MaxValue) return BadRequest();
 
-            var entity = await _commandQueryBus.Send(new GetMuseumGalleryByQuery { MuseumGalleryId = id });
+            var entity = await _commandQueryBus.Send(new GetMuseumGalleryByQuery { SalaId = id });
 
             return Ok(entity);
         }
@@ -54,9 +52,9 @@ namespace Controllers
         }
 
         [HttpDelete("api/v1/[Controller]/{id}")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (string.IsNullOrEmpty(id)) return BadRequest();
+            if (id < 0) return BadRequest();
 
             await _commandQueryBus.Send(new DeleteMuseumGalleryCommand { MuseumGalleryId = id });
 

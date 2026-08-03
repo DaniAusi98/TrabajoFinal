@@ -126,11 +126,16 @@ public class VisitasGuiadasController(ICommandQueryBus commandQueryBus) : Contro
 
     [HttpGet("calendar")]
     public async Task<IActionResult> GetAllGroupVisitCalendar(
-            DateTime fechaDesde,
-            DateTime fechaHasta)
+            [FromQuery] DateTime? fechaDesde,
+            [FromQuery] DateTime? fechaHasta)
     {
-        var GroupVisits = await _commandQueryBus.Send(new GetAllGroupVisitCalendarQuery(fechaDesde, fechaHasta));
-        return Ok(GroupVisits);
+        if (!fechaDesde.HasValue || !fechaHasta.HasValue)
+        {
+            return BadRequest("Parámetros 'fechaDesde' y 'fechaHasta' requeridos en la query. Formato ISO: yyyy-MM-dd o yyyy-MM-ddTHH:mm:ss");
+        }
+
+        var groupVisits = await _commandQueryBus.Send(new GetAllGroupVisitCalendarQuery(fechaDesde.Value, fechaHasta.Value));
+        return Ok(groupVisits);
     }
 
 

@@ -30,7 +30,7 @@ namespace Infrastructure.Configurations
                 .HasMaxLength(100)
                 .IsRequired();
 
-            builder.Property(x => x.CiudadInstitucion)
+            builder.Property(x => x.LocalidadInstitucion)
                 .HasMaxLength(100)
                 .IsRequired();
 

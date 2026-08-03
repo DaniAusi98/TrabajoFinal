@@ -22,7 +22,7 @@ namespace Domain.RecursoMuseo.Enums
             ReservaPatrimonial,
             Documentacion,
             Multifuncion,
-            ExposicionesFotograficas
+            ExposicionFotografica
         }
         public enum EstadoSala
         {

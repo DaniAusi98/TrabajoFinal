@@ -1,31 +1,26 @@
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using System.Text.Json.Serialization;
 namespace Application.VisitaGrupal.DataTransferObjets
 {
     public class VisitaGrupalCalendarDto
     {
         public int Id { get; set; }
-        public string Tipo { get; set; } = string.Empty;
-        public string IdProvincia { get; set; }
-        public string IdLocalidad { get; set; }
+
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public TipoVisitaGrupal Tipo { get; set; }
+        public string Provincia { get; set; } = string.Empty;
+        public string Departamento { get; set; } = string.Empty;
+        public string Localidad { get; set; } = string.Empty;
         public int CantidadPersonas { get; set; }
-        public string Institucion { get; set;}
-        public string DiversidadFuncional { get; set; }
-        public DateTime HoraInicio { get; set; }
-        public DateTime HoraFin { get; set; }
+        public string Institucion { get; set; } = string.Empty;
+        public string DiversidadFuncional { get; set; } = string.Empty;
+        public DateTime? HoraInicio { get; set; }
+        public DateTime? HoraFin { get; set; }
 
-
+        public enum TipoVisitaGrupal
+        {
+            Guiada,
+            Autoguiada
+        }
     }
 }
-/*Tipo
-              *provincia
-              *localidad
-             CantidadPersonas
-             Institucion
-             diversidadFuncional
-             TimeSlot*/
+

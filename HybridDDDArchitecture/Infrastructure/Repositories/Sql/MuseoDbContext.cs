@@ -27,7 +27,7 @@ namespace Infrastructure.Repositories.Sql
 
         public DbSet<VisitaGrupalGuiada> VisitaGuiada { get; set; }
 
-       // public DbSet<VisitaGrupalAutoguiada> VisitaGrupalAutoguiada { get; set; }
+       public DbSet<VisitaGrupalAutoguiada> VisitaGrupalAutoguiada { get; set; }
 
         public DbSet<ActividadMuseo> ActividadAgendaMuseo { get; set; }
         public DbSet<RecursoAsignado> RecursoAsignado { get; set; }
@@ -38,6 +38,10 @@ namespace Infrastructure.Repositories.Sql
         public DbSet<DiaCierreMuseo> DiaCierreMuseo { get; set; }
         public DbSet<HorarioGuia> HorarioGuia { get; set; }
         public DbSet<TematicaVisita> TematicaVisita { get; set; }
+        public DbSet<Domain.VisitasGrupales.Entities.ConfiguracionVisitasGrupalesGuiadas> ConfiguracionVisitasGrupalesGuiadas { get; set; }
+        public DbSet<Domain.Common.Entities.Provincia> Provincias { get; set; }
+        public DbSet<Domain.Common.Entities.Departamento> Departamentos { get; set; }
+        public DbSet<Domain.Common.Entities.Localidad> Localidades { get; set; }
 
 
 
@@ -71,6 +75,7 @@ namespace Infrastructure.Repositories.Sql
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<DummyEntity>().ToTable("DummyEntity");
             modelBuilder.ApplyConfiguration(new VisitaGrupalGuiadaConfiguration());
+            modelBuilder.ApplyConfiguration(new VisitaGrupalAutoguiadaConfiguration());
             modelBuilder.ApplyConfiguration(new ActividadMuseoConfiguration());
             modelBuilder.ApplyConfiguration(new RecursoConfiguration());
             modelBuilder.ApplyConfiguration(new SalaConfiguration());
@@ -81,6 +86,10 @@ namespace Infrastructure.Repositories.Sql
             modelBuilder.ApplyConfiguration(new DiaCierreMuseoConfiguration());
             modelBuilder.ApplyConfiguration(new BloqueoSalaConfiguration());
             modelBuilder.ApplyConfiguration(new TematicaVisitaConfiguration());
+            modelBuilder.ApplyConfiguration(new ProvinciaConfiguration());
+            modelBuilder.ApplyConfiguration(new DepartamentoConfiguration());
+            modelBuilder.ApplyConfiguration(new LocalidadConfiguration());
+            modelBuilder.ApplyConfiguration(new ConfiguracionVisitasGrupalesGuiadasConfig());
 
         }
     }

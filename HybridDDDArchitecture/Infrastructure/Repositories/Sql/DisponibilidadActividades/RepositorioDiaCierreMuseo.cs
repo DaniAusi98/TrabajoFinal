@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Application.ApplicationMuseo.Repositories;
 using Application.Repositories;
 
 using Core.Infraestructure.Repositories.Sql;

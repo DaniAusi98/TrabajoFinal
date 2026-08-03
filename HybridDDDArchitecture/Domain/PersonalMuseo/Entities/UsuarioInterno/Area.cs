@@ -1,8 +1,4 @@
 using Core.Domain.Entities;
-
-using System;
-using System.Collections.Generic;
-using Core.Domain.Entities;
 using Domain.Common.Exceptions;
 
 namespace Domain.PersonalMuseo.Entities.UsuarioInterno

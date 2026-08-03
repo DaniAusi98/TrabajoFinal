@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <Folder Include="ActividadMuseo\Entities\Guia\" />
+    <Folder Include="ActividadMuseo\DomainServices\" />
     <Folder Include="Common\DomainServices\" />
     <Folder Include="Common\Others\Helpers\" />
     <Folder Include="VisitasGrupales\Exceptions\" />

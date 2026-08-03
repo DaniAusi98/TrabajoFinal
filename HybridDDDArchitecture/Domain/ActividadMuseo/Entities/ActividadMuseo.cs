@@ -8,6 +8,7 @@ namespace Domain.ActividadMuseo.Entities
 {
     public class ActividadMuseo : DomainEntity<int>
     {
+        public CategoriaActividad CategoriaActividad { get; private set; }
         public TipoActividad TipoActividad { get; private set; }
         public EstadoActividad Estado { get; private set; }
         public int? CantidadPersonas { get; private set; }
@@ -19,6 +20,7 @@ namespace Domain.ActividadMuseo.Entities
         public List<TimeSlot> TimeSlots = [];
 
         public ActividadMuseo(
+            CategoriaActividad categoria,
             TipoActividad tipo,
             int? cantidadAsistentes,
             IEnumerable<TimeSlot> timeSlots,
@@ -56,8 +58,10 @@ namespace Domain.ActividadMuseo.Entities
 
 
             // Recién acá modificás el estado
+            CategoriaActividad = categoria;
 
             TipoActividad = tipo;
+
             CantidadPersonas = cantidadAsistentes;
             Estado = EstadoActividad.Activa;
 
@@ -72,6 +76,16 @@ namespace Domain.ActividadMuseo.Entities
 
         // EF Core
         protected ActividadMuseo() { }
+        public void CambiarCategoria(CategoriaActividad nuevaCategoria)
+        {
+            ArgumentNullException.ThrowIfNull(nuevaCategoria);
+            CategoriaActividad = nuevaCategoria;
+        }
+        public void CambiarTipoActividad(TipoActividad nuevoTipo)
+        {
+            ArgumentNullException.ThrowIfNull(nuevoTipo);
+            TipoActividad = nuevoTipo;
+        }
 
         public void AgregarSala(Sala sala)
         {

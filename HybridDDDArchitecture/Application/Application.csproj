@@ -18,7 +18,13 @@
 	<ItemGroup>
 		<Folder Include="ActividadMuseo\UseCases\ActividadesMuseo\Notifications\" />
 		<Folder Include="Adapters\" />
+		<Folder Include="Common\UseCases\Provincia\Commands\" />
+		<Folder Include="Common\UseCases\Provincia\Notifications\" />
+		<Folder Include="MuseumResources\UseCases\MuseumGallery\Queries\NewFolder\" />
+		<Folder Include="VisitaGrupal\UseCases\Commands\DeleteTurnosVisitas\" />
+		<Folder Include="VisitaGrupal\UseCases\Commands\UpdateTurnosVisitas\" />
 		<Folder Include="VisitaGrupal\UseCases\Notification\" />
+		<Folder Include="VisitaGrupal\UseCases\Queries\GetTurnosVisitas\" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -27,6 +33,8 @@
 	  <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.5" />
 	  <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.5" />
 	  <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.5" />
+      <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.5" />
+      <PackageReference Include="Scrutor" Version="7.0.0" />
 	</ItemGroup>
 
 </Project>

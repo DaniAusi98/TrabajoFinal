@@ -89,5 +89,12 @@ namespace Domain.ActividadMuseo.Enums
             EventosInstitucionales,
             Otro
         }
+        public enum CategoriaActividad
+        {
+            VisitaGrupal,
+            EventoActividadExterna,
+            ActividadEducativa,
+
+        }
     }
 }

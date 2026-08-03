@@ -12,9 +12,15 @@ using Domain.ActividadMuseo.Entities;
 using FluentValidation;
 
 using MediatR;
+using Scrutor;
+
+using Domain.VisitasGrupales.Options;
+using Domain.VisitasGrupales.DomainServices;
+using Microsoft.Extensions.Options;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Application.Availability;
 
 namespace Application.Registrations
 {
@@ -51,6 +57,38 @@ namespace Application.Registrations
             //services.AddScoped<IUsuarioApplicationService,UsuarioVisitanteApplicationService>();
 
             services.AddScoped<ICalendarioMuseo, CalendarioMuseo>();
+
+            // Bind TurnosVisitas options from configuration and register service
+            services.Configure<TurnosVisitasOptions>(configuration.GetSection("TurnosVisitas"));
+            // Add options validator
+            services.AddSingleton<Microsoft.Extensions.Options.IValidateOptions<TurnosVisitasOptions>, Domain.VisitasGrupales.Options.TurnosVisitasOptionsValidator>();
+            // Register application services for managing persisted configuracion visitas grupales guiadas
+            services.AddScoped<Application.VisitaGrupal.ApplicationServices.IConfiguracionVisitasGrupalesGuiadasService, Application.VisitaGrupal.ApplicationServices.ConfiguracionVisitasGrupalesGuiadasService>();
+            services.AddScoped<Domain.VisitasGrupales.Options.IConfiguracionVisitasOptionsProvider, Application.VisitaGrupal.ApplicationServices.ConfiguracionVisitasOptionsProvider>();
+
+            // Register availability service by interface (domain service will obtain options via provider)
+            services.AddScoped<Domain.VisitasGrupales.DomainServices.IServicioDisponibilidadTurnosVisitasGuiadas, ServicioDisponibilidadTurnosVisitasGuiadas>();
+
+            // Register availability engine, rule factory and providers (moved from Application.Availability.ServiceCollectionExtensions)
+            services.AddScoped<Application.Availability.AvailabilityEngine>();
+            services.AddScoped<Application.Availability.IRuleFactory, Application.Availability.CompositeRuleFactory>();
+
+            // Register providers - these will be created by DI and can create rule instances
+            services.Scan(scan => scan
+                .FromAssemblyOf<AvailabilityEngine>()
+                .AddClasses(classes => classes.InNamespaces("Application.Availability.Providers"))
+                .AsImplementedInterfaces()
+                .WithScopedLifetime());
+
+            // Register rules that do not require extra dependencies
+            services.AddScoped<Application.Availability.IAvailabilityRule, Application.Availability.Rules.NoConcurrentGuidedIfGroupRule>();
+
+            // Register guided availability producer service
+            services.AddScoped<Application.Availability.Producers.GuidedAvailabilityProducerService>();
+            // Register group availability producer service
+           // services.AddScoped<Application.Availability.Producers.GroupAvailabilityProducerService>();
+            // Register in-memory recurrence repo for testing (optional)
+            services.AddSingleton<Application.Availability.Recurrence.IRecurrenceRuleRepository, Application.Availability.Recurrence.InMemoryRecurrenceRuleRepository>();
 
             services.AddValidatorsFromAssemblyContaining<CrearVisitaGuiadaCommandValidator>();
 
