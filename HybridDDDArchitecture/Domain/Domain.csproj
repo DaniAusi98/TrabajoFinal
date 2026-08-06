@@ -32,6 +32,7 @@
     <Folder Include="Common\DomainServices\" />
     <Folder Include="Common\Others\Helpers\" />
     <Folder Include="VisitasGrupales\Exceptions\" />
+    <Folder Include="VisitasGrupales\Options\" />
     <Folder Include="VisitasGrupales\Others\" />
   </ItemGroup>
 

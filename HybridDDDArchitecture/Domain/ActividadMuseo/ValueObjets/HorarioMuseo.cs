@@ -8,19 +8,23 @@ namespace Domain.ActividadMuseo.ValueObjets
 {
 
 
-    public record HorarioMuseo
+    public sealed class Horario
     {
-        public TimeOnly HoraApertura { get; init; }
-        public TimeOnly HoraCierre { get; init; }
+        public TimeOnly HoraInicio { get; private set; }
+        public TimeOnly HoraFin { get; private set; }
 
-        public HorarioMuseo(TimeOnly apertura, TimeOnly cierre)
+        private Horario() { }
+        
+
+     
+        public Horario(TimeOnly inicio, TimeOnly fin)
         {
-            if (cierre <= apertura)
+            if (fin <= inicio)
                 throw new ArgumentException(
-                    "El horario de cierre debe ser posterior a la apertura");
+                    "El horario de fin debe ser posterior al inicio");
 
-            HoraApertura = apertura;
-            HoraCierre = cierre;
+            HoraInicio = inicio;
+            HoraFin = fin;
         }
     }
 

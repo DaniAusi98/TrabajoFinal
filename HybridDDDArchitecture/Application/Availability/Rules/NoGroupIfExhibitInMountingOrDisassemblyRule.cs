@@ -1,4 +1,4 @@
-using System.Linq;
+/*using System.Linq;
 using System.Threading.Tasks;
 using Application.Availability;
 using Domain.ActividadMuseo.Entities;
@@ -13,7 +13,7 @@ namespace Application.Availability.Rules
     /// </summary>
     public class NoGroupIfExhibitInMountingOrDisassemblyRule : IAvailabilityRule
     {
-        public Task<AvailabilityResult> CheckAsync(AvailabilityContext ctx, ActividadMuseo candidate)
+        public Task<AvailabilityResult> CheckAsync(AvailabilityContext ctx, Domain.ActividadMuseo.Entities.ActividadMuseo candidate)
         {
             if (candidate is not VisitaGrupalGuiada && candidate is not VisitaGrupalAutoguiada)
                 return Task.FromResult(AvailabilityResult.Ok());
@@ -23,7 +23,7 @@ namespace Application.Availability.Rules
             // Preferir exhibits prefetechados en ctx.Metadata[AvailabilityMetadataKeys.Exhibits].
             // Si no vienen en metadata, no realizamos ninguna comprobación aquí (dejamos Ok) —
             // el producer debe prefetchear y filtrar candidatos cuando corresponda.
-            if (ctx.Metadata == null || !ctx.Metadata.TryGetValue(AvailabilityMetadataKeys.Exhibits, out var exhibitsObj) || exhibitsObj is not System.Collections.Generic.IEnumerable<ActividadMuseo> exhibitsList)
+            if (ctx.Metadata == null || !ctx.Metadata.TryGetValue(AvailabilityMetadataKeys.Exhibits, out var exhibitsObj) || exhibitsObj is not System.Collections.Generic.IEnumerable<Domain.ActividadMuseo.Entities.ActividadMuseo> exhibitsList)
             {
                 // No hay información de muestras prefetechada: no aplicamos esta regla
                 return Task.FromResult(AvailabilityResult.Ok());
@@ -42,3 +42,4 @@ namespace Application.Availability.Rules
         }
     }
 }
+*/

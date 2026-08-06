@@ -10,7 +10,9 @@ namespace Domain.VisitasGrupales.DomainServices
             DateTime fechaDesde,
             DateTime fechaHasta,
             IReadOnlyCollection<Guia> guias,
-            IReadOnlyCollection<VisitaGrupalGuiada> visitasguiadas
+            IReadOnlyCollection<VisitaGrupalGuiada> visitasguiadas,
+            ConfiguracionVisitasGrupalesGuiadas configuracion,
+            CalendarioMuseo calendario
            );
     }
 }

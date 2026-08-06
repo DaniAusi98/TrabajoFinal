@@ -1,25 +1,51 @@
-using Application.VisitaGrupal.ApplicationServices;
+using Application.ActividadMuseo.Repositories;
+using Application.Exceptions;
+using Application.VisitaGrupal.Repositories;
 using Core.Application;
-using Domain.VisitasGrupales.Options;
+using Domain.ActividadMuseo.ValueObjets;
+using Domain.VisitasGrupales.Entities;
+using Domain.VisitasGrupales.ValueObjects;
 
 namespace Application.VisitaGrupal.UseCases.Commands.CreateConfiguracionVisitasGrupalesGuiadas
 {
-    internal sealed class CreateConfiguracionVisitasGrupalesGuiadasHandler(IConfiguracionVisitasGrupalesGuiadasService service) : IRequestCommandHandler<CreateConfiguracionVisitasGrupalesGuiadasCommand, int>
+    internal sealed class CreateConfiguracionVisitasGrupalesGuiadasHandler : IRequestCommandHandler<CreateConfiguracionVisitasGrupalesGuiadasCommand, int>
     {
-        private readonly IConfiguracionVisitasGrupalesGuiadasService _service = service ?? throw new ArgumentNullException(nameof(service));
+        private readonly IRepositorioConfiguracionVisitasGrupalesGuiadas _repositorio;
+        private readonly IRepositorioCalendarioMuseo _repositorioCalendario;
+
+        public CreateConfiguracionVisitasGrupalesGuiadasHandler(
+            IRepositorioConfiguracionVisitasGrupalesGuiadas repositorio,
+            IRepositorioCalendarioMuseo repositorioCalendario)
+        {
+            _repositorio = repositorio ?? throw new ArgumentNullException(nameof(repositorio));
+            _repositorioCalendario = repositorioCalendario ?? throw new ArgumentNullException(nameof(repositorioCalendario));
+        }
 
         public async Task<int> Handle(CreateConfiguracionVisitasGrupalesGuiadasCommand request, CancellationToken cancellationToken)
         {
-            var options = new TurnosVisitasOptions
-            {
-                MinGuiasParaCapacidadCompleta = request.MinGuiasParaCapacidadCompleta,
-                CapacidadPorGuia = request.CapacidadPorGuia,
-                CapacidadMaximaPorTurno = request.CapacidadMaximaPorTurno
-            };
+            // Obtener el calendario del museo para validar
+            var calendario = await _repositorioCalendario.ObtenerCalendarioActivoAsync()
+                ?? throw new EntityDoesNotExistException("No se encontró el calendario del museo");
 
-            await _service.UpdateAsync(options);
+            var diasDisponibles = new DiasLaboralesMuseo(request.DiasDisponibles);
 
-            return 0;
+            var turnos = request.Turnos
+                .Select(t => new TurnoVisitaGuiada(t.HoraInicio, t.HoraFin))
+                .ToList();
+
+            var configuracion = new ConfiguracionVisitasGrupalesGuiadas(
+                request.MinGuiasParaCapacidadCompleta,
+                request.CapacidadPorGuia,
+                request.CapacidadMaximaPorTurno,
+                diasDisponibles,
+                turnos
+            );
+
+            // Validar días contra el calendario del museo
+            configuracion.ActualizarDiasDisponibles(diasDisponibles, calendario);
+
+            await _repositorio.AddAsync(configuracion);
+            return configuracion.Id;
         }
     }
 }

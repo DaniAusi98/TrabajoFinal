@@ -41,7 +41,6 @@ namespace Application.Availability.Producers
         {
             // Prefetch common data
             var actividadesEnRango = await _repositorioActividadMuseo.FindAllAsync(desde, hasta);
-            var diasCierre = await _repositorioDiasCierre.FindAllAsync();
 
             // Load salas and filter if salaIds provided
             var salasAll = await _repositorioSala.FindAllAsync();

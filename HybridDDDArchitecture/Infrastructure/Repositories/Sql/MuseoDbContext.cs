@@ -1,13 +1,13 @@
+using Domain.ActividadMuseo.Entities;
+using Domain.Common.Entities;
+using Domain.RecursoMuseo.Entities;
+using Domain.RecursoMuseo.Entities.Guia;
+using Domain.VisitasGrupales.Entities;
 using Infrastructure.Configurations;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Domain.VisitasGrupales.Entities;
-using Domain.ActividadMuseo.Entities;
-using Domain.RecursoMuseo.Entities;
-using Domain.Common.Entities;
-using Domain.RecursoMuseo.Entities.Guia;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories.Sql
 {
@@ -22,14 +22,14 @@ namespace Infrastructure.Repositories.Sql
             : base(options)
         {
         }
-       // public DbSet<DummyEntity> DummyEntity { get; set; }
+        // public DbSet<DummyEntity> DummyEntity { get; set; }
 
 
         public DbSet<VisitaGrupalGuiada> VisitaGuiada { get; set; }
 
-       public DbSet<VisitaGrupalAutoguiada> VisitaGrupalAutoguiada { get; set; }
+        public DbSet<VisitaGrupalAutoguiada> VisitaGrupalAutoguiada { get; set; }
 
-        public DbSet<ActividadMuseo> ActividadAgendaMuseo { get; set; }
+        public DbSet<Domain.ActividadMuseo.Entities.ActividadMuseo> ActividadAgendaMuseo { get; set; }
         public DbSet<RecursoAsignado> RecursoAsignado { get; set; }
         public DbSet<Recurso> RecursoMuseo { get; set; }
         public DbSet<Sala> SalaMuseo { get; set; }
@@ -38,10 +38,14 @@ namespace Infrastructure.Repositories.Sql
         public DbSet<DiaCierreMuseo> DiaCierreMuseo { get; set; }
         public DbSet<HorarioGuia> HorarioGuia { get; set; }
         public DbSet<TematicaVisita> TematicaVisita { get; set; }
-        public DbSet<Domain.VisitasGrupales.Entities.ConfiguracionVisitasGrupalesGuiadas> ConfiguracionVisitasGrupalesGuiadas { get; set; }
-        public DbSet<Domain.Common.Entities.Provincia> Provincias { get; set; }
-        public DbSet<Domain.Common.Entities.Departamento> Departamentos { get; set; }
-        public DbSet<Domain.Common.Entities.Localidad> Localidades { get; set; }
+        public DbSet<ConfiguracionVisitasGrupalesGuiadas> ConfiguracionVisitasGrupalesGuiadas { get; set; }
+        public DbSet<Provincia> Provincias { get; set; }
+        public DbSet<Departamento> Departamentos { get; set; }
+        public DbSet<Localidad> Localidades { get; set; }
+        public DbSet<CalendarioMuseo> CalendarioMuseo { get; set; }
+        public DbSet<ConfiguracionHorarioAutoguiada> ConfiguracionHorarioVisitaAutoguiada { get; set; }
+
+
 
 
 
@@ -89,8 +93,9 @@ namespace Infrastructure.Repositories.Sql
             modelBuilder.ApplyConfiguration(new ProvinciaConfiguration());
             modelBuilder.ApplyConfiguration(new DepartamentoConfiguration());
             modelBuilder.ApplyConfiguration(new LocalidadConfiguration());
-            modelBuilder.ApplyConfiguration(new ConfiguracionVisitasGrupalesGuiadasConfig());
-
+            modelBuilder.ApplyConfiguration(new ConfiguracionVisitasGrupalesGuiadaConfig());
+            modelBuilder.ApplyConfiguration(new ConfiguracionCalendarioMuseo());
+            modelBuilder.ApplyConfiguration(new ConfiguracionHorarioVisitaGrupalAutoguiadaConfiguration());
         }
     }
 }

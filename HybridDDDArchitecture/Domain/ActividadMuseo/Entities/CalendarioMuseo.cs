@@ -1,77 +1,141 @@
+using Core.Domain.Entities;
 using Domain.ActividadMuseo.ValueObjets;
-using Domain.ActividadMuseo.ValueObjets.Domain.ActividadMuseo.ValueObjects;
 using Domain.Common.ValueObjets;
+using Domain.Common.Exceptions;
 
 namespace Domain.ActividadMuseo.Entities
 {
-    public class CalendarioMuseo : ICalendarioMuseo
+    public class CalendarioMuseo : DomainEntity<int>
     {
-        private readonly IReadOnlyCollection<DiaCierreMuseo> _diasCierre;
-        private readonly HorarioMuseo _horario;
-        private readonly DiasLaboralesMuseo _diasLaborales;
+        public Horario HorarioApertura { get; private set; }
+        public DiasLaboralesMuseo DiasApertura { get; private set; }
 
+        private readonly List<DiaCierreMuseo> _diasCierre;
+        public IReadOnlyCollection<DiaCierreMuseo> DiasCierre
+            => _diasCierre.AsReadOnly();
+        protected CalendarioMuseo() 
+        {
+            _diasCierre = new List<DiaCierreMuseo>();
+        }
 
         public CalendarioMuseo(
-            HorarioMuseo horario,
+            Horario horario,
             DiasLaboralesMuseo diasLaborales,
             IReadOnlyCollection<DiaCierreMuseo> diasCierre)
         {
-            _horario = horario
+            HorarioApertura = horario
                 ?? throw new ArgumentNullException(nameof(horario));
 
-            _diasLaborales = diasLaborales
+            DiasApertura = diasLaborales
                 ?? throw new ArgumentNullException(nameof(diasLaborales));
 
-            _diasCierre = diasCierre
+            _diasCierre = diasCierre?.ToList()
                 ?? throw new ArgumentNullException(nameof(diasCierre));
         }
 
+        public void ActualizarHorario(Horario nuevoHorario)
+        {
+            HorarioApertura = nuevoHorario
+                ?? throw new ArgumentNullException(nameof(nuevoHorario));
+        }
+
+        public void ActualizarDiasLaborales(DiasLaboralesMuseo nuevosDiasLaborales)
+        {
+            DiasApertura = nuevosDiasLaborales
+                ?? throw new ArgumentNullException(nameof(nuevosDiasLaborales));
+        }
+
+        public void AgregarDiaCierre(DiaCierreMuseo diaCierre)
+        {
+            if (diaCierre == null)
+                throw new ArgumentNullException(nameof(diaCierre));
+
+            if (_diasCierre.Any(d => d.Id == diaCierre.Id && d.Id != 0))
+                throw new DomainException("El día de cierre ya existe en el calendario.");
+
+            _diasCierre.Add(diaCierre);
+        }
+
+        public void RemoverDiaCierre(DiaCierreMuseo diaCierre)
+        {
+            if (diaCierre == null)
+                throw new ArgumentNullException(nameof(diaCierre));
+
+            _diasCierre.Remove(diaCierre);
+        }
 
         public bool EsDiaOperativo(DateTime fecha)
         {
-            if (!_diasLaborales.EsDiaLaboral(fecha.DayOfWeek))
+            if (!DiasApertura.EsDiaLaboral(fecha.DayOfWeek))
                 return false;
-
 
             var inicioDia = fecha.Date;
             var finDia = fecha.Date.AddDays(1);
-
 
             return !_diasCierre.Any(d =>
                 d.SolapaConFechas(inicioDia, finDia));
         }
 
-
         public bool EstaAbierto(DateTime inicio, DateTime fin)
         {
-            if (!_diasLaborales.EsDiaLaboral(inicio.DayOfWeek))
+            if (inicio >= fin)
+                throw new ArgumentException("La fecha de inicio debe ser anterior a la fecha de fin.");
+
+            if (!DiasApertura.EsDiaLaboral(inicio.DayOfWeek))
                 return false;
-            // 2. Verifico si el turno cae dentro de un cierre
+
+            if (inicio.Date != fin.Date && !DiasApertura.EsDiaLaboral(fin.DayOfWeek))
+                return false;
+
             if (_diasCierre.Any(d => d.SolapaConFechas(inicio, fin)))
                 return false;
 
-
-
-            return inicio.TimeOfDay >= _horario.HoraApertura.ToTimeSpan()
-                && fin.TimeOfDay <= _horario.HoraCierre.ToTimeSpan();
+            return inicio.TimeOfDay >= HorarioApertura.HoraInicio.ToTimeSpan()
+                && fin.TimeOfDay <= HorarioApertura.HoraFin.ToTimeSpan();
         }
-
 
         public IEnumerable<TimeSlot> ObtenerFranjasOperativas(DateOnly fecha)
         {
             var fechaDateTime = fecha.ToDateTime(TimeOnly.MinValue);
 
-
             if (!EsDiaOperativo(fechaDateTime))
                 return [];
 
+            var horaInicio = fecha.ToDateTime(HorarioApertura.HoraInicio);
+            var horaFin = fecha.ToDateTime(HorarioApertura.HoraFin);
 
-            return
-            [
-                new TimeSlot(
-                    fecha.ToDateTime(_horario.HoraApertura),
-                    fecha.ToDateTime(_horario.HoraCierre))
-            ];
+            var cierresDia = _diasCierre
+                .Where(d => d.SolapaConFechas(horaInicio, horaFin))
+                .OrderBy(d => d.FechaDesde)
+                .ToList();
+
+            if (!cierresDia.Any())
+            {
+                return [new TimeSlot(horaInicio, horaFin)];
+            }
+
+            var franjas = new List<TimeSlot>();
+            var inicioFranja = horaInicio;
+
+            foreach (var cierre in cierresDia)
+            {
+                var inicioCierre = cierre.FechaDesde > horaInicio ? cierre.FechaDesde : horaInicio;
+                var finCierre = cierre.FechaHasta < horaFin ? cierre.FechaHasta : horaFin;
+
+                if (inicioFranja < inicioCierre)
+                {
+                    franjas.Add(new TimeSlot(inicioFranja, inicioCierre));
+                }
+
+                inicioFranja = finCierre;
+            }
+
+            if (inicioFranja < horaFin)
+            {
+                franjas.Add(new TimeSlot(inicioFranja, horaFin));
+            }
+
+            return franjas;
         }
     }
 }

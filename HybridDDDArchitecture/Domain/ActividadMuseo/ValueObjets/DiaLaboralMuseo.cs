@@ -1,41 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Domain.ActividadMuseo.ValueObjets
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Linq;
-
-    namespace Domain.ActividadMuseo.ValueObjects
+    public sealed class DiasLaboralesMuseo
     {
-        public record DiasLaboralesMuseo
+        public IReadOnlyCollection<DayOfWeek> Dias { get; private set; }
+
+        private DiasLaboralesMuseo()
         {
-            public IReadOnlyCollection<DayOfWeek> Dias { get; init; }
+            Dias = Array.Empty<DayOfWeek>();
+        }
 
-            public DiasLaboralesMuseo(IEnumerable<DayOfWeek> dias)
-            {
-                if (dias == null)
-                    throw new ArgumentNullException(nameof(dias));
+        public DiasLaboralesMuseo(IEnumerable<DayOfWeek> dias)
+        {
+            if (dias == null)
+                throw new ArgumentNullException(nameof(dias));
 
-                var diasLista = dias.Distinct().ToList();
+            var lista = dias.Distinct().ToList();
 
-                if (!diasLista.Any())
-                    throw new ArgumentException(
-                        "Debe existir al menos un día laboral configurado");
+            if (!lista.Any())
+                throw new ArgumentException("Debe existir al menos un día laboral configurado.");
 
-                Dias = new ReadOnlyCollection<DayOfWeek>(diasLista);
-            }
-
-
-            public bool EsDiaLaboral(DayOfWeek dia)
-            {
-                return Dias.Contains(dia);
-            }
+            Dias = lista.AsReadOnly();
+        }
+        public bool EsDiaLaboral(DayOfWeek dia)
+        {
+            return Dias.Contains(dia);
         }
     }
+
 }

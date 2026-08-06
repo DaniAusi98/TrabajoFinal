@@ -33,4 +33,3 @@ namespace Domain.VisitasGrupales.DomainServices
         }
     }
 }
-// de guia que tengo tengo 

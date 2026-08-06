@@ -76,6 +76,30 @@ namespace Infrastructure.Registrations
                 IdentityDataInitializer.SeedRolesAsync(roleManager).GetAwaiter().GetResult();
             }
         }
+        public static void SeedCalendarioMuseo(this IApplicationBuilder app)
+        {
+            Infrastructure.Data.Seeders.CalendarioMuseoSeeder
+                .SeedAsync(app.ApplicationServices)
+                .GetAwaiter()
+                .GetResult();
+        }
         // 🔼
+        /// <summary>
+        /// Seedea la configuración inicial de visitas grupales guiadas al iniciar la aplicación
+        /// </summary>
+        public static void SeedConfiguracionVisitas(this IApplicationBuilder app)
+        {
+            Infrastructure.Data.Seeders.ConfiguracionVisitasSeeder
+                .SeedAsync(app.ApplicationServices)
+                .GetAwaiter()
+                .GetResult();
+        }
+        public static void SeedConfiguracionHorarioAutoguiadas(this IApplicationBuilder app)
+        {
+            Infrastructure.Data.Seeders.ConfiguracionHorarioAutoguiadasSeeder
+                .SeedAsync(app.ApplicationServices)
+                .GetAwaiter()
+                .GetResult();
+        }
     }
 }

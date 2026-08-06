@@ -103,6 +103,19 @@ namespace Infrastructure.Migrations
                     b.ToTable("BloqueosSala", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.ActividadMuseo.Entities.CalendarioMuseo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CalendariosMuseo", (string)null);
+                });
+
             modelBuilder.Entity("Domain.ActividadMuseo.Entities.DiaCierreMuseo", b =>
                 {
                     b.Property<int>("Id")
@@ -110,6 +123,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("CalendarioMuseoId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("FechaDesde")
                         .HasColumnType("datetime(6)");
@@ -126,6 +142,8 @@ namespace Infrastructure.Migrations
                         .HasColumnType("varchar(500)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CalendarioMuseoId");
 
                     b.ToTable("diascierremuseo", (string)null);
                 });
@@ -391,6 +409,22 @@ namespace Infrastructure.Migrations
                     b.ToTable("Salas", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.VisitasGrupales.Entities.ConfiguracionHorarioAutoguiada", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CapacidadMaximaPorGrupo")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ConfiguracionVisitaAutoguiada", (string)null);
+                });
+
             modelBuilder.Entity("Domain.VisitasGrupales.Entities.ConfiguracionVisitasGrupalesGuiadas", b =>
                 {
                     b.Property<int>("Id")
@@ -411,15 +445,6 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ConfiguracionVisitasGrupalesGuiadas", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = -1,
-                            CapacidadMaximaPorTurno = 50,
-                            CapacidadPorGuia = 25,
-                            MinGuiasParaCapacidadCompleta = 2
-                        });
                 });
 
             modelBuilder.Entity("Domain.VisitasGrupales.Entities.TematicaVisita", b =>
@@ -842,6 +867,60 @@ namespace Infrastructure.Migrations
                     b.Navigation("Sala");
                 });
 
+            modelBuilder.Entity("Domain.ActividadMuseo.Entities.CalendarioMuseo", b =>
+                {
+                    b.OwnsOne("Domain.ActividadMuseo.ValueObjets.DiasLaboralesMuseo", "DiasApertura", b1 =>
+                        {
+                            b1.Property<int>("CalendarioMuseoId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Dias")
+                                .IsRequired()
+                                .HasColumnType("longtext")
+                                .HasColumnName("DiasApertura");
+
+                            b1.HasKey("CalendarioMuseoId");
+
+                            b1.ToTable("CalendariosMuseo");
+
+                            b1.WithOwner()
+                                .HasForeignKey("CalendarioMuseoId");
+                        });
+
+                    b.OwnsOne("Domain.ActividadMuseo.ValueObjets.Horario", "HorarioApertura", b1 =>
+                        {
+                            b1.Property<int>("CalendarioMuseoId")
+                                .HasColumnType("int");
+
+                            b1.Property<TimeOnly>("HoraFin")
+                                .HasColumnType("time(6)")
+                                .HasColumnName("HoraFin");
+
+                            b1.Property<TimeOnly>("HoraInicio")
+                                .HasColumnType("time(6)")
+                                .HasColumnName("HoraInicio");
+
+                            b1.HasKey("CalendarioMuseoId");
+
+                            b1.ToTable("CalendariosMuseo");
+
+                            b1.WithOwner()
+                                .HasForeignKey("CalendarioMuseoId");
+                        });
+
+                    b.Navigation("DiasApertura");
+
+                    b.Navigation("HorarioApertura");
+                });
+
+            modelBuilder.Entity("Domain.ActividadMuseo.Entities.DiaCierreMuseo", b =>
+                {
+                    b.HasOne("Domain.ActividadMuseo.Entities.CalendarioMuseo", null)
+                        .WithMany("DiasCierre")
+                        .HasForeignKey("CalendarioMuseoId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("Domain.ActividadMuseo.Entities.RecursoAsignado", b =>
                 {
                     b.HasOne("Domain.ActividadMuseo.Entities.ActividadMuseo", "Actividad")
@@ -925,6 +1004,106 @@ namespace Infrastructure.Migrations
                     b.Navigation("DiaAsignado");
 
                     b.Navigation("Guia");
+                });
+
+            modelBuilder.Entity("Domain.VisitasGrupales.Entities.ConfiguracionHorarioAutoguiada", b =>
+                {
+                    b.OwnsOne("Domain.ActividadMuseo.ValueObjets.DiasLaboralesMuseo", "DiasDisponibles", b1 =>
+                        {
+                            b1.Property<int>("ConfiguracionHorarioAutoguiadaId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Dias")
+                                .IsRequired()
+                                .HasColumnType("longtext")
+                                .HasColumnName("DiasDisponibles");
+
+                            b1.HasKey("ConfiguracionHorarioAutoguiadaId");
+
+                            b1.ToTable("ConfiguracionVisitaAutoguiada");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ConfiguracionHorarioAutoguiadaId");
+                        });
+
+                    b.OwnsOne("Domain.ActividadMuseo.ValueObjets.Horario", "HorarioDisponibleVisitaAutoguiadas", b1 =>
+                        {
+                            b1.Property<int>("ConfiguracionHorarioAutoguiadaId")
+                                .HasColumnType("int");
+
+                            b1.Property<TimeOnly>("HoraFin")
+                                .HasColumnType("time(6)")
+                                .HasColumnName("HoraFin");
+
+                            b1.Property<TimeOnly>("HoraInicio")
+                                .HasColumnType("time(6)")
+                                .HasColumnName("HoraInicio");
+
+                            b1.HasKey("ConfiguracionHorarioAutoguiadaId");
+
+                            b1.ToTable("ConfiguracionVisitaAutoguiada");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ConfiguracionHorarioAutoguiadaId");
+                        });
+
+                    b.Navigation("DiasDisponibles");
+
+                    b.Navigation("HorarioDisponibleVisitaAutoguiadas");
+                });
+
+            modelBuilder.Entity("Domain.VisitasGrupales.Entities.ConfiguracionVisitasGrupalesGuiadas", b =>
+                {
+                    b.OwnsOne("Domain.ActividadMuseo.ValueObjets.DiasLaboralesMuseo", "DiasDisponibles", b1 =>
+                        {
+                            b1.Property<int>("ConfiguracionVisitasGrupalesGuiadasId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Dias")
+                                .IsRequired()
+                                .HasColumnType("longtext")
+                                .HasColumnName("DiasDisponibles");
+
+                            b1.HasKey("ConfiguracionVisitasGrupalesGuiadasId");
+
+                            b1.ToTable("ConfiguracionVisitasGrupalesGuiadas");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ConfiguracionVisitasGrupalesGuiadasId");
+                        });
+
+                    b.OwnsMany("Domain.VisitasGrupales.ValueObjects.TurnoVisitaGuiada", "Turnos", b1 =>
+                        {
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int");
+
+                            MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b1.Property<int>("Id"));
+
+                            b1.Property<int>("ConfiguracionVisitasGrupalesGuiadasId")
+                                .HasColumnType("int");
+
+                            b1.Property<TimeOnly>("HoraFin")
+                                .HasColumnType("time(6)")
+                                .HasColumnName("HoraFin");
+
+                            b1.Property<TimeOnly>("HoraInicio")
+                                .HasColumnType("time(6)")
+                                .HasColumnName("HoraInicio");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("ConfiguracionVisitasGrupalesGuiadasId");
+
+                            b1.ToTable("TurnosVisitasGuiadas", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("ConfiguracionVisitasGrupalesGuiadasId");
+                        });
+
+                    b.Navigation("DiasDisponibles");
+
+                    b.Navigation("Turnos");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1092,6 +1271,11 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.ActividadMuseo.Entities.ActividadMuseo", b =>
                 {
                     b.Navigation("Recursos");
+                });
+
+            modelBuilder.Entity("Domain.ActividadMuseo.Entities.CalendarioMuseo", b =>
+                {
+                    b.Navigation("DiasCierre");
                 });
 
             modelBuilder.Entity("Domain.RecursoMuseo.Entities.Guia.Guia", b =>

@@ -13,7 +13,6 @@ namespace Application.VisitaGrupal.Mappings
             CreateMap<TurnoDisponible, TurnoDisponibleDto>()
                 .ForMember(dest => dest.HorarioTurno, opt => opt.MapFrom(src => src.HorarioTurno))
                 .ForMember(dest => dest.CapacidadMaxima, opt => opt.MapFrom(src => src.CapacidadMaxima))
-                .ForMember(dest => dest.CapacidadDisponible, opt => opt.MapFrom(src => src.CapacidadDisponible))
                 .ForMember(dest => dest.EstadoTurno, opt => opt.MapFrom(src => src.EstadoTurno.ToString()));
 
             CreateMap<TematicaVisita, TematicaVisitaGrupalDto>()
@@ -43,26 +42,3 @@ namespace Application.VisitaGrupal.Mappings
         }   
     }
 }
-/*using Application.ApplicationMuseo.DataTransferObjects;
-using Application.ApplicationMuseo.DomainEvents;
-
-using AutoMapper;
-
-using Domain.Entities;
-
-namespace Application.ApplicationMuseo.Mappings
-{
-    /// <summary>
-    /// El mapeo entre objetos debe ir definido aqui
-    /// </summary>
-    public class Mapping : Profile
-    {
-        public Mapping()
-        {
-            CreateMap<DummyEntity, DummyEntityCreated>().ReverseMap();
-            CreateMap<DummyEntity, DummyEntityUpdated>().ReverseMap();
-            CreateMap<DummyEntity, DummyEntityDto>().ReverseMap();
-        }
-    }
-}
-*/

@@ -22,7 +22,6 @@
 		<Folder Include="Common\UseCases\Provincia\Notifications\" />
 		<Folder Include="MuseumResources\UseCases\MuseumGallery\Queries\NewFolder\" />
 		<Folder Include="VisitaGrupal\UseCases\Commands\DeleteTurnosVisitas\" />
-		<Folder Include="VisitaGrupal\UseCases\Commands\UpdateTurnosVisitas\" />
 		<Folder Include="VisitaGrupal\UseCases\Notification\" />
 		<Folder Include="VisitaGrupal\UseCases\Queries\GetTurnosVisitas\" />
 	</ItemGroup>

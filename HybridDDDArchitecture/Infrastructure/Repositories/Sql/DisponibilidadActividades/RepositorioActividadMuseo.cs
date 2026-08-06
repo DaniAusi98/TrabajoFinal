@@ -9,9 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories.Sql.DisponibilidadActividades
 {
-    internal sealed class RepositorioActividadMuseo(MuseoDbContext context) : BaseRepository<ActividadMuseo>(context), IRepositorioActividadMuseo
+    internal sealed class RepositorioActividadMuseo(MuseoDbContext context) : BaseRepository<Domain.ActividadMuseo.Entities.ActividadMuseo>(context), IRepositorioActividadMuseo
     {
-        public async Task<List<ActividadMuseo>> FindAllAsync(DateTime fechaDesde, DateTime fechaHasta)
+        public async Task<List<Domain.ActividadMuseo.Entities.ActividadMuseo>> FindAllAsync(DateTime fechaDesde, DateTime fechaHasta)
         {
             
                 return await Repository

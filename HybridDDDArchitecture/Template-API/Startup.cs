@@ -106,9 +106,11 @@ namespace API
             }
 
             CustomMapper.Instance = app.ApplicationServices.GetRequiredService<IMapper>();
-            // 🔽 AGREGAR ESTO - Una línea simple
             app.SeedIdentityRoles();
-            // 🔼
+            app.SeedCalendarioMuseo();
+            app.SeedConfiguracionVisitas();  
+            app.SeedConfiguracionHorarioAutoguiadas();
+
 
             app.UseHttpsRedirection();
 

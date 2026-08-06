@@ -7,6 +7,7 @@ using Application.VisitaGrupal.Repositories;
 using Domain.Common.Others.Utils;
 
 using Infrastructure.Constants;
+using Infrastructure.Repositories.Sql.ActividadMuseo;
 using Infrastructure.Repositories.Sql.RecursosMuseo;
 using Infrastructure.Repositories.Sql.Ubicacion;
 using Infrastructure.Repositories.Sql.VisitaGrupal;
@@ -93,20 +94,25 @@ namespace Infrastructure.Factories
             /* Repositories */
             services.AddTransient<IDummyEntityRepository, Repositories.Sql.DummyEntityRepository>();
             // services.AddTransient<IRepositorioUsuarioVisitante, RepositorioUsuario>();
-            services.AddTransient<IRepositorioVisitaGuiada, Repositories.Sql.VisitaGrupal.RepositorioVisitaGuiada>();
-            services.AddTransient<IRepositorioTematicas, Repositories.Sql.VisitaGrupal.RepositorioTematicasVisita>();
+            services.AddTransient<IRepositorioVisitaGuiada, RepositorioVisitaGuiada>();
+            services.AddTransient<IRepositorioTematicas, RepositorioTematicasVisita>();
             // También registrar la interfaz usada por la versión 'MuseumResources' para evitar mismatch de namespaces
-            services.AddTransient<IRepositorioGuia,Repositories.Sql.VisitaGrupal.RepositorioGuia>();
-            services.AddTransient<Application.VisitaGrupal.Repositories.IRepositorioConfiguracionVisitasGrupalesGuiadas, Repositories.Sql.VisitaGrupal.RepositorioConfiguracionVisitasGrupalesGuiadas>();
+            services.AddTransient<IRepositorioGuia,RepositorioGuia>();
+            services.AddTransient<IRepositorioConfiguracionVisitasGrupalesGuiadas, RepositorioConfiguracionVisitasGrupalesGuiadas>();
             services.AddTransient<IRepositorioDiaCierreMuseo, Repositories.Sql.DisponibilidadActividades.RepositorioDiaCierreMuseo>();
             services.AddTransient<IRepositorioActividadMuseo,Repositories.Sql.DisponibilidadActividades.RepositorioActividadMuseo>();
+            services.AddTransient<IRepositorioCalendarioMuseo, RepositorioCalendarioMuseo>();
             services.AddTransient<IRepositorioVisitaGrupalAutoguiada, RepositorioVisitaGrupalAutoguiada>();
             services.AddTransient<IRepositorioSala, RepositorioSalaMuseo>();
             services.AddTransient<IRepositorioRecurso, RepositorioRecursoMuseo>();
             services.AddTransient<IDepartamentoRepository,DepartamentoRepository>();
             services.AddTransient<ILocalidadRepository, LocalidadRepository>();
+            services.AddTransient<IRepositorioConfiguracionHorarioAutoguiada, RepositorioConfiguracionHorarioAutoguiada>();
+
 
             services.AddTransient<IProvinciaRepository, ProvinciaRepository>();
+           
+
 
 
             // 🔥 Migraciones automáticas al levantar la app (infra pura)

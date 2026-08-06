@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Collections.Generic;
 using Domain.ActividadMuseo.Entities;
 
 namespace Application.Availability
@@ -13,14 +12,7 @@ namespace Application.Availability
         public IReadOnlyCollection<Domain.ActividadMuseo.Entities.ActividadMuseo> ExistingActivities { get; init; } = new List<Domain.ActividadMuseo.Entities.ActividadMuseo>();
 
         // Typed optional properties commonly used by rules (prefetched by orchestrator)
-        public IReadOnlyCollection<DiaCierreMuseo>? DiasCierre { get; init; }
 
-        public IReadOnlyCollection<BloqueoSala>? BloqueosSala { get; init; }
-
-        // Optional map by sala id for quick lookups (key: sala.Id)
-        public IReadOnlyDictionary<int, IReadOnlyCollection<Domain.ActividadMuseo.Entities.ActividadMuseo>>? ExistingActivitiesBySala { get; init; }
-
-        // Generic metadata bag (optional)
         public IReadOnlyDictionary<string, object> Metadata { get; init; } = new Dictionary<string, object>();
     }
 }

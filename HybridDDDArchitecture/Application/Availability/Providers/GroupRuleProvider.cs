@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+/*using System.Collections.Generic;
 using Application.Availability.Rules;
 using Domain.ActividadMuseo.Entities;
 
@@ -18,4 +18,4 @@ namespace Application.Availability.Providers
             yield return new NoConcurrentGuidedIfGroupRule();
         }
     }
-}
+}*/

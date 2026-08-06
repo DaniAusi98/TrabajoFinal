@@ -1,21 +1,31 @@
-using Application.VisitaGrupal.ApplicationServices;
 using Application.VisitaGrupal.DataTransferObjets;
+using Application.VisitaGrupal.Repositories;
 using Core.Application;
 
 namespace Application.VisitaGrupal.UseCases.Queries.GetConfiguracionVisitasGrupalesGuiadas
 {
-    internal sealed class GetConfiguracionVisitasGrupalesGuiadasHandler(IConfiguracionVisitasGrupalesGuiadasService service) : IRequestQueryHandler<GetConfiguracionVisitasGrupalesGuiadasQuery, ConfiguracionVisitasGrupalesGuiadasDto>
+    internal sealed class GetConfiguracionVisitasGrupalesGuiadasHandler(IRepositorioConfiguracionVisitasGrupalesGuiadas repositorio) 
+        : IRequestQueryHandler<GetConfiguracionVisitasGrupalesGuiadasQuery, ConfiguracionVisitasGrupalesGuiadasDto>
     {
-        private readonly IConfiguracionVisitasGrupalesGuiadasService _service = service ?? throw new ArgumentNullException(nameof(service));
+        private readonly IRepositorioConfiguracionVisitasGrupalesGuiadas _repositorio = repositorio ?? throw new ArgumentNullException(nameof(repositorio));
 
         public async Task<ConfiguracionVisitasGrupalesGuiadasDto> Handle(GetConfiguracionVisitasGrupalesGuiadasQuery request, CancellationToken cancellationToken)
         {
-            var opts = await _service.GetAsync();
+            var config = await _repositorio.ObtenerConfiguracionActivaAsync()
+                ?? throw new InvalidOperationException("No existe una configuración activa.");
+
             return new ConfiguracionVisitasGrupalesGuiadasDto
             {
-                MinGuiasParaCapacidadCompleta = opts.MinGuiasParaCapacidadCompleta,
-                CapacidadPorGuia = opts.CapacidadPorGuia,
-                CapacidadMaximaPorTurno = opts.CapacidadMaximaPorTurno
+                Id = config.Id,
+                MinGuiasParaCapacidadCompleta = config.MinGuiasParaCapacidadCompleta,
+                CapacidadPorGuia = config.CapacidadPorGuia,
+                CapacidadMaximaPorTurno = config.CapacidadMaximaPorTurno,
+                DiasDisponibles = config.DiasDisponibles.Dias.ToList(),
+                Turnos = config.Turnos.Select(t => new TurnoDto
+                {
+                    HoraInicio = t.HoraInicio,
+                    HoraFin = t.HoraFin
+                }).ToList()
             };
         }
     }

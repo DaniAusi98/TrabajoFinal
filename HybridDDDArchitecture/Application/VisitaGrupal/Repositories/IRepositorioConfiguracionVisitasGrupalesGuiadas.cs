@@ -1,11 +1,10 @@
 using Domain.VisitasGrupales.Entities;
-using System.Threading.Tasks;
+using Core.Application.Repositories;
 
 namespace Application.VisitaGrupal.Repositories
 {
-    public interface IRepositorioConfiguracionVisitasGrupalesGuiadas
+    public interface IRepositorioConfiguracionVisitasGrupalesGuiadas : IRepository<ConfiguracionVisitasGrupalesGuiadas>
     {
-        Task<ConfiguracionVisitasGrupalesGuiadas> ObtenerConfiguracionAsync();
-        Task GuardarConfiguracionAsync(ConfiguracionVisitasGrupalesGuiadas configuracion);
+        Task<ConfiguracionVisitasGrupalesGuiadas?> ObtenerConfiguracionActivaAsync();
     }
 }

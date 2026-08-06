@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Application.Availability;
 using Domain.ActividadMuseo.Entities;
 using Domain.VisitasGrupales.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Availability.Rules
 {
@@ -12,11 +13,22 @@ namespace Application.Availability.Rules
     /// </summary>
     public class NoConcurrentGuidedWithAutoguidedRule : IAvailabilityRule
     {
-        public Task<AvailabilityResult> CheckAsync(AvailabilityContext ctx, ActividadMuseo candidate)
+        private readonly ILogger<NoConcurrentGuidedWithAutoguidedRule> _logger;
+
+        public NoConcurrentGuidedWithAutoguidedRule(ILogger<NoConcurrentGuidedWithAutoguidedRule> logger)
+        {
+            _logger = logger;
+        }
+
+        public Task<AvailabilityResult> CheckAsync(AvailabilityContext ctx, Domain.ActividadMuseo.Entities.ActividadMuseo candidate)
         {
             // Aplica sólo a actividades grupales
             if (candidate is not VisitaGrupalGuiada && candidate is not VisitaGrupalAutoguiada)
                 return Task.FromResult(AvailabilityResult.Ok());
+
+            var candidateType = candidate is VisitaGrupalGuiada ? "Guiada" : "Autoguiada";
+            _logger.LogDebug("Checking concurrent visits for {CandidateType} candidate {CandidateId}",
+                candidateType, candidate.Id);
 
             var candidateSlots = candidate.TimeSlots.ToList();
 
@@ -32,8 +44,13 @@ namespace Application.Availability.Rules
                 });
 
             if (conflict)
+            {
+                _logger.LogInformation("Concurrent visit conflict detected for {CandidateType} candidate {CandidateId}",
+                    candidateType, candidate.Id);
                 return Task.FromResult(AvailabilityResult.Fail("No se permiten visitas guiadas y autoguiadas en el mismo horario."));
+            }
 
+            _logger.LogDebug("No concurrent visit conflicts for candidate {CandidateId}", candidate.Id);
             return Task.FromResult(AvailabilityResult.Ok());
         }
     }

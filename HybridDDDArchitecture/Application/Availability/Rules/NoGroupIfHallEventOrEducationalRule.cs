@@ -1,4 +1,4 @@
-using System.Linq;
+/*using System.Linq;
 using System.Threading.Tasks;
 using Application.Availability;
 using Domain.ActividadMuseo.Entities;
@@ -12,7 +12,7 @@ namespace Application.Availability.Rules
     /// </summary>
     public class NoGroupIfHallEventOrEducationalRule : IAvailabilityRule
     {
-        public Task<AvailabilityResult> CheckAsync(AvailabilityContext ctx, ActividadMuseo candidate)
+        public Task<AvailabilityResult> CheckAsync(AvailabilityContext ctx, Domain.ActividadMuseo.Entities.ActividadMuseo candidate)
         {
             // Aplica solo a visitas grupales
             if (candidate is not VisitaGrupalGuiada && candidate is not VisitaGrupalAutoguiada)
@@ -20,7 +20,7 @@ namespace Application.Availability.Rules
 
             // Si la candidata no tiene salas asignadas, conservadoramente no la bloqueamos aquí
             var salas = candidate.Salas ?? new System.Collections.Generic.List<Domain.RecursoMuseo.Entities.Sala>();
-            if (!salas.Any() || !salas.Any(s => s.TipoSala == TipoSala.Hall))
+            if (!salas.Any() || !salas.Any(s => s.Nombre =="Hall"))
                 return Task.FromResult(AvailabilityResult.Ok());
 
             var candidateSlots = candidate.TimeSlots.ToList();
@@ -48,3 +48,4 @@ namespace Application.Availability.Rules
         }
     }
 }
+*/
