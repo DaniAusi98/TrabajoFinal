@@ -9,6 +9,7 @@ namespace Domain.VisitasGrupales.Entities
     public class ConfiguracionVisitasGrupalesGuiadas : DomainEntity<int>
     {
         private readonly List<TurnoVisitaGuiada> _turnos;
+        private readonly List<BloqueoVisitasGuiadas> _bloqueos; // NUEVO
 
         public int MinGuiasParaCapacidadCompleta { get; private set; }
         public int CapacidadPorGuia { get; private set; }
@@ -16,17 +17,20 @@ namespace Domain.VisitasGrupales.Entities
         public DiasLaboralesMuseo DiasDisponibles { get; private set; }
         public IReadOnlyCollection<TurnoVisitaGuiada> Turnos => _turnos.AsReadOnly();
 
+        public IReadOnlyCollection<BloqueoVisitasGuiadas> Bloqueos=> _bloqueos.AsReadOnly();
+
         protected ConfiguracionVisitasGrupalesGuiadas()
         {
             _turnos = new List<TurnoVisitaGuiada>();
+            _bloqueos = new List<BloqueoVisitasGuiadas>(); // NUEVO
         }
-
         public ConfiguracionVisitasGrupalesGuiadas(
             int minGuias,
             int capacidadPorGuia,
             int capacidadMaxima,
             DiasLaboralesMuseo diasDisponibles,
-            IReadOnlyCollection<TurnoVisitaGuiada> turnos)
+            IReadOnlyCollection<TurnoVisitaGuiada> turnos,
+            IReadOnlyCollection<BloqueoVisitasGuiadas>? bloqueos = null) 
         {
             if (minGuias <= 0)
                 throw new DomainException("El número mínimo de guías debe ser mayor a 0.");
@@ -49,6 +53,8 @@ namespace Domain.VisitasGrupales.Entities
 
             _turnos = turnos?.ToList()
                 ?? throw new ArgumentNullException(nameof(turnos));
+            _bloqueos = bloqueos?.ToList() ?? new List<BloqueoVisitasGuiadas>();
+
 
             ValidarTurnosNoSeSolapen();
         }
@@ -127,7 +133,35 @@ namespace Domain.VisitasGrupales.Entities
 
             ValidarTurnosNoSeSolapen();
         }
+        public void AgregarBloqueo(BloqueoVisitasGuiadas bloqueo)
+        {
+            if (bloqueo == null)
+                throw new ArgumentNullException(nameof(bloqueo));
 
+            // Opcional: validar que no se solape con bloqueos existentes
+            if (_bloqueos.Any(b => b.SolapaConPeriodo(bloqueo.FechaDesde, bloqueo.FechaHasta)))
+                throw new DomainException("El bloqueo se solapa con un bloqueo existente.");
+
+            _bloqueos.Add(bloqueo);
+        }
+
+        public void RemoverBloqueo(BloqueoVisitasGuiadas bloqueo)
+        {
+            if (bloqueo == null)
+                throw new ArgumentNullException(nameof(bloqueo));
+
+            _bloqueos.Remove(bloqueo);
+        }
+
+        public bool EstaDisponibleEnFecha(DateTime fecha)
+        {
+            // Primero verifica día de la semana
+            if (!EsDiaDisponible(fecha.DayOfWeek))
+                return false;
+
+            // Luego verifica bloqueos
+            return !_bloqueos.Any(b => b.SolapaConFecha(fecha));
+        }
         public bool EsDiaDisponible(DayOfWeek dia)
         {
             return DiasDisponibles.EsDiaLaboral(dia);
@@ -161,3 +195,67 @@ namespace Domain.VisitasGrupales.Entities
         }
     }
 }
+
+
+/*public class ConfiguracionVisitasGrupalesGuiadas : DomainEntity<int>
+{
+    private readonly List<TurnoVisitaGuiada> _turnos;
+    private readonly List<BloqueoVisitasGuiadas> _bloqueos; // NUEVO
+
+    // ... propiedades existentes ...
+    
+    public IReadOnlyCollection<BloqueoVisitasGuiadas> Bloqueos 
+        => _bloqueos.AsReadOnly(); // NUEVO
+
+    protected ConfiguracionVisitasGrupalesGuiadas()
+    {
+        _turnos = new List<TurnoVisitaGuiada>();
+        _bloqueos = new List<BloqueoVisitasGuiadas>(); // NUEVO
+    }
+
+    public ConfiguracionVisitasGrupalesGuiadas(
+        int minGuias,
+        int capacidadPorGuia,
+        int capacidadMaxima,
+        DiasLaboralesMuseo diasDisponibles,
+        IReadOnlyCollection<TurnoVisitaGuiada> turnos,
+        IReadOnlyCollection<BloqueoVisitasGuiadas>? bloqueos = null) // NUEVO (opcional)
+    {
+        // ... validaciones existentes ...
+
+        _bloqueos = bloqueos?.ToList() ?? new List<BloqueoVisitasGuiadas>();
+    }
+
+    // NUEVOS MÉTODOS
+    public void AgregarBloqueo(BloqueoVisitasGuiadas bloqueo)
+    {
+        if (bloqueo == null)
+            throw new ArgumentNullException(nameof(bloqueo));
+
+        // Opcional: validar que no se solape con bloqueos existentes
+        if (_bloqueos.Any(b => b.SolapaConPeriodo(bloqueo.FechaDesde, bloqueo.FechaHasta)))
+            throw new DomainException("El bloqueo se solapa con un bloqueo existente.");
+
+        _bloqueos.Add(bloqueo);
+    }
+
+    public void RemoverBloqueo(BloqueoVisitasGuiadas bloqueo)
+    {
+        if (bloqueo == null)
+            throw new ArgumentNullException(nameof(bloqueo));
+
+        _bloqueos.Remove(bloqueo);
+    }
+
+    public bool EstaDisponibleEnFecha(DateTime fecha)
+    {
+        // Primero verifica día de la semana
+        if (!EsDiaDisponible(fecha.DayOfWeek))
+            return false;
+
+        // Luego verifica bloqueos
+        return !_bloqueos.Any(b => b.SolapaConFecha(fecha));
+    }
+
+    // ... resto de métodos existentes ...
+}*/

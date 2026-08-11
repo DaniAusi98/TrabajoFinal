@@ -4,7 +4,7 @@ using Application.ApplicationMuseo.UseCases.Provincia.Queries.GetLocalidadesbyDe
 using Core.Application;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Controllers
+namespace Controllers.VisitasGrupales
 {
     [ApiController]
     [Route("api/v1/[controller]")]

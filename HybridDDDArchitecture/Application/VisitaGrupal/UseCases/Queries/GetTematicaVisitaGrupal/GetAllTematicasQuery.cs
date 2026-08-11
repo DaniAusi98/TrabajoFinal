@@ -10,7 +10,7 @@ using Core.Application;
 
 namespace Application.VisitaGrupal.UseCases.Queries.GetTematicaVisitaGrupal
 {
-    public class GetAllTematicasQuery:QueryRequest<QueryResult<TematicaVisitaGrupalDto>>
+    public class GetAllTematicasQuery:QueryRequest<QueryResult<TematicaVisitaDto>>
     {
     }
 }

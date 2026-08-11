@@ -36,7 +36,8 @@ namespace Domain.VisitasGrupales.Enums
             Disponible,
             NoDisponible,
             Completo,
-            Cancelado
+            Cancelado,
+            Bloqueado
         }
 
 

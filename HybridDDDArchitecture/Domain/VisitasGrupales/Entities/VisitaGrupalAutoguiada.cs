@@ -26,6 +26,8 @@ namespace Domain.VisitasGrupales.Entities
         public string Observaciones { get; private set; } = string.Empty;
 
         public EstadoConfirmacionVisita EstadoConfirmacion { get; private set; }
+        public List<TematicaVisita> Tematicas { get; private set; } = [];
+
 
 
         protected VisitaGrupalAutoguiada()
@@ -44,6 +46,7 @@ namespace Domain.VisitasGrupales.Entities
             string descripcionDiversidad,
             string observaciones,
             IEnumerable<TimeSlot> timeSlots,
+            IEnumerable<TematicaVisita> tematicas,
             IEnumerable<Sala> salas
         )
         : base(
@@ -105,6 +108,7 @@ namespace Domain.VisitasGrupales.Entities
                 string.IsNullOrWhiteSpace(observaciones)
                 ? string.Empty
                 : observaciones.Trim();
+            AsignarTematicas(tematicas);
 
 
             EstadoConfirmacion = EstadoConfirmacionVisita.PendienteConfirmar;
@@ -175,6 +179,23 @@ namespace Domain.VisitasGrupales.Entities
                 string.IsNullOrWhiteSpace(nuevasObservaciones)
                 ? string.Empty
                 : nuevasObservaciones.Trim();
+        }
+        public void AsignarTematicas(
+           IEnumerable<TematicaVisita> tematicas)
+        {
+            ArgumentNullException.ThrowIfNull(tematicas);
+
+            var lista = tematicas.ToList();
+
+            if (lista.Select(x => x.Id)
+                .Distinct()
+                .Count() != lista.Count)
+            {
+                throw new DomainException(
+                    "No se pueden repetir temáticas.");
+            }
+
+            Tematicas = lista;
         }
 
 

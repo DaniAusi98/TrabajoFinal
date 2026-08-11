@@ -9,14 +9,13 @@ using Application.VisitaGrupal.UseCases.Queries.GetAllGroupVisitCalendar;
 using Application.VisitaGrupal.UseCases.Queries.GetReservationById;
 using Application.VisitaGrupal.UseCases.Queries.GetReservationsById;
 using Application.VisitaGrupal.UseCases.Queries.GetTematicaVisitaGrupal;
-
 using Core.Application;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Controllers;
+namespace Controllers.VisitasGrupales;
 
 [ApiController]
 [Route("api/v1/[controller]")]

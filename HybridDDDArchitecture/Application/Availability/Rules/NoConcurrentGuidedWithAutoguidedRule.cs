@@ -45,7 +45,7 @@ namespace Application.Availability.Rules
 
             if (conflict)
             {
-                _logger.LogInformation("Concurrent visit conflict detected for {CandidateType} candidate {CandidateId}",
+                _logger.LogDebug("Concurrent visit conflict detected for {CandidateType} candidate {CandidateId}",
                     candidateType, candidate.Id);
                 return Task.FromResult(AvailabilityResult.Fail("No se permiten visitas guiadas y autoguiadas en el mismo horario."));
             }

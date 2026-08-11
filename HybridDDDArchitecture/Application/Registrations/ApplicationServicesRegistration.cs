@@ -19,6 +19,7 @@ using Domain.VisitasGrupales.DomainServices;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Application.Availability;
+using Application.Availability.Producers;
 
 namespace Application.Registrations
 {
@@ -57,6 +58,7 @@ namespace Application.Registrations
 
             // Register availability service (now uses ConfiguracionVisitasGrupalesGuiadas entity from database)
             services.AddScoped<IServicioDisponibilidadTurnosVisitasGuiadas, ServicioDisponibilidadTurnosVisitasGuiadas>();
+            services.AddScoped<IServicioDisponibilidadSlotsAutoguiadas, ServicioDisponibilidadSlotsAutoguiadas>();
 
             // Register availability engine, rule factory and providers (moved from Application.Availability.ServiceCollectionExtensions)
             services.AddScoped<Application.Availability.AvailabilityEngine>();
@@ -78,6 +80,7 @@ namespace Application.Registrations
 
             // Register guided availability producer service
             services.AddScoped<Application.Availability.Producers.GuidedAvailabilityProducerService>();
+            services.AddScoped<GroupAvailabilityProducerService>();
             // Register group availability producer service
            // services.AddScoped<Application.Availability.Producers.GroupAvailabilityProducerService>();
             // Register in-memory recurrence repo for testing (optional)

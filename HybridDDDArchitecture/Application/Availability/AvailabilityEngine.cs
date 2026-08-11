@@ -1,5 +1,3 @@
-
-
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,50 +9,89 @@ namespace Application.Availability
     public class AvailabilityEngine
     {
         private readonly IRuleFactory _ruleFactory;
-        private readonly ILogger<AvailabilityEngine> _logger;
+        private readonly ILogger _logger;
 
-        public AvailabilityEngine(IRuleFactory ruleFactory, ILogger<AvailabilityEngine> logger)
+        public AvailabilityEngine(
+            IRuleFactory ruleFactory,
+            ILogger<AvailabilityEngine> logger)
         {
             _ruleFactory = ruleFactory;
             _logger = logger;
         }
 
-        public async Task<AvailabilityResult> CheckAsync(AvailabilityContext ctx, Domain.ActividadMuseo.Entities.ActividadMuseo candidate)
+        public async Task<AvailabilityResult> CheckAsync(
+            AvailabilityContext ctx,
+            Domain.ActividadMuseo.Entities.ActividadMuseo candidate)
         {
             var rules = _ruleFactory.GetRulesFor(candidate);
             var rulesList = rules.ToList();
 
-            _logger.LogInformation("Checking availability for {TipoActividad} (Id: {CandidateId}) with {RuleCount} rules",
-                candidate.TipoActividad, candidate.Id, rulesList.Count);
+            // Se cambia de Information a Debug porque este log
+            // se ejecuta una vez por cada candidato.
+            _logger.LogDebug(
+                "Checking availability for {TipoActividad} (Id: {CandidateId}) with {RuleCount} rules",
+                candidate.TipoActividad,
+                candidate.Id,
+                rulesList.Count);
 
             foreach (var rule in rulesList)
             {
                 var ruleName = rule.GetType().Name;
-                _logger.LogDebug("Executing rule: {RuleName}", ruleName);
+
+                _logger.LogDebug(
+                    "Executing rule: {RuleName}",
+                    ruleName);
 
                 var res = await rule.CheckAsync(ctx, candidate);
+
                 if (!res.IsOk)
                 {
-                    _logger.LogWarning("Rule {RuleName} failed for {TipoActividad} (Id: {CandidateId}): {Message}",
-                        ruleName, candidate.TipoActividad, candidate.Id, res.Message);
+                    // Se mantiene como Warning porque representa
+                    // un candidato que no pasó una regla.
+                    _logger.LogWarning(
+                        "Rule {RuleName} failed for {TipoActividad} (Id: {CandidateId}): {Message}",
+                        ruleName,
+                        candidate.TipoActividad,
+                        candidate.Id,
+                        res.Message);
+
                     return res;
                 }
 
-                _logger.LogDebug("Rule {RuleName} passed", ruleName);
+                _logger.LogDebug(
+                    "Rule {RuleName} passed",
+                    ruleName);
             }
 
-            _logger.LogInformation("All rules passed for {TipoActividad} (Id: {CandidateId})",
-                candidate.TipoActividad, candidate.Id);
+            // También pasa a Debug porque se ejecuta una vez
+            // por cada candidato aprobado.
+            _logger.LogDebug(
+                "All rules passed for {TipoActividad} (Id: {CandidateId})",
+                candidate.TipoActividad,
+                candidate.Id);
 
             return AvailabilityResult.Ok();
         }
 
-        // Validate a collection of candidates using the engine. Returns a map candidate -> result.
-        // For each candidate a per-candidate context is created by copying typed prefetched data and
-        // filtering ExistingActivities to those that overlap with the candidate timeslots.
-        public async Task<IDictionary<Domain.ActividadMuseo.Entities.ActividadMuseo, AvailabilityResult>> CheckManyAsync(AvailabilityContext baseCtx, IEnumerable<Domain.ActividadMuseo.Entities.ActividadMuseo> candidates)
+        // Validate a collection of candidates using the engine.
+        // Returns a map candidate -> result.
+        //
+        // For each candidate a per-candidate context is created
+        // by copying typed prefetched data and filtering
+        // ExistingActivities to those that overlap with
+        // the candidate timeslots.
+        public async Task<
+            IDictionary<
+                Domain.ActividadMuseo.Entities.ActividadMuseo,
+                AvailabilityResult>>
+            CheckManyAsync(
+                AvailabilityContext baseCtx,
+                IEnumerable<Domain.ActividadMuseo.Entities.ActividadMuseo> candidates)
         {
-            var results = new Dictionary<Domain.ActividadMuseo.Entities.ActividadMuseo, AvailabilityResult>();
+            var results =
+                new Dictionary<
+                    Domain.ActividadMuseo.Entities.ActividadMuseo,
+                    AvailabilityResult>();
 
             if (candidates == null)
                 return results;
@@ -64,32 +101,56 @@ namespace Application.Availability
 
             foreach (var candidate in list)
             {
-                // Build a per-candidate context reusing prefetched data from baseCtx
-                var candidateStart = candidate.TimeSlots.Min(ts => ts.Inicio);
-                var candidateEnd = candidate.TimeSlots.Max(ts => ts.Fin);
+                // Build a per-candidate context reusing
+                // prefetched data from baseCtx
+                var candidateStart =
+                    candidate.TimeSlots.Min(ts => ts.Inicio);
+
+                var candidateEnd =
+                    candidate.TimeSlots.Max(ts => ts.Fin);
 
                 var perCtx = new AvailabilityContext
                 {
                     Start = candidateStart,
                     End = candidateEnd,
                     Metadata = baseCtx.Metadata,
-                    // Filter ExistingActivities to those that overlap the candidate time slot
-                    ExistingActivities = baseCtx.ExistingActivities?
-                        .Where(a => a.TimeSlots.Any(ts => ts.SeSolapaCon(new Domain.Common.ValueObjets.TimeSlot(candidateStart, candidateEnd))))
-                        .ToList() ?? new List<Domain.ActividadMuseo.Entities.ActividadMuseo>()
+
+                    // Filter ExistingActivities to those that
+                    // overlap the candidate time slot
+                    ExistingActivities =
+                        baseCtx.ExistingActivities?
+                            .Where(a =>
+                                a.TimeSlots.Any(ts =>
+                                    ts.SeSolapaCon(
+                                        new Domain.Common.ValueObjets.TimeSlot(
+                                            candidateStart,
+                                            candidateEnd))))
+                            .ToList()
+                        ?? new List<
+                            Domain.ActividadMuseo.Entities.ActividadMuseo>()
                 };
 
-                var res = await CheckAsync(perCtx, candidate);
+                var res =
+                    await CheckAsync(
+                        perCtx,
+                        candidate);
+
                 results[candidate] = res;
             }
 
             return results;
         }
 
-        // Overload that accepts CandidateEntry list and returns results keyed by the candidate Id.
-        public async Task<IDictionary<Guid, AvailabilityResult>> CheckManyAsync(AvailabilityContext baseCtx, IEnumerable<Application.Availability.Models.CandidateEntry> entries)
+        // Overload that accepts CandidateEntry list
+        // and returns results keyed by the candidate Id.
+        public async Task<IDictionary<Guid, AvailabilityResult>>
+            CheckManyAsync(
+                AvailabilityContext baseCtx,
+                IEnumerable<Application.Availability.Models.CandidateEntry> entries)
         {
-            var results = new Dictionary<Guid, AvailabilityResult>();
+            var results =
+                new Dictionary<Guid, AvailabilityResult>();
+
             if (entries == null)
                 return results;
 
@@ -100,20 +161,36 @@ namespace Application.Availability
             {
                 var candidate = entry.Candidate;
 
-                var candidateStart = candidate.TimeSlots.Min(ts => ts.Inicio);
-                var candidateEnd = candidate.TimeSlots.Max(ts => ts.Fin);
+                var candidateStart =
+                    candidate.TimeSlots.Min(ts => ts.Inicio);
+
+                var candidateEnd =
+                    candidate.TimeSlots.Max(ts => ts.Fin);
 
                 var perCtx = new AvailabilityContext
                 {
                     Start = candidateStart,
                     End = candidateEnd,
                     Metadata = baseCtx.Metadata,
-                    ExistingActivities = baseCtx.ExistingActivities?
-                        .Where(a => a.TimeSlots.Any(ts => ts.SeSolapaCon(new Domain.Common.ValueObjets.TimeSlot(candidateStart, candidateEnd))))
-                        .ToList() ?? new List<Domain.ActividadMuseo.Entities.ActividadMuseo>()
+
+                    ExistingActivities =
+                        baseCtx.ExistingActivities?
+                            .Where(a =>
+                                a.TimeSlots.Any(ts =>
+                                    ts.SeSolapaCon(
+                                        new Domain.Common.ValueObjets.TimeSlot(
+                                            candidateStart,
+                                            candidateEnd))))
+                            .ToList()
+                        ?? new List<
+                            Domain.ActividadMuseo.Entities.ActividadMuseo>()
                 };
 
-                var res = await CheckAsync(perCtx, candidate);
+                var res =
+                    await CheckAsync(
+                        perCtx,
+                        candidate);
+
                 results[entry.Id] = res;
             }
 
@@ -121,3 +198,4 @@ namespace Application.Availability
         }
     }
 }
+

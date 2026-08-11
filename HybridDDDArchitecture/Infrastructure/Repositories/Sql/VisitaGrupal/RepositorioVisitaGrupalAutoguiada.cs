@@ -19,6 +19,7 @@ namespace Infrastructure.Repositories.Sql.VisitaGrupal
             try
             {
                 return await Repository
+                    .Include(v => v.Tematicas)
                     .Include(v => v.TimeSlots)
                     .Include(v => v.Salas)
                     .Where(v =>

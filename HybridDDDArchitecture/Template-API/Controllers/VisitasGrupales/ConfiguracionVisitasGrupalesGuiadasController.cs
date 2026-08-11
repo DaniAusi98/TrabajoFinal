@@ -6,7 +6,7 @@ using Application.VisitaGrupal.UseCases.Queries.GetConfiguracionVisitasGrupalesG
 using Core.Application;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Controllers
+namespace Controllers.VisitasGrupales
 {
     [ApiController]
     public class ConfiguracionVisitasGrupalesGuiadasController(ICommandQueryBus commandQueryBus) : BaseController

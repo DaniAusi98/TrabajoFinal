@@ -55,6 +55,29 @@ namespace Infrastructure.Configurations
                     .HasMaxLength(200)
                     .IsRequired();
             });
+
+            builder.HasMany(x => x.Tematicas)
+                .WithMany()
+                .UsingEntity<Dictionary<string, object>>(
+                    "VisitaGrupalAutoguiadaTematicas",
+                    j => j
+                        .HasOne<TematicaVisita>()
+                        .WithMany()
+                        .HasForeignKey("TematicaId"),
+
+                    j => j
+                        .HasOne<VisitaGrupalAutoguiada>()
+                        .WithMany()
+                        .HasForeignKey("VisitaGrupalAutoguiadaId"),
+
+                    j =>
+                    {
+                        j.HasKey(
+                            "VisitaGrupalAutoguiadaId",
+                            "TematicaId"
+                        );
+                    }
+                );
         }
     }
 }

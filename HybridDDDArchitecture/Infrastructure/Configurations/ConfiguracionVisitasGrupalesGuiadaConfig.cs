@@ -54,6 +54,26 @@ namespace Infrastructure.Configurations
                     .HasColumnName("HoraFin")
                     .IsRequired();
             });
+            builder.OwnsMany(c => c.Bloqueos, bloqueosNav =>
+            {
+                bloqueosNav.ToTable("BloqueosVisitasGuiadas");
+
+                bloqueosNav.WithOwner()
+                    .HasForeignKey("ConfiguracionVisitasGrupalesGuiadasId");
+
+                bloqueosNav.Property<int>("Id");
+                bloqueosNav.HasKey("Id");
+
+                bloqueosNav.Property(b => b.FechaDesde)
+                    .IsRequired();
+
+                bloqueosNav.Property(b => b.FechaHasta)
+                    .IsRequired();
+
+                bloqueosNav.Property(b => b.Motivo)
+                    .HasMaxLength(500)
+                    .IsRequired();
+            });
         }
     }
 }

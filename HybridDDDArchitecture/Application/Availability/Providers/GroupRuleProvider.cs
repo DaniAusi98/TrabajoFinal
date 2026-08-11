@@ -6,8 +6,16 @@ namespace Application.Availability.Providers
 {
     public class GroupRuleProvider : IRuleProvider
     {
+        private readonly NoConcurrentGuidedWithAutoguidedRule _noConcurrentRule;
+        public GroupRuleProvider(NoConcurrentGuidedWithAutoguidedRule noConcurrentRule)
+        {
+            _noConcurrentRule = noConcurrentRule;
+           // _hallEventRule = hallEventRule;
+           // _exhibitRule = exhibitRule;
+        }
         public bool CanHandle(Domain.ActividadMuseo.Entities.ActividadMuseo candidate)
         {
+
             // Apply when candidate is either guided or autoguided group visit
             return candidate is Domain.VisitasGrupales.Entities.VisitaGrupalGuiada
                 || candidate is Domain.VisitasGrupales.Entities.VisitaGrupalAutoguiada;
@@ -15,7 +23,8 @@ namespace Application.Availability.Providers
 
         public IEnumerable<IAvailabilityRule> CreateRules(Domain.ActividadMuseo.Entities.ActividadMuseo candidate)
         {
-            yield return new NoConcurrentGuidedIfGroupRule();
+            yield return _noConcurrentRule ;
         }
     }
-}*/
+}
+*/

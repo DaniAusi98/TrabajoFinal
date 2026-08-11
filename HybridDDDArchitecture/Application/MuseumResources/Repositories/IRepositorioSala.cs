@@ -7,5 +7,8 @@ namespace Application.MuseumResources.Repositories
 {
     public interface IRepositorioSala: IRepository<Sala>
     {
+        Task<List<Sala>> ObtenerSalasporIdsAsync(IEnumerable<int> ids);
+        Task<List<Sala>> ObtenerSalasDisponiblesAsync();
+
     }
 }

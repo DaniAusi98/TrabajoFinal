@@ -8,6 +8,7 @@ namespace Application.VisitaGrupal.DataTransferObjets
         public int CapacidadMaximaPorTurno { get; set; }
         public List<DayOfWeek> DiasDisponibles { get; set; } = new();
         public List<TurnoDto> Turnos { get; set; } = new();
+        public List<BloqueoVisitaGuiadaDto> Bloqueos { get; set; } = new();
     }
 
     public class TurnoDto

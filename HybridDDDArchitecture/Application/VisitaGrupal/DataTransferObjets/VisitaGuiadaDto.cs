@@ -18,7 +18,7 @@ namespace Application.VisitaGrupal.DataTransferObjets
         public string DescripcionDiscapacidad { get; set; } = string.Empty;
         public string MotivoVisita { get; set; } = string.Empty;
         public string Observaciones { get; set; } = string.Empty;
-        public List<TematicaVisitaGrupalDto> TematicasDto { get; set; }
+        public List<TematicaVisitaDto> TematicasDto { get; set; }
         public DateTime FechaInicio { get; set; }
         public DateTime FechaFin { get; set; }
         public int CantidadPersonas { get; set; }

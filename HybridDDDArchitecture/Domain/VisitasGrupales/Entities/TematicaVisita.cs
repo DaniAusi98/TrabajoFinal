@@ -10,7 +10,6 @@ namespace Domain.VisitasGrupales.Entities
         public string Nombre { get; private set; } = string.Empty;
         public string Descripcion { get; private set; } = string.Empty;
         public bool Disponible { get; private set; } = true;
-
         public List<Sala> Salas { get; private set; } = new();
 
         protected TematicaVisita()

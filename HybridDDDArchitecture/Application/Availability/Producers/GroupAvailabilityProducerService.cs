@@ -1,12 +1,19 @@
-/*using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Application.Availability.Models;
+using Application.Exceptions;
 using Application.MuseumResources.Repositories;
+using Application.VisitaGrupal.Repositories;
 using Domain.ActividadMuseo.Entities;
 using Domain.Common.ValueObjets;
+using Domain.VisitasGrupales.DomainServices;
 using Domain.VisitasGrupales.Entities;
+
+using static Domain.VisitasGrupales.Enums.Enums;
+
+/*DateTime fechaDesde,
+            DateTime fechaHasta,
+            IReadOnlyCollection<VisitaGrupalAutoguiada> visitasAutoguiadas,
+            ConfiguracionHorarioAutoguiada configuracion,
+            CalendarioMuseo calendario*/
 
 namespace Application.Availability.Producers
 {
@@ -16,20 +23,32 @@ namespace Application.Availability.Producers
     /// </summary>
     public class GroupAvailabilityProducerService
     {
-        private readonly Application.ActividadMuseo.Repositories.IRepositorioActividadMuseo _repositorioActividadMuseo;
-        private readonly Application.Repositories.IRepositorioDiaCierreMuseo _repositorioDiasCierre;
-        private readonly IRepositorioSala _repositorioSala;
+        private readonly IRepositorioVisitaGrupalAutoguiada repositorioVisitaGrupalAutoguiada;
+        private readonly ActividadMuseo.Repositories.IRepositorioActividadMuseo _repositorioActividadMuseo;
+        private readonly IRepositorioConfiguracionHorarioAutoguiada repositorioConfiguracionHorarioAutoguiada;
+        private readonly ActividadMuseo.Repositories.IRepositorioCalendarioMuseo _repositorioCalendario;
+        private readonly IRepositorioSala repositorioSala;
+        private readonly IServicioDisponibilidadSlotsAutoguiadas servicioDisponibilidadSlotsAutoguiadas;
         private readonly AvailabilityEngine _engine;
+        private readonly IRepositorioTematicas _tematicaRepository;
 
         public GroupAvailabilityProducerService(
+            IRepositorioVisitaGrupalAutoguiada repositorioVisitaGrupalAutoguiada,
+            IRepositorioConfiguracionHorarioAutoguiada repositorioConfiguracionHorarioAutoguiada,
+            ActividadMuseo.Repositories.IRepositorioCalendarioMuseo repositorioCalendario,
             Application.ActividadMuseo.Repositories.IRepositorioActividadMuseo repositorioActividadMuseo,
-            Application.Repositories.IRepositorioDiaCierreMuseo repositorioDiasCierre,
+            IServicioDisponibilidadSlotsAutoguiadas servicioDisponibilidadSlotsAutoguiadas,
             IRepositorioSala repositorioSala,
+            IRepositorioTematicas tematicaRepository,
             AvailabilityEngine engine)
         {
             _repositorioActividadMuseo = repositorioActividadMuseo;
-            _repositorioDiasCierre = repositorioDiasCierre;
-            _repositorioSala = repositorioSala;
+            this.repositorioVisitaGrupalAutoguiada = repositorioVisitaGrupalAutoguiada;
+            this.servicioDisponibilidadSlotsAutoguiadas = servicioDisponibilidadSlotsAutoguiadas;
+            this.repositorioConfiguracionHorarioAutoguiada = repositorioConfiguracionHorarioAutoguiada;
+            this.repositorioSala = repositorioSala;
+            _repositorioCalendario = repositorioCalendario;
+            _tematicaRepository = tematicaRepository;
             _engine = engine;
         }
 
@@ -37,86 +56,98 @@ namespace Application.Availability.Producers
         /// Genera bloques horarios entre "desde" y "hasta" (inclusive dates) para las salas indicadas.
         /// Por defecto genera bloques de 1 hora entre startHour (incl) y endHour (excl).
         /// </summary>
-        public async Task<List<HourBlockDto>> GetHourlyBlocksAsync(DateTime desde, DateTime hasta, IEnumerable<int>? salaIds = null, int startHour = 9, int endHour = 17)
+        /// 
+
+
+
+        public async Task<List<SlotDisponibleVisitaAutoguiada>> GetHourlyBlocksAsync(DateTime desde, DateTime hasta, List<int>? tematicasSeleccionadasIds = null)
         {
+            /*DateTime fechaDesde,
+            DateTime fechaHasta,
+            IReadOnlyCollection<VisitaGrupalAutoguiada> visitasAutoguiadas,
+            ConfiguracionHorarioAutoguiada configuracion,
+            CalendarioMuseo calendario*/
+            var VisitasAutoguiadasExistentes= await repositorioVisitaGrupalAutoguiada.GetAllGroupVisitAuAsync(desde, hasta);
+            var configuracion = await repositorioConfiguracionHorarioAutoguiada.ObtenerConfiguracionActivaAsync();
+            var calendario = await _repositorioCalendario.ObtenerCalendarioActivoAsync();
+
+            if (configuracion == null)
+                throw new InvalidOperationException("No hay configuración activa para visitas guiadas");
+
+            if (calendario == null)
+                throw new InvalidOperationException("No hay calendario activo del museo");
+            // Llamar al servicio de dominio de guiadas que calcula los turnos candidatos
+            // Este servicio ya valida: calendario, configuración, capacidad contra visitasAutoguiadasExistentes, y devuelve los bloques horarios candidatos.
+            var candidatosTurnos = await servicioDisponibilidadSlotsAutoguiadas.CalcularDisponibilidad(desde, hasta, VisitasAutoguiadasExistentes, configuracion, calendario);
+
+            var candidatosFiltrados = candidatosTurnos
+                .Where(turno => turno.EstadoSlot == EstadoTurno.Disponible);
+
+            candidatosTurnos = [.. candidatosFiltrados];
+
             // Prefetch common data
-            var actividadesEnRango = await _repositorioActividadMuseo.FindAllAsync(desde, hasta);
+
+            var actividadesExistentes = await _repositorioActividadMuseo.FindAllAsync(desde, hasta);
 
             // Load salas and filter if salaIds provided
-            var salasAll = await _repositorioSala.FindAllAsync();
-            var salas = salaIds != null ? salasAll.Where(s => salaIds.Contains(s.Id)).ToList() : salasAll;
+            var tematicas = await _tematicaRepository
+                .GetByIdsAsync(tematicasSeleccionadasIds);
+            if (tematicas.Count != tematicasSeleccionadasIds.Count)
+            {
+                throw new BussinessException(
+                    "Una o más temáticas no existen.");
+            }
+            var salas = tematicas
+                .SelectMany(t => t.Salas)
+                .DistinctBy(s => s.Id)
+                .ToList();
 
             // Build entries
-            var entries = new List<Application.Availability.Models.CandidateEntry>();
+            var entries = new List<CandidateEntry>();
+            var candidates = new List<Domain.ActividadMuseo.Entities.ActividadMuseo>();
+
 
             var email = new Email("sistema@localhost.com");
             var telefono = new Telefono("1123456789");
 
-            for (var day = desde.Date; day <= hasta.Date; day = day.AddDays(1))
+            foreach (var turno in candidatosTurnos)
             {
-                for (int h = startHour; h < endHour; h++)
-                {
-                    var inicio = day.AddHours(h);
-                    var fin = inicio.AddHours(1);
+                
+                
+                var timeSlot = new TimeSlot(turno.HorarioSlot.Inicio, turno.HorarioSlot.Fin);
 
-                    // If no specific salas requested, create a candidate with salas = null
-                    if (salas == null || !salas.Any())
-                    {
-                        var candidate = new VisitaGrupalAutoguiada(
-                            usuarioVisitanteId: "system",
-                            cantidadPersonas: 1,
-                            institucion: "Sistema",
-                            emailInstitucion: email,
-                            provinciaInstitucion: string.Empty,
-                            departamentoInstitucion: string.Empty,
-                            ciudadInstitucion: string.Empty,
-                            descripcionDiversidad: string.Empty,
-                            observaciones: string.Empty,
-                            timeSlots: new[] { new Domain.Common.ValueObjets.TimeSlot(inicio, fin) },
-                            salas: null
-                        );
+                var candidate = new VisitaGrupalAutoguiada(
 
-                        var original = new HourBlockDto(null, inicio, fin);
-                        var entry = new Application.Availability.Models.CandidateEntry(Guid.NewGuid(), candidate, original, "GroupProducer");
-                        entries.Add(entry);
-                    }
-                    else
-                    {
-                        foreach (var sala in salas)
-                        {
-                            var candidate = new VisitaGrupalAutoguiada(
-                                usuarioVisitanteId: "system",
-                                cantidadPersonas: 1,
-                                institucion: "Sistema",
-                                emailInstitucion: email,
-                                provinciaInstitucion: string.Empty,
-                                departamentoInstitucion: string.Empty,
-                                ciudadInstitucion: string.Empty,
-                                descripcionDiversidad: string.Empty,
-                                observaciones: string.Empty,
-                                timeSlots: new[] { new Domain.Common.ValueObjets.TimeSlot(inicio, fin) },
-                                salas: new[] { sala }
-                            );
+                    usuarioVisitanteId: "system",
+                    cantidadPersonas: turno.cuposDisponibles,
+                    institucion: "Sistema",
+                    emailInstitucion: email,
+                    provinciaInstitucion: "Sistema",
+                    departamentoInstitucion: "Sistema",
+                    ciudadInstitucion: "Sistema",
+                    descripcionDiversidad: string.Empty,
+                    observaciones: string.Empty,
+                    timeSlots: new[] { timeSlot },
+                    salas: salas,
+                    tematicas:tematicas
 
-                            var original = new HourBlockDto(sala.Id, inicio, fin);
-                            var entry = new Application.Availability.Models.CandidateEntry(Guid.NewGuid(), candidate, original, "GroupProducer");
-                            entries.Add(entry);
-                        }
-                    }
-                }
+
+                );
+                var entry = new CandidateEntry(Guid.NewGuid(), candidate, turno, "self-guidedservice");
+                entries.Add(entry);
+                candidates.Add(candidate);
             }
+
 
             // Build base context
             var baseCtx = new AvailabilityContext
             {
                 Start = desde,
                 End = hasta,
-                ExistingActivities = actividadesEnRango,
-                DiasCierre = diasCierre,
+                ExistingActivities = actividadesExistentes,
                 Metadata = new Dictionary<string, object>
                 {
-                    { AvailabilityMetadataKeys.DiasCierre, diasCierre },
-                    { AvailabilityMetadataKeys.ExistingActivities, actividadesEnRango }
+                    { AvailabilityMetadataKeys.ExistingActivities, actividadesExistentes }
                 }
             };
 
@@ -128,12 +159,12 @@ namespace Application.Availability.Producers
             var results = await _engine.CheckManyAsync(baseCtx, entries);
 
             // Return originals for approved entries
-            var approved = new List<HourBlockDto>();
+            var approved = new List<SlotDisponibleVisitaAutoguiada>();
             foreach (var entry in entries)
             {
                 if (results.TryGetValue(entry.Id, out var res) && res.IsOk)
                 {
-                    if (entry.Original is HourBlockDto hb)
+                    if (entry.Original is SlotDisponibleVisitaAutoguiada hb)
                         approved.Add(hb);
                 }
             }
@@ -142,4 +173,3 @@ namespace Application.Availability.Producers
         }
     }
 }
-*/

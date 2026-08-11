@@ -4,6 +4,7 @@ using Infrastructure.Repositories.Sql;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(MuseoDbContext))]
-    partial class MuseoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260807041932_ConfiguracionAutoguiadanuevasprops")]
+    partial class ConfiguracionAutoguiadanuevasprops
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -420,10 +423,7 @@ namespace Infrastructure.Migrations
                     b.Property<int>("CapacidadMaximaPorGrupo")
                         .HasColumnType("int");
 
-                    b.Property<long>("DuracionVisita")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("IntervaloReservas")
+                    b.Property<long>("DuracionSlot")
                         .HasColumnType("bigint");
 
                     b.Property<int>("VisitasSimultaneasMaximas")
@@ -699,21 +699,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("SalaId");
 
                     b.ToTable("TematicaSalas", (string)null);
-                });
-
-            modelBuilder.Entity("VisitaGrupalAutoguiadaTematicas", b =>
-                {
-                    b.Property<int>("VisitaGrupalAutoguiadaId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TematicaId")
-                        .HasColumnType("int");
-
-                    b.HasKey("VisitaGrupalAutoguiadaId", "TematicaId");
-
-                    b.HasIndex("TematicaId");
-
-                    b.ToTable("VisitaGrupalAutoguiadaTematicas");
                 });
 
             modelBuilder.Entity("VisitaGuiadaTematicas", b =>
@@ -1263,21 +1248,6 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.VisitasGrupales.Entities.TematicaVisita", null)
                         .WithMany()
                         .HasForeignKey("TematicaVisitaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("VisitaGrupalAutoguiadaTematicas", b =>
-                {
-                    b.HasOne("Domain.VisitasGrupales.Entities.TematicaVisita", null)
-                        .WithMany()
-                        .HasForeignKey("TematicaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.VisitasGrupales.Entities.VisitaGrupalAutoguiada", null)
-                        .WithMany()
-                        .HasForeignKey("VisitaGrupalAutoguiadaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

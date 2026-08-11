@@ -108,8 +108,10 @@ namespace Infrastructure.Configurations
                     {
                         j.HasKey(
                             "VisitaGrupalGuiadaId",
-                            "TematicaId");
-                    });
+                            "TematicaId"
+                        );
+                    }
+                );
         }
     }
 }
