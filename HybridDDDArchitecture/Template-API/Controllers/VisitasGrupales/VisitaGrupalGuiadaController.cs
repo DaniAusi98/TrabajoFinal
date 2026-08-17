@@ -1,6 +1,4 @@
 using System.Security.Claims;
-
-using Application.ActividadMuseo.UseCases.ActividadesMuseo.Queries;
 using Application.VisitaGrupal.UseCases.Comands.CancelarVisitaGuiada;
 using Application.VisitaGrupal.UseCases.Comands.CrearVisitaGuiada;
 using Application.VisitaGrupal.UseCases.Comands.NewFolder;
@@ -10,7 +8,6 @@ using Application.VisitaGrupal.UseCases.Queries.GetReservationById;
 using Application.VisitaGrupal.UseCases.Queries.GetReservationsById;
 using Application.VisitaGrupal.UseCases.Queries.GetTematicaVisitaGrupal;
 using Core.Application;
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -83,9 +80,9 @@ public class VisitasGuiadasController(ICommandQueryBus commandQueryBus) : Contro
         return Ok(visitas);
     }
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetReservationById(int id)
+    public async Task<IActionResult> GetReservationById(string id)
     {
-        if (id <= 0)
+        if (string.IsNullOrEmpty(id))
             return BadRequest();
         var entity= await _commandQueryBus.Send(new GetReservationByIdQuery { ReservationId = id });
         return Ok(entity);
@@ -94,9 +91,9 @@ public class VisitasGuiadasController(ICommandQueryBus commandQueryBus) : Contro
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPut("{id}/cancel")]
-    public async Task<IActionResult> Cancel(int id)
+    public async Task<IActionResult> Cancel(string id)
     {
-        if (id <= 0)
+        if (string.IsNullOrEmpty(id))
             return BadRequest();
 
         await _commandQueryBus.Send(
@@ -111,7 +108,7 @@ public class VisitasGuiadasController(ICommandQueryBus commandQueryBus) : Contro
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPost("{id}/reprogram")]
     public async Task<IActionResult> Reprogram(
-        int id,
+        string id,
         ReprogramarCommand command)
     {
         var usuarioId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;

@@ -13,7 +13,7 @@ namespace Application.VisitaGrupal.Repositories
     public interface IRepositorioTematicas:IRepository<TematicaVisita>
     {
         Task<List<TematicaVisita>> ObtenerDisponiblesAsync();
-        Task<List<TematicaVisita>> GetByIdsAsync(List<int> tematicasIds);
+        Task<List<TematicaVisita>> GetByIdsAsync(List<string> tematicasIds);
 
     }
 }

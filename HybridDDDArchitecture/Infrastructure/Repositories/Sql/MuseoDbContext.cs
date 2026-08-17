@@ -2,8 +2,12 @@ using Domain.ActividadMuseo.Entities;
 using Domain.Common.Entities;
 using Domain.RecursoMuseo.Entities;
 using Domain.RecursoMuseo.Entities.Guia;
+using Domain.Reportes.Entities;
 using Domain.VisitasGrupales.Entities;
+using Domain.VisitasGrupales.Entities.GrupalGuiada;
 using Infrastructure.Configurations;
+using Infrastructure.Configurations.Reportes;
+using Infrastructure.Configurations.VisitasGrupales;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -22,12 +26,12 @@ namespace Infrastructure.Repositories.Sql
             : base(options)
         {
         }
-        // public DbSet<DummyEntity> DummyEntity { get; set; }
-
 
         public DbSet<VisitaGrupalGuiada> VisitaGuiada { get; set; }
 
         public DbSet<VisitaGrupalAutoguiada> VisitaGrupalAutoguiada { get; set; }
+
+        public DbSet<ReporteGeneralVisitasGrupales> ReporteGeneralVisitasGrupales { get; set; }
 
         public DbSet<Domain.ActividadMuseo.Entities.ActividadMuseo> ActividadAgendaMuseo { get; set; }
         public DbSet<RecursoAsignado> RecursoAsignado { get; set; }
@@ -44,9 +48,9 @@ namespace Infrastructure.Repositories.Sql
         public DbSet<Localidad> Localidades { get; set; }
         public DbSet<CalendarioMuseo> CalendarioMuseo { get; set; }
         public DbSet<ConfiguracionHorarioAutoguiada> ConfiguracionHorarioVisitaAutoguiada { get; set; }
-
-
-
+        public DbSet<ReporteVisitasGuiadas> ReporteVisitasGuiadas { get; set; }
+        public DbSet<ReporteVisitasAutoguiadas> ReporteVisitasAutoguiadas { get; set; }
+        public DbSet<ReporteGeneralVisitasGrupales> ReporteGeneralVisitas { get; set; }
 
 
         /*public DbSet<PersonalInterno> PersonalInterno { get; set; }
@@ -56,14 +60,6 @@ namespace Infrastructure.Repositories.Sql
         public DbSet<AreaPuesto> AreaPuesto { get; set; }
 
         public DbSet<Puesto> Puesto { get; set; }*/
-
-
-
-
-
-
-
-
 
         protected MuseoDbContext()
         {
@@ -96,6 +92,10 @@ namespace Infrastructure.Repositories.Sql
             modelBuilder.ApplyConfiguration(new ConfiguracionVisitasGrupalesGuiadaConfig());
             modelBuilder.ApplyConfiguration(new ConfiguracionCalendarioMuseo());
             modelBuilder.ApplyConfiguration(new ConfiguracionHorarioVisitaGrupalAutoguiadaConfiguration());
+            modelBuilder.ApplyConfiguration(new ReporteVisitaGrupalConfig());
+            modelBuilder.ApplyConfiguration(new ReporteVisitaGuiadaConfig());
+            modelBuilder.ApplyConfiguration(new ReporteVisitaAutoguiadaConfig());
+
         }
     }
 }

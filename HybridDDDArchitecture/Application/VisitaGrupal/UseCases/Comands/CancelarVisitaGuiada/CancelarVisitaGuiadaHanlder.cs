@@ -1,8 +1,7 @@
 using Application.VisitaGrupal.Repositories;
 
 using Core.Application;
-
-using Domain.VisitasGrupales.Entities;
+using Domain.VisitasGrupales.Entities.GrupalGuiada;
 
 namespace Application.VisitaGrupal.UseCases.Comands.CancelarVisitaGuiada
 {

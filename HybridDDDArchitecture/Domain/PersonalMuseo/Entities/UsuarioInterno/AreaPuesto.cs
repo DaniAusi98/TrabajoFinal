@@ -5,33 +5,37 @@ using Domain.Common.Exceptions;
 
 namespace Domain.PersonalMuseo.Entities.UsuarioInterno
 {
-    public class AreaPuesto : DomainEntity<int>
+    public class AreaPuesto : DomainEntity<string>
     {
-        public int AreaId { get; private set; }
+        public string    AreaId { get; private set; }
         public Area Area { get; private set; }
 
-        public int PuestoId { get; private set; }
+        public string PuestoId { get; private set; }
         public Puesto Puesto { get; private set; }
 
         public AreaPuesto()
         {
         }
 
-        public AreaPuesto(int areaId, int puestoId)
+        public AreaPuesto(string areaId, string puestoId)
         {
+            Id = Guid.NewGuid().ToString();
+
             SetAreaId(areaId);
             SetPuestoId(puestoId);
         }
 
-        public void SetAreaId(int areaId)
+        public void SetAreaId(string areaId)
         {
-            if (areaId <= 0) throw new DomainException("AreaId debe ser mayor a 0.");
+            if (areaId == null || areaId.Trim() == "")
+                throw new DomainException("AreaId no puede ser nulo o vacío.");
             AreaId = areaId;
         }
 
-        public void SetPuestoId(int puestoId)
+        public void SetPuestoId(string puestoId)
         {
-            if (puestoId <= 0) throw new DomainException("PuestoId debe ser mayor a 0.");
+            if (puestoId == null || puestoId.Trim() == "")
+                throw new DomainException("PuestoId no puede ser nulo o vacío.");
             PuestoId = puestoId;
         }
     }

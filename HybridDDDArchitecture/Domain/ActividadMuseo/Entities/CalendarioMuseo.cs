@@ -5,7 +5,7 @@ using Domain.Common.Exceptions;
 
 namespace Domain.ActividadMuseo.Entities
 {
-    public class CalendarioMuseo : DomainEntity<int>
+    public class CalendarioMuseo : DomainEntity<string>
     {
         public Horario HorarioApertura { get; private set; }
         public DiasLaboralesMuseo DiasApertura { get; private set; }
@@ -23,6 +23,8 @@ namespace Domain.ActividadMuseo.Entities
             DiasLaboralesMuseo diasLaborales,
             IReadOnlyCollection<DiaCierreMuseo> diasCierre)
         {
+            Id = Guid.NewGuid().ToString();
+
             HorarioApertura = horario
                 ?? throw new ArgumentNullException(nameof(horario));
 
@@ -50,7 +52,7 @@ namespace Domain.ActividadMuseo.Entities
             if (diaCierre == null)
                 throw new ArgumentNullException(nameof(diaCierre));
 
-            if (_diasCierre.Any(d => d.Id == diaCierre.Id && d.Id != 0))
+            if (_diasCierre.Any(d => d.Id == diaCierre.Id && d.Id != ""))
                 throw new DomainException("El día de cierre ya existe en el calendario.");
 
             _diasCierre.Add(diaCierre);

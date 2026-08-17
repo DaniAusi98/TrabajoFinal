@@ -2,7 +2,7 @@ namespace Application.VisitaGrupal.DataTransferObjets
 {
     public class ConfiguracionVisitasGrupalesGuiadasDto
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public int MinGuiasParaCapacidadCompleta { get; set; }
         public int CapacidadPorGuia { get; set; }
         public int CapacidadMaximaPorTurno { get; set; }

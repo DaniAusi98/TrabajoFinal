@@ -6,7 +6,7 @@ using Domain.Common.ValueObjets;
 
 namespace Domain.ActividadMuseo.Entities
 {
-    public class ActividadMuseo : DomainEntity<int>
+    public class ActividadMuseo : DomainEntity<string>
     {
         public CategoriaActividad CategoriaActividad { get; private set; }
         public TipoActividad TipoActividad { get; private set; }
@@ -27,6 +27,7 @@ namespace Domain.ActividadMuseo.Entities
             IEnumerable<Sala> salas = null,
             IEnumerable<RecursoAsignado> recursos = null)
         {
+
             if (cantidadAsistentes is not null && cantidadAsistentes <= 0)
                 throw new DomainException("La cantidad de personas debe ser mayor a cero.");
 
@@ -56,6 +57,7 @@ namespace Domain.ActividadMuseo.Entities
                     throw new DomainException("No puede haber recursos repetidos.");
             }
 
+            Id = Guid.NewGuid().ToString();
 
             // Recién acá modificás el estado
             CategoriaActividad = categoria;

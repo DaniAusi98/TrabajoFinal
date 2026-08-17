@@ -4,7 +4,7 @@ using Core.Application;
 
 namespace Application.VisitaGrupal.UseCases.Commands.CreateConfiguracionVisitasGrupalesGuiadas
 {
-    public class CreateConfiguracionVisitasGrupalesGuiadasCommand : IRequestCommand<int>
+    public class CreateConfiguracionVisitasGrupalesGuiadasCommand : IRequestCommand<string>
     {
         public int MinGuiasParaCapacidadCompleta { get; set; }
         public int CapacidadPorGuia { get; set; }

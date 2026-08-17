@@ -10,7 +10,7 @@ namespace Application.VisitaGrupal.UseCases.Comands.CancelarVisitaGuiada
 {
     public class CancelarVisitaGuiadaCommand: IRequestCommand
     {
-        public int ReservationId { get; set; }
+        public string ReservationId { get; set; }
 
         public CancelarVisitaGuiadaCommand()
         {

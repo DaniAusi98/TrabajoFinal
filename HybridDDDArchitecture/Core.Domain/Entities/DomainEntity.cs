@@ -15,7 +15,7 @@ namespace Core.Domain.Entities
         }
     }
 
-    public abstract class DomainEntity : DomainEntity<int>
+    public abstract class DomainEntity : DomainEntity<string>
     {
     }
 }

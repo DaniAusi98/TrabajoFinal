@@ -33,12 +33,11 @@ namespace Controllers.VisitasGrupales
         public async Task<IActionResult> DisponibilidadTurnosVisitasAutoguiadas(
           [FromQuery] DateTime fechaDesde,
           [FromQuery] DateTime fechaHasta,
-          [FromQuery] List<int> tematicasIds,
           [FromQuery] uint pageIndex = 1,
           [FromQuery] uint pageSize = 10)
         {
             var visitas = await _commandQueryBus.Send(
-                new Application.VisitaGrupal.UseCases.Queries.ConsultarDisponibilidadTurnosVisitaAutoguiada.DisponibilidadTurnosVisitasAutoguiadasQuery(fechaDesde, fechaHasta, tematicasIds)
+                new Application.VisitaGrupal.UseCases.Queries.ConsultarDisponibilidadTurnosVisitaAutoguiada.DisponibilidadTurnosVisitasAutoguiadasQuery(fechaDesde, fechaHasta)
                 {
                     PageIndex = pageIndex,
                     PageSize = pageSize

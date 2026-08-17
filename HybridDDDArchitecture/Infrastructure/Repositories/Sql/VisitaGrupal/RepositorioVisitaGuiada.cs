@@ -1,9 +1,7 @@
 using Application.VisitaGrupal.Repositories;
 
 using Core.Infraestructure.Repositories.Sql;
-
-using Domain.VisitasGrupales.Entities;
-
+using Domain.VisitasGrupales.Entities.GrupalGuiada;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories.Sql.VisitaGrupal
@@ -11,7 +9,7 @@ namespace Infrastructure.Repositories.Sql.VisitaGrupal
     internal sealed class RepositorioVisitaGuiada(MuseoDbContext context)
         : BaseRepository<VisitaGrupalGuiada>(context), IRepositorioVisitaGuiada
     {
-        public Task<VisitaGrupalGuiada?> FindByIdWithActividadAsync(int id)
+        public Task<VisitaGrupalGuiada?> FindByIdWithActividadAsync(string id)
         {
             return Repository
                 .Include(v => v.Tematicas)
@@ -54,6 +52,16 @@ namespace Infrastructure.Repositories.Sql.VisitaGrupal
                 .Where(v =>
                     v.UsuarioVisitanteId == usuarioId &&
                     v.TimeSlots.Any(ts => ts.Inicio >= fechaActual))
+                .ToListAsync();
+        }
+        public async Task<List<VisitaGrupalGuiada>> GetGuidedToursByMonth(
+        DateOnly monthDate)
+        {
+            return await Repository
+                .Include(v => v.TimeSlots)
+                .Where(v => v.TimeSlots.Any(ts =>
+                    ts.Inicio.Year == monthDate.Year &&
+                    ts.Inicio.Month == monthDate.Month))
                 .ToListAsync();
         }
     }

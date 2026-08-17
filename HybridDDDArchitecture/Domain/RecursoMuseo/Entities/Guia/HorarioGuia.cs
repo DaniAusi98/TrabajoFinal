@@ -7,7 +7,7 @@ namespace Domain.RecursoMuseo.Entities.Guia
     public class HorarioGuia : DomainEntity
     {
         // Navigation back to Guia
-        public int GuiaId { get; private set; }
+        public string GuiaId { get; private set; }
         public Guia Guia { get; private set; } = default!;
 
         // Días de la semana en los que aplica este horario
@@ -25,8 +25,10 @@ namespace Domain.RecursoMuseo.Entities.Guia
             TimeOnly inicio,
             TimeOnly fin)
         {
+            Id = Guid.NewGuid().ToString();
 
-            
+
+
 
             if (fin <= inicio)
             {

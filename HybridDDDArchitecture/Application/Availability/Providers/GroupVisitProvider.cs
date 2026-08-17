@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Application.Availability.Rules;
 using Domain.ActividadMuseo.Entities;
+using Domain.VisitasGrupales.Entities.GrupalGuiada;
 
 namespace Application.Availability.Providers
 {
@@ -28,7 +29,7 @@ namespace Application.Availability.Providers
         public bool CanHandle(Domain.ActividadMuseo.Entities.ActividadMuseo candidate)
         {
             // Aplicable a cualquier visita grupal
-            return candidate is Domain.VisitasGrupales.Entities.VisitaGrupalGuiada
+            return candidate is VisitaGrupalGuiada
                 || candidate is Domain.VisitasGrupales.Entities.VisitaGrupalAutoguiada;
         }
 

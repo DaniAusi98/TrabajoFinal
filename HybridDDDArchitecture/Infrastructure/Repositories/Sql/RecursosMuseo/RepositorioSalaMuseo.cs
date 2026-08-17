@@ -10,7 +10,7 @@ namespace Infrastructure.Repositories.Sql.RecursosMuseo
 {
     internal sealed class RepositorioSalaMuseo(MuseoDbContext context) : BaseRepository<Sala>(context), IRepositorioSala
     {
-        public async Task<List<Sala>> ObtenerSalasporIdsAsync(IEnumerable<int> ids)
+        public async Task<List<Sala>> ObtenerSalasporIdsAsync(IEnumerable<string> ids)
         {
             return await context.Set<Sala>()
                 .Where(s => ids.Contains(s.Id))

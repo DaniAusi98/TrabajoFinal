@@ -6,7 +6,7 @@ using Domain.Common.Exceptions;
 
 namespace Domain.PersonalMuseo.Entities.UsuarioInterno
 {
-    public class Puesto : DomainEntity<int>
+    public class Puesto : DomainEntity<string>
     {
         public string Nombre { get; private set; }
 
@@ -18,6 +18,8 @@ namespace Domain.PersonalMuseo.Entities.UsuarioInterno
 
         public Puesto(string nombre)
         {
+            Id = Guid.NewGuid().ToString();
+
             SetNombre(nombre);
         }
 

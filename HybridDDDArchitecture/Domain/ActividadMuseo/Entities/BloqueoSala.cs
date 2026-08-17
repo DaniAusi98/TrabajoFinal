@@ -7,9 +7,9 @@ using static Domain.ActividadMuseo.Enums.Enums;
 
 namespace Domain.ActividadMuseo.Entities
 {
-    public class BloqueoSala : DomainEntity<int>
+    public class BloqueoSala : DomainEntity<string>
     {
-        public int SalaId { get; private set; }
+        public string SalaId { get; private set; }
         public Sala Sala { get; private set; }
 
         public DateTime FechaDesde { get; private set; }
@@ -23,13 +23,15 @@ namespace Domain.ActividadMuseo.Entities
         protected BloqueoSala() { }
 
         public BloqueoSala(
-            int salaId,
+            string salaId,
             DateTime fechaDesde,
             DateTime fechaHasta,
             TipoBloqueoSala motivo,
             string observaciones = "")
         {
-            if (salaId <= 0)
+            Id = Guid.NewGuid().ToString();
+
+            if (string.IsNullOrEmpty(salaId.ToString()))
                 throw new DomainException("La sala es obligatoria.");
 
             if (fechaHasta <= fechaDesde)

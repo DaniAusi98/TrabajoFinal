@@ -31,8 +31,7 @@
     <Folder Include="ActividadMuseo\DomainServices\" />
     <Folder Include="Common\DomainServices\" />
     <Folder Include="Common\Others\Helpers\" />
-    <Folder Include="Reportes\DomainServices\" />
-    <Folder Include="Reportes\Entities\" />
+    <Folder Include="Reportes\DomainServices\VisitaGrupalGuiada\" />
     <Folder Include="Reportes\Enums\" />
     <Folder Include="Reportes\Constants\" />
     <Folder Include="Reportes\Others\" />

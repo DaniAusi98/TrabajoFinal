@@ -5,19 +5,21 @@ using Domain.RecursoMuseo.Entities;
 
 namespace Domain.ActividadMuseo.Entities
 {
-    public class RecursoAsignado:DomainEntity<int>
+    public class RecursoAsignado:DomainEntity<string>
     {
-        public int ActividadId { get; private set; }
+        public string ActividadId { get; private set; }
         public ActividadMuseo Actividad { get; private set; }
 
-        public int RecursoId { get; private set; }
+        public string RecursoId { get; private set; }
         public Recurso Recurso { get; private set; }
 
         public int CantidadAsignada { get; private set; }
 
-        public RecursoAsignado(int recursoId, int cantidadAsignada)
+        public RecursoAsignado(string recursoId, int cantidadAsignada)
         {
-            if (recursoId <= 0)
+            Id = Guid.NewGuid().ToString();
+
+            if (string.IsNullOrEmpty(recursoId))
                 throw new DomainException("El recurso es obligatorio.");
 
             if (cantidadAsignada <= 0)

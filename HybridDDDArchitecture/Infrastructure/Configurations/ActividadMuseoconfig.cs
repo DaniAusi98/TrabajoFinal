@@ -12,7 +12,8 @@ namespace Infrastructure.Configurations
         {
             builder.ToTable("ActividadesMuseo");
 
-            builder.HasKey(x => x.Id);
+            builder.HasKey(x => x.Id)
+            ;
             builder.Property(x => x.CategoriaActividad)
                 .HasConversion<string>()
                 .HasMaxLength(50)

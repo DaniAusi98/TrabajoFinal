@@ -5,7 +5,7 @@ using Domain.RecursoMuseo.Entities;
 
 namespace Domain.VisitasGrupales.Entities
 {
-    public class TematicaVisita : DomainEntity<int>
+    public class TematicaVisita : DomainEntity<string>
     {
         public string Nombre { get; private set; } = string.Empty;
         public string Descripcion { get; private set; } = string.Empty;
@@ -22,6 +22,8 @@ namespace Domain.VisitasGrupales.Entities
             string descripcion,
             IEnumerable<Sala> salas)
         {
+            Id = Guid.NewGuid().ToString();
+
             if (string.IsNullOrWhiteSpace(nombre))
                 throw new DomainException(
                     "La temática es obligatoria.");
@@ -64,7 +66,7 @@ namespace Domain.VisitasGrupales.Entities
         }
 
 
-        public void QuitarSala(int salaId)
+        public void QuitarSala(string salaId)
         {
             var sala = Salas
                 .FirstOrDefault(s => s.Id == salaId);

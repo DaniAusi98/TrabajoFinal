@@ -1,6 +1,6 @@
 using Domain.ActividadMuseo.Entities;
 using Domain.ActividadMuseo.ValueObjets;
-using Domain.VisitasGrupales.Entities;
+using Domain.VisitasGrupales.Entities.GrupalGuiada;
 using Domain.VisitasGrupales.ValueObjects;
 
 namespace Domain.VisitasGrupales.Factories

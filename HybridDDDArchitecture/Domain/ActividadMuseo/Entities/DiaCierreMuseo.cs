@@ -8,7 +8,7 @@ using static Domain.ActividadMuseo.Enums.Enums;
 
 namespace Domain.ActividadMuseo.Entities
 {
-    public class DiaCierreMuseo : DomainEntity<int>
+    public class DiaCierreMuseo : DomainEntity<string>
     {
         public DateTime FechaDesde { get; private set; }
 
@@ -25,6 +25,8 @@ namespace Domain.ActividadMuseo.Entities
             MotivoCierreMuseo motivo,
             string observaciones = "")
         {
+            Id = Guid.NewGuid().ToString();
+
             if (fechaHasta <= fecha)
                 throw new DomainException("La fecha de fin debe ser posterior a la fecha de inicio.");
 

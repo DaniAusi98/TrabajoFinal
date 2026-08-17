@@ -4,7 +4,6 @@ using Application.ApplicationMuseo.ApplicationServices;
 using Application.ApplicationMuseo.Integrations.Events;
 using Application.ApplicationMuseo.Integrations.Handlers.Publishers;
 using Application.ApplicationMuseo.Integrations.Handlers.Subscribers;
-using Application.Behaviors;
 using Application.Usuario.ApplicationServices.ApplicationServiceInterfaces;
 using Application.Usuario.UseCases.Commands.UpdateUsuario;
 using Core.Application;
@@ -20,6 +19,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Application.Availability;
 using Application.Availability.Producers;
+using Domain.Reportes.DomainServices;
+using Application.Behaivors;
 
 namespace Application.Registrations
 {
@@ -61,8 +62,8 @@ namespace Application.Registrations
             services.AddScoped<IServicioDisponibilidadSlotsAutoguiadas, ServicioDisponibilidadSlotsAutoguiadas>();
 
             // Register availability engine, rule factory and providers (moved from Application.Availability.ServiceCollectionExtensions)
-            services.AddScoped<Application.Availability.AvailabilityEngine>();
-            services.AddScoped<Application.Availability.IRuleFactory, Application.Availability.CompositeRuleFactory>();
+            services.AddScoped<AvailabilityEngine>();
+            services.AddScoped<IRuleFactory, CompositeRuleFactory>();
 
             // Register providers - these will be created by DI and can create rule instances
             services.Scan(scan => scan
@@ -79,8 +80,8 @@ namespace Application.Registrations
                 .WithScopedLifetime());
 
             // Register guided availability producer service
-            services.AddScoped<Application.Availability.Producers.GuidedAvailabilityProducerService>();
-            services.AddScoped<GroupAvailabilityProducerService>();
+            services.AddScoped<GuidedAvailabilityProducerService>();
+            services.AddScoped<SelfGuidedAvailabilityProducerService>();
             // Register group availability producer service
            // services.AddScoped<Application.Availability.Producers.GroupAvailabilityProducerService>();
             // Register in-memory recurrence repo for testing (optional)

@@ -5,9 +5,9 @@ using Domain.Common.Exceptions;
 
 namespace Domain.RecursoMuseo.Entities.Guia
 {
-    public class AusenciaGuia : DomainEntity<int>
+    public class AusenciaGuia : DomainEntity<string>
     {
-        public int GuiaId { get; private set; }
+        public string GuiaId { get; private set; }
         public Guia Guia { get; private set; } = default!;
 
         public DateTime FechaDesde { get; private set; }
@@ -21,6 +21,8 @@ namespace Domain.RecursoMuseo.Entities.Guia
             DateTime fechaHasta,
             string motivo)
         {
+            Id = Guid.NewGuid().ToString();
+
             if (fechaHasta < fechaDesde)
                 throw new DomainException(
                     "La fecha hasta no puede ser menor a la fecha desde.");

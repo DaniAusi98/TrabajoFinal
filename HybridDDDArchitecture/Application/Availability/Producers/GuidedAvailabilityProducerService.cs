@@ -3,6 +3,7 @@ using Domain.VisitasGrupales.DomainServices;
 using Domain.VisitasGrupales.Entities;
 using Domain.Common.ValueObjets;
 using static Domain.VisitasGrupales.Enums.Enums;
+using Domain.VisitasGrupales.Entities.GrupalGuiada;
 
 namespace Application.Availability.Producers
 {

@@ -21,7 +21,8 @@
 		<Folder Include="Common\UseCases\Provincia\Commands\" />
 		<Folder Include="Common\UseCases\Provincia\Notifications\" />
 		<Folder Include="MuseumResources\UseCases\MuseumGallery\Queries\NewFolder\" />
-		<Folder Include="VisitaGrupal\UseCases\Notification\" />
+		<Folder Include="Reportes\Validators\" />
+		<Folder Include="Reportes\Repositories\" />
 		<Folder Include="VisitaGrupal\UseCases\Queries\GetTurnosVisitas\" />
 	</ItemGroup>
 

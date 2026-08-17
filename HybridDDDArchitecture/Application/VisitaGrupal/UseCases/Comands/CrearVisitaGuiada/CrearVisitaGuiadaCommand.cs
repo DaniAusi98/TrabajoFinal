@@ -42,9 +42,9 @@ namespace Application.VisitaGrupal.UseCases.Comands.CrearVisitaGuiada
         [Required]
         public int CantidadPersonas { get; set; }
 
-        public List<int> TematicasIds { get; set; } = [];
+        public List<string> TematicasIds { get; set; } = [];
 
-        public List <int>SalasIds { get; set; } = [];
+        public List <string>SalasIds { get; set; } = [];
         [Required]
         public DateTime  Inicio { get; set; }
         [Required]

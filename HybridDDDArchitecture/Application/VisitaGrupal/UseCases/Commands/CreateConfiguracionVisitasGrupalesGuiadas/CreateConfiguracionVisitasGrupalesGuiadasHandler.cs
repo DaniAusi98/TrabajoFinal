@@ -4,11 +4,13 @@ using Application.VisitaGrupal.Repositories;
 using Core.Application;
 using Domain.ActividadMuseo.ValueObjets;
 using Domain.VisitasGrupales.Entities;
+using Domain.VisitasGrupales.Entities.GrupalGuiada;
 using Domain.VisitasGrupales.ValueObjects;
+using MediatR;
 
 namespace Application.VisitaGrupal.UseCases.Commands.CreateConfiguracionVisitasGrupalesGuiadas
 {
-    internal sealed class CreateConfiguracionVisitasGrupalesGuiadasHandler : IRequestCommandHandler<CreateConfiguracionVisitasGrupalesGuiadasCommand, int>
+    internal sealed class CreateConfiguracionVisitasGrupalesGuiadasHandler : IRequestCommandHandler<CreateConfiguracionVisitasGrupalesGuiadasCommand, string>
     {
         private readonly IRepositorioConfiguracionVisitasGrupalesGuiadas _repositorio;
         private readonly IRepositorioCalendarioMuseo _repositorioCalendario;
@@ -21,7 +23,7 @@ namespace Application.VisitaGrupal.UseCases.Commands.CreateConfiguracionVisitasG
             _repositorioCalendario = repositorioCalendario ?? throw new ArgumentNullException(nameof(repositorioCalendario));
         }
 
-        public async Task<int> Handle(CreateConfiguracionVisitasGrupalesGuiadasCommand request, CancellationToken cancellationToken)
+        public async Task<string> Handle(CreateConfiguracionVisitasGrupalesGuiadasCommand request, CancellationToken cancellationToken)
         {
             // Obtener el calendario del museo para validar
             var calendario = await _repositorioCalendario.ObtenerCalendarioActivoAsync()
@@ -47,5 +49,7 @@ namespace Application.VisitaGrupal.UseCases.Commands.CreateConfiguracionVisitasG
             await _repositorio.AddAsync(configuracion);
             return configuracion.Id;
         }
+
+       
     }
 }

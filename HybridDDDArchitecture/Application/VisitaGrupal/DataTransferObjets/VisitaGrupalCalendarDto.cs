@@ -3,7 +3,7 @@ namespace Application.VisitaGrupal.DataTransferObjets
 {
     public class VisitaGrupalCalendarDto
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public TipoVisitaGrupal Tipo { get; set; }

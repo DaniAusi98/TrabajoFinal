@@ -5,7 +5,7 @@ using Domain.RecursoMuseo.ValueObjets;
 
 namespace Domain.RecursoMuseo.Entities.Guia
 {
-    public class Guia : DomainEntity<int>
+    public class Guia : DomainEntity<string>
     {
         public string NombreCompleto { get; private set; }
         public List<HorarioGuia> HorariosGuia { get; private set; } = new();
@@ -23,6 +23,8 @@ namespace Domain.RecursoMuseo.Entities.Guia
 
         public Guia(string nombrecompleto, int personalInternoId, IEnumerable<HorarioGuia> horariosGuia)
         {
+            Id = Guid.NewGuid().ToString();
+
             SetPersonalInternoId(personalInternoId);
 
             if (string.IsNullOrWhiteSpace(nombrecompleto))
@@ -93,7 +95,7 @@ namespace Domain.RecursoMuseo.Entities.Guia
                 new AusenciaGuia(desde, hasta, motivo));
         }
 
-        public void EliminarAusencia(int ausenciaId)
+        public void EliminarAusencia(string ausenciaId)
         {
             var ausencia = AusenciasProgramadas
                 .FirstOrDefault(a => a.Id == ausenciaId)

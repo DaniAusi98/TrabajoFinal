@@ -12,7 +12,7 @@ namespace Application.VisitaGrupal.UseCases.Queries.GetReservationById
 {
     public class GetReservationByIdQuery:IRequestQuery<GuidedTourReservationDto>
     {
-        public int ReservationId { get; set; }
+        public string ReservationId { get; set; }
         public GetReservationByIdQuery()
         {
                 

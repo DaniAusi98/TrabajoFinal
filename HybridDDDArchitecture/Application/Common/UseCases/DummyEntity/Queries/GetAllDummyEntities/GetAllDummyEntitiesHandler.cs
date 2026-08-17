@@ -1,5 +1,6 @@
 using Application.ApplicationMuseo.DataTransferObjects;
 using Application.Common.Repositories;
+using Application.Common.UseCases.DummyEntity.Queries.GetAllDummyEntities;
 using Core.Application;
 
 namespace Application.ApplicationMuseo.UseCases.DummyEntity.Queries.GetAllDummyEntities
@@ -7,6 +8,7 @@ namespace Application.ApplicationMuseo.UseCases.DummyEntity.Queries.GetAllDummyE
     internal class GetAllDummyEntitiesHandler(IDummyEntityRepository context) : IRequestQueryHandler<GetAllDummyEntitiesQuery, QueryResult<DummyEntityDto>>
     {
         private readonly IDummyEntityRepository _context = context ?? throw new ArgumentNullException(nameof(context));
+
 
         public async Task<QueryResult<DummyEntityDto>> Handle(GetAllDummyEntitiesQuery request, CancellationToken cancellationToken)
         {

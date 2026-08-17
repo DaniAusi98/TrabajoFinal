@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Application.Availability;
 using Domain.ActividadMuseo.Entities;
 using Domain.VisitasGrupales.Entities;
+using Domain.VisitasGrupales.Entities.GrupalGuiada;
 using Microsoft.Extensions.Logging;
 
 namespace Application.Availability.Rules

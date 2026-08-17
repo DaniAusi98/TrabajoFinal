@@ -3,7 +3,7 @@ using Domain.Common.Exceptions;
 
 namespace Domain.PersonalMuseo.Entities.UsuarioInterno
 {
-    public class Area : DomainEntity<int>
+    public class Area : DomainEntity<string>
     {
         public string Nombre { get; private set; }
         public List<AreaPuesto> AreaPuestos { get; private set; } = new List<AreaPuesto>();
@@ -14,6 +14,8 @@ namespace Domain.PersonalMuseo.Entities.UsuarioInterno
 
         public Area(string nombre)
         {
+            Id = Guid.NewGuid().ToString();
+
             SetNombre(nombre);
         }
 

@@ -25,7 +25,7 @@ namespace Infrastructure.Repositories.Sql.VisitaGrupal
                 .ToListAsync();
         }
 
-        public async Task<List<TematicaVisita>> GetByIdsAsync(List<int> tematicasIds)
+        public async Task<List<TematicaVisita>> GetByIdsAsync(List<string> tematicasIds)
         {
             return await Repository
                 .Include(t => t.Salas)

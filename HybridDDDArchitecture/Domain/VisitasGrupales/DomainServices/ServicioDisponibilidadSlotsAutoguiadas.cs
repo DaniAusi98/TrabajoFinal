@@ -83,6 +83,7 @@ namespace Domain.VisitasGrupales.DomainServices
                                 slot,
                                 configuracion.CalcularCapacidadMaximaSimultanea(),
                                 0,
+                                configuracion.CapacidadMaximaPorGrupo,
                                 EstadoTurno.NoDisponible));
                     }
 
@@ -104,6 +105,7 @@ namespace Domain.VisitasGrupales.DomainServices
                                 configuracion
                                     .CalcularCapacidadMaximaSimultanea(),
                                 0,
+                                configuracion.CapacidadMaximaPorGrupo,
                                 EstadoTurno.NoDisponible));
 
                         continue;
@@ -149,6 +151,7 @@ namespace Domain.VisitasGrupales.DomainServices
                             slot,
                             configuracion.CalcularCapacidadMaximaSimultanea(),
                             cuposDisponibles,
+                            configuracion.CapacidadMaximaPorGrupo,
                             estado));
                 }
             }

@@ -6,7 +6,7 @@ using static Domain.RecursoMuseo.Enums.Enums;
 
 namespace Domain.RecursoMuseo.Entities
 {
-    public class Recurso : DomainEntity<int>
+    public class Recurso : DomainEntity<string>
     {
         public string NombreRecurso { get; private set; }
 
@@ -28,6 +28,8 @@ namespace Domain.RecursoMuseo.Entities
             string descripcion,
             int cantidadTotal)
         {
+            Id = Guid.NewGuid().ToString();
+
             ActualizarNombre(nombreRecurso);
             ActualizarTipo(tipoRecurso);
             ActualizarDescripcion(descripcion);

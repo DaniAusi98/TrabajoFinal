@@ -5,6 +5,7 @@ using Application.ApplicationMuseo.UseCases.DummyEntity.Queries.GetAllDummyEntit
 using Application.ApplicationMuseo.UseCases.DummyEntity.Queries.GetDummyEntityBy;
 using Core.Application;
 using Microsoft.AspNetCore.Mvc;
+using Application.Common.UseCases.DummyEntity.Queries.GetAllDummyEntities;
 
 namespace Controllers
 {

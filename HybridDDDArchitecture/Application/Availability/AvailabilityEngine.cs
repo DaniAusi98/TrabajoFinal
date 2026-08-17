@@ -146,7 +146,7 @@ namespace Application.Availability
         public async Task<IDictionary<Guid, AvailabilityResult>>
             CheckManyAsync(
                 AvailabilityContext baseCtx,
-                IEnumerable<Application.Availability.Models.CandidateEntry> entries)
+                IEnumerable<Models.CandidateEntry> entries)
         {
             var results =
                 new Dictionary<Guid, AvailabilityResult>();

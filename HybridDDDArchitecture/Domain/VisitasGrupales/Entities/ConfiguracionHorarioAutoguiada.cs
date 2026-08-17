@@ -7,7 +7,7 @@ using Domain.VisitasGrupales.ValueObjects;
 
 namespace Domain.VisitasGrupales.Entities
 {
-    public class ConfiguracionHorarioAutoguiada : DomainEntity<int>
+    public class ConfiguracionHorarioAutoguiada : DomainEntity<string>
     {
         private readonly List<BloqueoAutoguiada> _bloqueos;
 
@@ -52,6 +52,8 @@ namespace Domain.VisitasGrupales.Entities
             int visitasSimultaneasMaximas,
             IReadOnlyCollection<BloqueoAutoguiada>? bloqueos = null)
         {
+            Id = Guid.NewGuid().ToString();
+
             if (calendario == null)
                 throw new ArgumentNullException(nameof(calendario));
 

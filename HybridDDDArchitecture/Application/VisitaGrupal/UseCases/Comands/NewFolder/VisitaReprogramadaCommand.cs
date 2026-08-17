@@ -9,7 +9,7 @@ namespace Application.VisitaGrupal.UseCases.Comands.NewFolder
     public class ReprogramarCommand : IRequestCommand<string>
     {
         [Required]
-        public int VisitaReprogramadaId { get; set; }
+        public string VisitaReprogramadaId { get; set; }
         [Required]
         public string UsuarioVisitanteId { get; set; }
 
@@ -44,7 +44,7 @@ namespace Application.VisitaGrupal.UseCases.Comands.NewFolder
         [Required]
         public int CantidadPersonas { get; set; }
 
-        public List<int> TematicasIds { get; set; } = [];
+        public List<string> TematicasIds { get; set; } = [];
         [Required]
         public DateTime Inicio { get; set; }
         [Required]

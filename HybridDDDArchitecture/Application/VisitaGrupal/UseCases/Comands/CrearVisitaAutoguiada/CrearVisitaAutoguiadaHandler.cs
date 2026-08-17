@@ -20,16 +20,28 @@ namespace Application.VisitaGrupal.UseCases.Comands.CrearVisitaAutoguiada
                request.Inicio,
                request.Fin
            );
-            var tematicas = await _tematicaRepository
-              .GetByIdsAsync(request.TematicasIds);
+            // Temáticas opcionales
+            var tematicas = request.TematicasIds.Any()
+                ? await _tematicaRepository.GetByIdsAsync(request.TematicasIds)
+                : [];
 
             if (tematicas.Count != request.TematicasIds.Count)
             {
                 throw new BussinessException(
                     "Una o más temáticas no existen.");
             }
-            var salas= await _repositorioSala.ObtenerSalasporIdsAsync(request.SalasIds);
-                
+
+            // Salas opcionales
+            var salas = request.SalasIds.Any()
+                ? await _repositorioSala.ObtenerSalasporIdsAsync(request.SalasIds)
+                : [];
+
+            if (salas.Count != request.SalasIds.Count)
+            {
+                throw new BussinessException(
+                    "Una o más salas no existen.");
+            }
+
             var visita = new Domain.VisitasGrupales.Entities.VisitaGrupalAutoguiada(
                 usuarioVisitanteId: request.UsuarioVisitanteId,
                 institucion: request.Institucion,

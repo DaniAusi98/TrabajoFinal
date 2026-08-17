@@ -6,7 +6,7 @@ using static Domain.RecursoMuseo.Enums.Enums;
 
 namespace Domain.RecursoMuseo.Entities
 {
-    public class Sala : DomainEntity<int>
+    public class Sala : DomainEntity<string>
     {
         public string Nombre { get; private set; }
 
@@ -31,6 +31,8 @@ namespace Domain.RecursoMuseo.Entities
             UbicacionSala ubicacion,
             string codigoSala)
         {
+            Id = Guid.NewGuid().ToString();
+
             ActualizarNombre(nombre);
             ActualizarTipoSala(tipoSala);
             ActualizarCapacidad(capacidad);

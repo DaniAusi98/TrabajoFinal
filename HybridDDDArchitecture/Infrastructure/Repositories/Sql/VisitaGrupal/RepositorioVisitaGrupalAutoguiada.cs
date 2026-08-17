@@ -19,7 +19,6 @@ namespace Infrastructure.Repositories.Sql.VisitaGrupal
             try
             {
                 return await Repository
-                    .Include(v => v.Tematicas)
                     .Include(v => v.TimeSlots)
                     .Include(v => v.Salas)
                     .Where(v =>
@@ -33,6 +32,16 @@ namespace Infrastructure.Repositories.Sql.VisitaGrupal
                 Console.WriteLine(ex);
                 throw;
             }
+        }
+        public async Task<List<VisitaGrupalAutoguiada>> GetSelfGuidedToursByMonth(
+        DateOnly monthDate)
+        {
+            return await Repository
+                .Include(v => v.TimeSlots)
+                .Where(v => v.TimeSlots.Any(ts =>
+                    ts.Inicio.Year == monthDate.Year &&
+                    ts.Fin.Month == monthDate.Month))
+                .ToListAsync();
         }
     }
 }

@@ -1,7 +1,7 @@
 using Domain.ActividadMuseo.Entities;
 using Domain.Common.ValueObjets;
 using Domain.RecursoMuseo.Entities.Guia;
-using Domain.VisitasGrupales.Entities;
+using Domain.VisitasGrupales.Entities.GrupalGuiada;
 using static Domain.VisitasGrupales.Enums.Enums;
 
 namespace Domain.VisitasGrupales.DomainServices

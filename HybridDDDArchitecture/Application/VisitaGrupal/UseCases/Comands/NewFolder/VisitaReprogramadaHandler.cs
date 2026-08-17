@@ -12,7 +12,7 @@ using Core.Application;
 
 using Domain.Common.ValueObjets;
 using Domain.VisitasGrupales.Entities;
-
+using Domain.VisitasGrupales.Entities.GrupalGuiada;
 using Microsoft.IdentityModel.Tokens.Experimental;
 
 namespace Application.VisitaGrupal.UseCases.Comands.NewFolder

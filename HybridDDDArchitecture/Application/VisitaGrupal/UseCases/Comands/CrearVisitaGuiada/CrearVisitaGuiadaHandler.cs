@@ -1,10 +1,12 @@
 using Application.ApplicationMuseo.Constants;
 using Application.Exceptions;
+using Application.VisitaGrupal.DomainEvents;
 using Application.VisitaGrupal.Repositories;
 using Core.Application;
 
 using Domain.Common.ValueObjets;
 using Domain.VisitasGrupales.Entities;
+using Domain.VisitasGrupales.Entities.GrupalGuiada;
 using Domain.VisitasGrupales.Enums;
 
 
@@ -60,7 +62,7 @@ namespace Application.VisitaGrupal.UseCases.Comands.CrearVisitaGuiada
             {
                 object createdId = await _repositorioVisitaGuiada.AddAsync(visita);
 
-                //await _domainBus.Publish(entity.To<DummyEntityCreated>(), cancellationToken);
+                await _domainBus.Publish(visita.To<VisitaGuiadaCreated>(), cancellationToken);
 
                 return createdId.ToString();
             }
