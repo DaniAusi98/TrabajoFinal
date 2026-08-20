@@ -9,8 +9,10 @@ namespace Domain.Common.Entities
         public string DepartamentoId { get; private set; }
         public string Nombre { get; private set; }
 
-        public Localidad(string provinciaId, string departamentoId, string nombre)
+        public Localidad(string id, string departamentoId, string provinciaId, string nombre)
         {
+            Id = id;
+
            if (string.IsNullOrWhiteSpace(provinciaId))
                 throw new DomainException("El ID de la provincia es obligatorio.");
            if (string.IsNullOrWhiteSpace(departamentoId))

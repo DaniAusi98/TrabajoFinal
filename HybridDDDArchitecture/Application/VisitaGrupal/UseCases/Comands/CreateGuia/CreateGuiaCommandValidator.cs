@@ -12,7 +12,8 @@ namespace Application.VisitaGrupal.UseCases.Comands.CreateGuia
                 .MaximumLength(200);
 
             RuleFor(x => x.PersonalInternoId)
-                .GreaterThan(0);
+                .NotNull()
+                .NotEmpty();
 
             RuleFor(x => x.Horarios)
                 .NotEmpty().WithMessage("Debe asignar al menos un horario.");

@@ -1,7 +1,5 @@
 using Core.Domain.Entities;
-
 using Domain.Common.Exceptions;
-using Domain.RecursoMuseo.ValueObjets;
 
 namespace Domain.RecursoMuseo.Entities.Guia
 {
@@ -12,7 +10,7 @@ namespace Domain.RecursoMuseo.Entities.Guia
 
         public List<AusenciaGuia> AusenciasProgramadas { get; private set; } = new();
 
-        public int PersonalInternoId { get; private set; }
+        public string PersonalInternoId { get; private set; }
 
         public bool Activo { get; private set; } = true;
 
@@ -21,7 +19,7 @@ namespace Domain.RecursoMuseo.Entities.Guia
             // EF Core
         }
 
-        public Guia(string nombrecompleto, int personalInternoId, IEnumerable<HorarioGuia> horariosGuia)
+        public Guia(string nombrecompleto, string personalInternoId, IEnumerable<HorarioGuia> horariosGuia)
         {
             Id = Guid.NewGuid().ToString();
 
@@ -35,9 +33,9 @@ namespace Domain.RecursoMuseo.Entities.Guia
 
         }
 
-        public void SetPersonalInternoId(int personalInternoId)
+        public void SetPersonalInternoId(string personalInternoId)
         {
-            if (personalInternoId <= 0)
+            if (string.IsNullOrWhiteSpace(personalInternoId))
                 throw new DomainException("El id del personal interno debe ser válido.");
 
             PersonalInternoId = personalInternoId;

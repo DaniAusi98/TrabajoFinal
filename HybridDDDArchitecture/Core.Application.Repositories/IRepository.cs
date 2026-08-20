@@ -5,6 +5,8 @@ namespace Core.Application.Repositories
     public interface IRepository<TEntity>
     {
         object Add(TEntity entity);
+        IEnumerable<object> AddRange(IEnumerable<TEntity> entities);
+        Task<IEnumerable<object>> AddRangeAsync(IEnumerable<TEntity> entities);
         Task<object> AddAsync(TEntity entity);
         long Count(Expression<Func<TEntity, bool>> filter);
         Task<long> CountAsync(Expression<Func<TEntity, bool>> filter);

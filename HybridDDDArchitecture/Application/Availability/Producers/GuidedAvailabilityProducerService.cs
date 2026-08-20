@@ -4,6 +4,7 @@ using Domain.VisitasGrupales.Entities;
 using Domain.Common.ValueObjets;
 using static Domain.VisitasGrupales.Enums.Enums;
 using Domain.VisitasGrupales.Entities.GrupalGuiada;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Availability.Producers
 {
@@ -18,6 +19,7 @@ namespace Application.Availability.Producers
         private readonly IRepositorioConfiguracionVisitasGrupalesGuiadas _repositorioConfiguracion;
         private readonly ActividadMuseo.Repositories.IRepositorioCalendarioMuseo _repositorioCalendario;
         private readonly AvailabilityEngine _engine;
+        private readonly ILogger<GuidedAvailabilityProducerService> _logger;
 
         public GuidedAvailabilityProducerService(
             IServicioDisponibilidadTurnosVisitasGuiadas servicioGuiadas,
@@ -28,7 +30,8 @@ namespace Application.Availability.Producers
             IRepositorioConfiguracionVisitasGrupalesGuiadas repositorioConfiguracion,
             ActividadMuseo.Repositories.IRepositorioCalendarioMuseo repositorioCalendario,
             AvailabilityEngine engine,
-            IServiceProvider serviceProvider)
+            IServiceProvider serviceProvider,
+            ILogger<GuidedAvailabilityProducerService> logger)
         {
             _servicioGuiadas = servicioGuiadas;
             _repositorioGuia = repositorioGuia;
@@ -37,47 +40,138 @@ namespace Application.Availability.Producers
             _repositorioConfiguracion = repositorioConfiguracion;
             _repositorioCalendario = repositorioCalendario;
             _engine = engine;
+            _logger = logger;
         }
 
-
         // Devuelve la lista de turnos aprobados por las reglas de disponibilidad
-        public async Task<List<TurnoDisponible>> GetAvailableTurnsAsync(DateTime desde, DateTime hasta)
+        public async Task<List<TurnoDisponible>> GetAvailableTurnsAsync(
+            DateTime desde,
+            DateTime hasta)
         {
-            // 1) Prefetch datos que el servicio de guiadas necesita
+            _logger.LogInformation(
+                "[GuidedAvailabilityProducer] ===== INICIO =====");
+
+            _logger.LogInformation(
+                "[GuidedAvailabilityProducer] Rango solicitado: Desde {Desde} - Hasta {Hasta}",
+                desde,
+                hasta);
+
+            // ============================================================
+            // 1) PREFETCH DATOS
+            // ============================================================
+
             var guias = await _repositorioGuia.ObtenerGuiasConDisponibilidadAsync();
-            var visitasGuiadasExistentes = await _repositorioVisitaGuiada.GetAllGroupVisitAsync(desde, hasta);
-            var configuracion = await _repositorioConfiguracion.ObtenerConfiguracionActivaAsync();
-            var calendario = await _repositorioCalendario.ObtenerCalendarioActivoAsync();
+
+            _logger.LogInformation(
+                "[GuidedAvailabilityProducer] Guías obtenidos: {Cantidad}",
+                guias.Count);
+
+            var visitasGuiadasExistentes =
+                await _repositorioVisitaGuiada.GetAllGroupVisitAsync(desde, hasta);
+
+            _logger.LogInformation(
+                "[GuidedAvailabilityProducer] Visitas guiadas existentes obtenidas: {Cantidad}",
+                visitasGuiadasExistentes.Count);
+
+            var configuracion =
+                await _repositorioConfiguracion.ObtenerConfiguracionActivaAsync();
+
+            _logger.LogInformation(
+                "[GuidedAvailabilityProducer] Configuración encontrada: {Existe}",
+                configuracion is not null);
+
+            var calendario =
+                await _repositorioCalendario.ObtenerCalendarioActivoAsync();
+
+            _logger.LogInformation(
+                "[GuidedAvailabilityProducer] Calendario encontrado: {Existe}",
+                calendario is not null);
 
             if (configuracion == null)
-                throw new InvalidOperationException("No hay configuración activa para visitas guiadas");
+            {
+                _logger.LogError(
+                    "[GuidedAvailabilityProducer] No existe configuración activa");
+
+                throw new InvalidOperationException(
+                    "No hay configuración activa para visitas guiadas");
+            }
 
             if (calendario == null)
-                throw new InvalidOperationException("No hay calendario activo del museo");
+            {
+                _logger.LogError(
+                    "[GuidedAvailabilityProducer] No existe calendario activo");
 
-            // 2) Llamar al servicio de dominio de guiadas que calcula los turnos candidatos
-            // Este servicio ya valida: calendario, configuración, guías y capacidad
-            var candidatosTurnos = await _servicioGuiadas.CalcularDisponibilidad(
-                desde, hasta, guias, visitasGuiadasExistentes, configuracion, calendario);
+                throw new InvalidOperationException(
+                    "No hay calendario activo del museo");
+            }
 
-            // Filtrar turnos que el servicio de dominio ya marcó como no disponibles
-            // (el servicio ya valida calendario, configuración, guías y capacidad)
+            // ============================================================
+            // 2) SERVICIO DE DISPONIBILIDAD DE VISITAS GUIADAS
+            // ============================================================
+
+            _logger.LogInformation(
+                "[GuidedAvailabilityProducer] Llamando a CalcularDisponibilidad...");
+
+            var candidatosTurnos =
+                await _servicioGuiadas.CalcularDisponibilidad(
+                    desde,
+                    hasta,
+                    guias,
+                    visitasGuiadasExistentes,
+                    configuracion,
+                    calendario);
+
+            _logger.LogInformation(
+                "[GuidedAvailabilityProducer] Servicio de guiadas devolvió {Cantidad} turnos",
+                candidatosTurnos.Count);
+
+            // Log por estado para saber qué está devolviendo el servicio
+            var disponiblesAntesFiltro = candidatosTurnos.Count(
+                x => x.EstadoTurno == EstadoTurno.Disponible);
+
+            var noDisponiblesAntesFiltro =
+                candidatosTurnos.Count - disponiblesAntesFiltro;
+
+            _logger.LogInformation(
+                "[GuidedAvailabilityProducer] Turnos con estado Disponible: {Disponibles}",
+                disponiblesAntesFiltro);
+
+            _logger.LogInformation(
+                "[GuidedAvailabilityProducer] Turnos NO disponibles: {NoDisponibles}",
+                noDisponiblesAntesFiltro);
+
+            // ============================================================
+            // FILTRO POR ESTADO
+            // ============================================================
+
             var candidatosFiltrados = candidatosTurnos
-                .Where(turno => turno.EstadoTurno == EstadoTurno.Disponible);
+                .Where(turno => turno.EstadoTurno == EstadoTurno.Disponible)
+                .ToList();
 
-            candidatosTurnos = [.. candidatosFiltrados];
+            _logger.LogInformation(
+                "[GuidedAvailabilityProducer] Después de filtrar por estado Disponible: {Cantidad}",
+                candidatosFiltrados.Count);
 
-            // 3) Prefetch actividades del rango (para todas las salas) and other common data
-            var actividadesEnRango = await _repositorioActividadMuseo.FindAllAsync(desde, hasta);
+            candidatosTurnos = candidatosFiltrados;
+
+            // ============================================================
+            // 3) ACTIVIDADES EXISTENTES
+            // ============================================================
+
+            var actividadesEnRango =
+                await _repositorioActividadMuseo.FindAllAsync(desde, hasta);
+
+            _logger.LogInformation(
+                "[GuidedAvailabilityProducer] Actividades existentes en rango: {Cantidad}",
+                actividadesEnRango.Count);
 
             var aprobados = new List<TurnoDisponible>();
 
-            // 3.1) Optionally prefetch recurrence rules (blocking rules) and expand into blocked slots
-            
+            // ============================================================
+            // 4) CREACIÓN DE CANDIDATOS
+            // ============================================================
 
-            // Build candidate entries list and keep mapping to original turno using stable Ids
             var entries = new List<Models.CandidateEntry>();
-            var candidates = new List<Domain.ActividadMuseo.Entities.ActividadMuseo>();
 
             // Email and phone once
             var email = new Email("sistema@localhost.com");
@@ -85,7 +179,9 @@ namespace Application.Availability.Producers
 
             foreach (var turno in candidatosTurnos)
             {
-                var timeSlot = new TimeSlot(turno.HorarioTurno.Inicio, turno.HorarioTurno.Fin);
+                var timeSlot = new TimeSlot(
+                    turno.HorarioTurno.Inicio,
+                    turno.HorarioTurno.Fin);
 
                 var candidate = new VisitaGrupalGuiada(
                     usuarioVisitanteId: "system",
@@ -106,13 +202,33 @@ namespace Application.Availability.Producers
                     salas: null
                 );
 
-                var entry = new Models.CandidateEntry(Guid.NewGuid(), candidate, turno, "GuidedService");
+                var entry = new Models.CandidateEntry(
+                    Guid.NewGuid(),
+                    candidate,
+                    turno,
+                    "GuidedService");
+
                 entries.Add(entry);
-                candidates.Add(candidate);
             }
 
-            // Build a base context that contains prefetched data for reuse
-            // Nota: No incluimos DiasCierre porque el servicio de dominio ya validó el calendario
+            _logger.LogInformation(
+                "[GuidedAvailabilityProducer] CandidateEntry creados: {Cantidad}",
+                entries.Count);
+
+            // Si llegamos acá con 0, el problema está ANTES del AvailabilityEngine
+            if (entries.Count == 0)
+            {
+                _logger.LogWarning(
+                    "[GuidedAvailabilityProducer] No hay entries para enviar al AvailabilityEngine. " +
+                    "El problema está antes del engine.");
+
+                return aprobados;
+            }
+
+            // ============================================================
+            // 5) CONTEXTO PARA AVAILABILITY ENGINE
+            // ============================================================
+
             var baseCtx = new AvailabilityContext
             {
                 Start = desde,
@@ -125,24 +241,71 @@ namespace Application.Availability.Producers
                 }
             };
 
-            // If you have a repository for exhibits (muestras), prefetch them here and put in metadata
-            // Example (commented because repository may not exist yet):
-            // var exhibits = await _repositorioMuestra.FindAllAsync(desde, hasta);
-            // baseCtx.Metadata[AvailabilityMetadataKeys.Exhibits] = exhibits;
+            _logger.LogInformation(
+                "[GuidedAvailabilityProducer] Enviando {Cantidad} candidatos al AvailabilityEngine",
+                entries.Count);
 
-            // Ask engine to check all entries (returns results keyed by entry.Id)
-            var results = await _engine.CheckManyAsync(baseCtx, entries);
+            // ============================================================
+            // 6) VALIDACIÓN CON AVAILABILITY ENGINE
+            // ============================================================
+
+            var results =
+                await _engine.CheckManyAsync(baseCtx, entries);
+
+            _logger.LogInformation(
+                "[GuidedAvailabilityProducer] AvailabilityEngine devolvió {Cantidad} resultados",
+                results.Count);
+
+            var resultadosOk =
+                results.Count(x => x.Value.IsOk);
+
+            var resultadosError =
+                results.Count - resultadosOk;
+
+            _logger.LogInformation(
+                "[GuidedAvailabilityProducer] Resultados OK: {Cantidad}",
+                resultadosOk);
+
+            _logger.LogInformation(
+                "[GuidedAvailabilityProducer] Resultados rechazados: {Cantidad}",
+                resultadosError);
+
+            // ============================================================
+            // 7) RECUPERAR TURNOS APROBADOS
+            // ============================================================
 
             foreach (var entry in entries)
             {
-                if (results.TryGetValue(entry.Id, out var res) && res.IsOk)
+                if (results.TryGetValue(entry.Id, out var res))
                 {
-                    if (entry.Original is TurnoDisponible turno)
+                    if (res.IsOk)
                     {
-                        aprobados.Add(turno);
+                        if (entry.Original is TurnoDisponible turno)
+                        {
+                            aprobados.Add(turno);
+                        }
+                    }
+                    else
+                    {
+                        _logger.LogDebug(
+                            "[GuidedAvailabilityProducer] Candidato {Id} rechazado por AvailabilityEngine",
+                            entry.Id);
                     }
                 }
+                else
+                {
+                    _logger.LogWarning(
+                        "[GuidedAvailabilityProducer] No se encontró resultado para CandidateEntry {Id}",
+                        entry.Id);
+                }
             }
+
+            _logger.LogInformation(
+                "[GuidedAvailabilityProducer] ===== FIN =====");
+
+            _logger.LogInformation(
+                "[GuidedAvailabilityProducer] Total de turnos aprobados: {Cantidad}",
+                aprobados.Count);
 
             return aprobados;
         }

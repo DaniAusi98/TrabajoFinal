@@ -5,7 +5,7 @@ using Domain.Common.Exceptions;
 
 namespace Domain.PersonalMuseo.Entities.UsuarioInterno
 {
-    public class PersonalInterno : DomainEntity<int>
+    public class PersonalInterno : DomainEntity<string>
     {
         public string IdentityUserId { get; private set; }
         public int AreaId { get; private set; }
@@ -20,6 +20,7 @@ namespace Domain.PersonalMuseo.Entities.UsuarioInterno
 
         public PersonalInterno(string identityUserId, int areaId, int puestoId)
         {
+            Id= Guid.NewGuid().ToString();
             SetIdentityUserId(identityUserId);
             SetAreaId(areaId);
             SetPuestoId(puestoId);

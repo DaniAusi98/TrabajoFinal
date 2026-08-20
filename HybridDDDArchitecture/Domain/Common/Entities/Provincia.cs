@@ -7,8 +7,9 @@ namespace Domain.Common.Entities
     {
         public string Nombre { get; private set; }
 
-        public Provincia(string nombre)
+        public Provincia(string id,string nombre)
         {
+            Id = id;
             if (string.IsNullOrWhiteSpace(nombre))
                 throw new DomainException("El nombre de la provincia es obligatorio.");
 

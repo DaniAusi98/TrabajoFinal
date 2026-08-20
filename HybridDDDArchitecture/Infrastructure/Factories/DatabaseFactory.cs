@@ -3,9 +3,7 @@ using Application.Common.Repositories;
 using Application.MuseumResources.Repositories;
 using Application.Repositories;
 using Application.VisitaGrupal.Repositories;
-
 using Domain.Common.Others.Utils;
-
 using Infrastructure.Constants;
 using Infrastructure.Repositories.Sql.ActividadMuseo;
 using Infrastructure.Repositories.Sql.RecursosMuseo;

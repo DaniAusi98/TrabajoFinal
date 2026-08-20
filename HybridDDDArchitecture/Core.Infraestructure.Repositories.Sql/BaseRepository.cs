@@ -32,7 +32,21 @@ namespace Core.Infraestructure.Repositories.Sql
 
             return (object)Context.Entry(entity).Property("Id").CurrentValue;
         }
+        public IEnumerable<object> AddRange(IEnumerable<TEntity> entities)
+        {
+            Repository.AddRange(entities);
 
+            Context.SaveChanges(); 
+            return entities; // Retorna la lista con sus estados trackeados (e IDs si ya se guardó)
+        }
+        public async Task<IEnumerable<object>> AddRangeAsync(IEnumerable<TEntity> entities)
+        {
+            await Repository.AddRangeAsync(entities);
+
+             await Context.SaveChangesAsync();
+
+            return entities;
+        }
         public long Count(Expression<Func<TEntity, bool>> filter)
         {
             return Convert.ToInt64(Repository.Count(filter));

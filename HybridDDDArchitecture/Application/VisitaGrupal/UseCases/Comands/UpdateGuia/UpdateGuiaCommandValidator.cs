@@ -8,7 +8,8 @@ namespace Application.VisitaGrupal.UseCases.Comands.UpdateGuia
         public UpdateGuiaCommandValidator(IRepositorioGuia repositorioGuia)
         {
             RuleFor(x => x.Id)
-                .GreaterThan(0)
+                .NotNull()
+                .NotEmpty()
                 .MustAsync(async (id, ct) => await repositorioGuia.FindOneAsync(id) != null)
                 .WithMessage("El guía no existe.");
 
@@ -17,7 +18,8 @@ namespace Application.VisitaGrupal.UseCases.Comands.UpdateGuia
                 .MaximumLength(200);
 
             RuleFor(x => x.PersonalInternoId)
-                .GreaterThan(0);
+                .NotNull()
+                .NotEmpty();
 
             RuleFor(x => x.Horarios)
                 .NotEmpty().WithMessage("Debe asignar al menos un horario.");

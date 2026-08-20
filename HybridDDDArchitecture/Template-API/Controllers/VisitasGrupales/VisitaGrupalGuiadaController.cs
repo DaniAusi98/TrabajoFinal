@@ -1,5 +1,5 @@
-using System.Security.Claims;
 using Application.VisitaGrupal.UseCases.Comands.CancelarVisitaGuiada;
+using Application.VisitaGrupal.UseCases.Comands.ConfirmarVisitaGrupal;
 using Application.VisitaGrupal.UseCases.Comands.CrearVisitaGuiada;
 using Application.VisitaGrupal.UseCases.Comands.NewFolder;
 using Application.VisitaGrupal.UseCases.Queries.ConsultarDisponibilidadTurnosVisitaGuiada;
@@ -11,6 +11,7 @@ using Core.Application;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Controllers.VisitasGrupales;
 
@@ -102,6 +103,18 @@ public class VisitasGuiadasController(ICommandQueryBus commandQueryBus) : Contro
                 ReservationId = id
             });
 
+        return NoContent();
+    }
+    [HttpPatch("{id}/confirmar")]
+    public async Task<IActionResult> Confirmar(string id)
+    {
+        if (string.IsNullOrEmpty(id))
+            return BadRequest();
+        await _commandQueryBus.Send(
+            new ConfirmarGuiadaCommand
+            {
+                ReservationId = id
+            });
         return NoContent();
     }
 

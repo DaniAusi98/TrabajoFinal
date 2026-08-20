@@ -7,5 +7,6 @@ namespace Application.Common.Repositories
     {
         Task<List<Provincia>> GetByIdsAsync(IEnumerable<string> ids);
 
+
     }
 }

@@ -6,6 +6,6 @@ namespace Application.VisitaGrupal.UseCases.Comands.DeleteGuia
 {
     public class DeleteGuiaCommand : IRequestCommand<Unit>
     {
-        public int GuiaId { get; set; }
+        public string GuiaId { get; set; }
     }
 }

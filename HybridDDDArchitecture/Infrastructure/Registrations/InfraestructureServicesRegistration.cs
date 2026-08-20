@@ -1,4 +1,5 @@
 using Application.ApplicationMuseo.ApplicationServices;
+using Application.Common.ApplicationServices;
 using Application.Usuario.ApplicationServices.ApplicationServiceInterfaces;
 
 using Core.Application.Adapters.Http;
@@ -53,8 +54,22 @@ namespace Infrastructure.Registrations
             services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
             services.AddScoped<JwtTokenService>();
             services.AddScoped<IIdentityService, IdentityService>();
-            services.AddScoped<IClock,ArgentinaClock>();
-
+            services.AddScoped<IClock, ArgentinaClock>();
+            services.AddHttpClient<IConsultarProvinciasArgetina, ObtenerProvinciasArgentinaGeoRef>(client =>
+            {
+                // Aquí es donde va la base del Curl. Tiene que terminar siempre con una barra diagonal '/'
+                client.BaseAddress = new Uri("https://apis.datos.gob.ar/");
+            });
+            services.AddHttpClient<IConsultaDepartamentos, ObtenerDepartamentosArg>(client =>
+            {
+                // Aquí es donde va la base del Curl. Tiene que terminar siempre con una barra diagonal '/'
+                client.BaseAddress = new Uri("https://apis.datos.gob.ar/");
+            });
+            services.AddHttpClient<IConsultarLocalidades, ObtenerLocalidadesArg>(client =>
+            {
+                // Aquí es donde va la base del Curl. Tiene que terminar siempre con una barra diagonal '/'
+                client.BaseAddress = new Uri("https://apis.datos.gob.ar/");
+            });
 
             return services;
         }
@@ -97,6 +112,49 @@ namespace Infrastructure.Registrations
         public static void SeedConfiguracionHorarioAutoguiadas(this IApplicationBuilder app)
         {
             Infrastructure.Data.Seeders.ConfiguracionHorarioAutoguiadasSeeder
+                .SeedAsync(app.ApplicationServices)
+                .GetAwaiter()
+                .GetResult();
+        }
+        public static void SeedProvinciasArgentina(this IApplicationBuilder app)
+        {
+            Data.Seeders.Ubicacion.ProvinciaSeeder
+                .SeedAsync(app.ApplicationServices)
+                .GetAwaiter()
+                .GetResult();
+        }
+        public static void SeedDepartamentosArgentina(this IApplicationBuilder app)
+        {
+            Data.Seeders.Ubicacion.SeederDepartamentos
+                .SeedAsync(app.ApplicationServices)
+                .GetAwaiter()
+                .GetResult();
+
+        }
+        public static void SeedLocalidadesArgentina(this IApplicationBuilder app)
+        {
+            Data.Seeders.Ubicacion.SeederLocalidades
+                .SeedAsync(app.ApplicationServices)
+                .GetAwaiter()
+                .GetResult();
+        }
+        public static void SeedSalasMuseo(this IApplicationBuilder app)
+        {
+            Data.Seeders.SalaSeeder
+                .SeedAsync(app.ApplicationServices)
+                .GetAwaiter()
+                .GetResult();
+        }
+        public static void SeedTematicasVisitas(this IApplicationBuilder app)
+        {
+            Data.Seeders.TematicaVisitaSeeder
+                .SeedAsync(app.ApplicationServices)
+                .GetAwaiter()
+                .GetResult();
+        }
+        public static void SeedGuiasMuseo(this IApplicationBuilder app)
+        {
+            Data.Seeders.Ubicacion.SeederGuias
                 .SeedAsync(app.ApplicationServices)
                 .GetAwaiter()
                 .GetResult();

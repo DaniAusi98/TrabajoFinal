@@ -16,10 +16,12 @@ namespace Domain.VisitasGrupales.Enums
 
         public enum NivelEducativo
         {
-            Inicial,
-            Primario,
-            Secundario,
-            Superior
+            NivelInicial,
+            NivelPrimario,
+            NivelSecundario,
+            NivelSuperiorNoUniversitario,
+            NivelSuperiorUniversitario,
+            Otro
 
 
         }

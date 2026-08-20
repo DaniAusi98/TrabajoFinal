@@ -1,7 +1,6 @@
 using Domain.Common.Exceptions;
 using Domain.Common.ValueObjets;
 using Domain.RecursoMuseo.Entities;
-
 using static Domain.ActividadMuseo.Enums.Enums;
 using static Domain.VisitasGrupales.Enums.Enums;
 

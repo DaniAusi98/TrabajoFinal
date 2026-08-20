@@ -52,9 +52,9 @@ namespace Controllers.VisitasGrupales
         }
 
         [HttpDelete("api/v1/[Controller]/{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(string id)
         {
-            if (id < 0) return BadRequest();
+            if (string.IsNullOrEmpty(id)) return BadRequest();
 
             await _commandQueryBus.Send(new DeleteGuiaCommand { GuiaId = id });
 

@@ -75,5 +75,15 @@ namespace Core.Infraestructure.Repositories.MongoDb
             FilterDefinition<TEntity> filter = Builders<TEntity>.Filter.Eq("_id", id);
             Collection.ReplaceOne(filter, entity);
         }
+
+        public IEnumerable<object> AddRange(IEnumerable<TEntity> entities)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<object>> AddRangeAsync(IEnumerable<TEntity> entities)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

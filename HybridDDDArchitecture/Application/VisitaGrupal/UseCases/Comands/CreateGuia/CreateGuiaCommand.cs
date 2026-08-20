@@ -9,7 +9,7 @@ namespace Application.VisitaGrupal.UseCases.Comands.CreateGuia
         [Required]
         public string NombreCompleto { get; set; }
         [Required]
-        public int PersonalInternoId { get; set; }
+        public string PersonalInternoId { get; set; }
         [Required]
         public List<GuiaHorarioDto> Horarios { get; set; } = new();
     }
