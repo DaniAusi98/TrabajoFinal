@@ -145,7 +145,15 @@ namespace Infrastructure.Identity
                 Roles = roles.ToList()
             };
         }
-
+        public async Task<string>FindEmailById (string idUser)
+        {
+            var user = await _userManager.FindByIdAsync(idUser);
+            if (user is null)
+            {
+                return null;
+            }
+            return user.Email;
+        }
         public async Task<string> GenerateEmailConfirmationTokenAsync(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);

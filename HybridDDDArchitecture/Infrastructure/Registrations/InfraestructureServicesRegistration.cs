@@ -1,17 +1,20 @@
 using Application.ApplicationMuseo.ApplicationServices;
 using Application.Common.ApplicationServices;
 using Application.Usuario.ApplicationServices.ApplicationServiceInterfaces;
-
+using Application.VisitaGrupal.ApplicationServices;
 using Core.Application.Adapters.Http;
 using Core.Infraestructure;
 using Core.Infraestructure.Adapters.Http;
-
 using Infrastructure.Adapters;
 using Infrastructure.Adapters.EmailSender.ResendEmailService;
+using Infrastructure.Adapters.EmailSender.ResendEmailService.ConfirmarVisitaUrl;
 using Infrastructure.Adapters.EmailSender.ResendEmailService.User;
 using Infrastructure.Constants;
 using Infrastructure.Factories;
 using Infrastructure.Identity;
+using Hangfire;
+using Hangfire.MySql;
+using System.Transactions;
 
 using Microsoft.AspNetCore.Builder;
 
@@ -35,6 +38,39 @@ namespace Infrastructure.Registrations
             /* Database Context */
             services.AddRepositories(configuration);
 
+
+            /* REGISTRO DE HANGFIRE JUSTO AQUÍ*/
+            // Obtenemos el tipo de base de datos activa
+            string dbType = configuration["Configurations:UseDatabase"] ?? "";
+
+            // Solo configuramos Hangfire si la base de datos activa es MYSQL
+            if (dbType.Equals("mysql", StringComparison.OrdinalIgnoreCase))
+            {
+                string connectionString = configuration.GetConnectionString("MySqlConnection")
+                    ?? throw new NullReferenceException("La cadena 'MySqlConnection' no está configurada.");
+
+                services.AddHangfire(config => config
+                    .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+                    .UseSimpleAssemblyNameTypeSerializer()
+                    .UseRecommendedSerializerSettings()
+                    .UseStorage(new MySqlStorage(connectionString, new MySqlStorageOptions
+                    {
+                        TransactionIsolationLevel = IsolationLevel.ReadCommitted,
+                        QueuePollInterval = TimeSpan.FromSeconds(15),
+                        JobExpirationCheckInterval = TimeSpan.FromHours(1),
+                        CountersAggregateInterval = TimeSpan.FromMinutes(5),
+                        PrepareSchemaIfNecessary = true, // Creará las tablas automáticamente al iniciar
+                        DashboardJobListLimit = 50000,
+                        TransactionTimeout = TimeSpan.FromMinutes(1),
+                        TablesPrefix = "Hangfire_"
+                    })));
+
+                // Arranca el servidor que procesa las tareas en segundo plano
+                services.AddHangfireServer();
+            }
+            /* 🔼 TERMINA HANGFIRE 🔼 */
+
+
             /* EventBus */
             services.AddEventBus(configuration);
 
@@ -46,6 +82,7 @@ namespace Infrastructure.Registrations
             services.AddHttpClient<ResendClient>();
             services.AddTransient<IResend, ResendClient>();
             services.AddScoped<IConfirmUserUrl, ConfirmUserUrl>();
+            services.AddScoped<IURLConfirmacionVisitaGrupal, UrlConfirmacionVisitaGrupal>();
 
             services.AddScoped<IEmailService, ResendEmailService>();
 
@@ -70,6 +107,7 @@ namespace Infrastructure.Registrations
                 // Aquí es donde va la base del Curl. Tiene que terminar siempre con una barra diagonal '/'
                 client.BaseAddress = new Uri("https://apis.datos.gob.ar/");
             });
+
 
             return services;
         }

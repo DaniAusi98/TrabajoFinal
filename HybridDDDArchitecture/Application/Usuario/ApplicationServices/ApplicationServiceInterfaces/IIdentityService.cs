@@ -16,7 +16,7 @@ namespace Application.Usuario.ApplicationServices.ApplicationServiceInterfaces
         Task<bool> UserExistsAsync(string email);
 
         Task<UserDto?> FindById(string idUser);
-
+        Task<string> FindEmailById(string idUser);
 
     }
 }

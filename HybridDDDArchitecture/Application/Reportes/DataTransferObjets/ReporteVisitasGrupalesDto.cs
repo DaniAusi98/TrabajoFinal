@@ -6,7 +6,7 @@ namespace Application.Reportes.DataTransferObjets
 {
     public class ReporteVisitasGrupalesDto
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public int ReservasTotales { get; private set; }
         public int VisitanteTotales { get; private set; }
         public int VisitasConfirmadas { get; private set; }

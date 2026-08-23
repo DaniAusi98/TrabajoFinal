@@ -13,7 +13,7 @@ namespace Infrastructure.Configurations.VisitasGrupales
 
             builder.HasKey(c => c.Id);
 
-            builder.Property(c => c.MinGuiasParaCapacidadCompleta)
+            builder.Property(c => c.MaximoVisitasSimultaneas)                
                 .IsRequired();
 
             builder.Property(c => c.CapacidadPorGuia)

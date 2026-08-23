@@ -72,6 +72,7 @@ namespace Infrastructure.Repositories.Sql
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<DummyEntity>().ToTable("DummyEntity");
             modelBuilder.ApplyConfiguration(new VisitaGrupalGuiadaConfiguration());
@@ -95,6 +96,18 @@ namespace Infrastructure.Repositories.Sql
             modelBuilder.ApplyConfiguration(new ReporteVisitaGrupalConfig());
             modelBuilder.ApplyConfiguration(new ReporteVisitaGuiadaConfig());
             modelBuilder.ApplyConfiguration(new ReporteVisitaAutoguiadaConfig());
+
+            // ... Aquí tienes tus configuraciones actuales de tablas (Entidades, Claves, etc.) ...
+
+            //RUCO: Le indicamos a Entity Framework que ignore por completo 
+            // cualquier tabla que empiece con el prefijo "Hangfire_"
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes().ToList())
+            {
+                if (entityType.GetTableName() != null && entityType.GetTableName().StartsWith("Hangfire_"))
+                {
+                    modelBuilder.Ignore(entityType.ClrType);
+                }
+            }
 
         }
     }

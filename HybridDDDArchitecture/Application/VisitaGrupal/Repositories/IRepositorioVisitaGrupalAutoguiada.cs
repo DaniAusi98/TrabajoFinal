@@ -7,7 +7,6 @@ namespace Application.VisitaGrupal.Repositories
     public interface IRepositorioVisitaGrupalAutoguiada:IRepository<VisitaGrupalAutoguiada>
     {
         Task<List<VisitaGrupalAutoguiada>> GetAllGroupVisitAuAsync(DateTime fechaDesde, DateTime fechaHasta);
-        Task<List<VisitaGrupalAutoguiada>> GetSelfGuidedToursByMonth(DateOnly monthDate);
 
     }
 }

@@ -17,36 +17,51 @@ namespace Controllers.VisitasGrupales
         [HttpGet("reportSummaryCards")]
         public async Task<IActionResult> ReporteVisitasGrupales (
 
-        [FromQuery] DateOnly mesReporte)
+        [FromQuery] DateTime desde, 
+        [FromQuery] DateTime hasta)
         {
             var reporteGeneral = await _commandQueryBus.Send(
                 new ReporteGeneralVisitaGrupalQuery
 
-                { MesReporte = mesReporte });
+                {
+                    Desde = desde,
+                    Hasta = hasta,
+
+                });
 
             return Ok(reporteGeneral);
         }
         [HttpGet("reporteVisitaGuiada")]
         public async Task<IActionResult> ReporteVisitasGuiadas(
 
-        [FromQuery] DateOnly mesReporte)
+        [FromQuery] DateTime desde,
+        [FromQuery] DateTime hasta)
         {
             var reporte = await _commandQueryBus.Send(
                 new ReporteVisitaGuiadaQuery
 
-                { MesReporte = mesReporte });
+                {
+                    Desde = desde,
+                    Hasta = hasta,
+
+                });
 
             return Ok(reporte);
         }
         [HttpGet("reporteVisitaAutoguiada")]
         public async Task<IActionResult> ReporteVisitasAutoguiadas(
 
-        [FromQuery] DateOnly mesReporte)
+        [FromQuery] DateTime desde,
+        [FromQuery] DateTime hasta)
         {
             var reporte = await _commandQueryBus.Send(
                 new ReporteVisitaAutoguiadaQuery
 
-                { MesReporte = mesReporte });
+                {
+                    Desde = desde,
+                    Hasta = hasta,
+
+                });
 
             return Ok(reporte);
         }

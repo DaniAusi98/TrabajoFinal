@@ -54,15 +54,6 @@ namespace Infrastructure.Repositories.Sql.VisitaGrupal
                     v.TimeSlots.Any(ts => ts.Inicio >= fechaActual))
                 .ToListAsync();
         }
-        public async Task<List<VisitaGrupalGuiada>> GetGuidedToursByMonth(
-        DateOnly monthDate)
-        {
-            return await Repository
-                .Include(v => v.TimeSlots)
-                .Where(v => v.TimeSlots.Any(ts =>
-                    ts.Inicio.Year == monthDate.Year &&
-                    ts.Inicio.Month == monthDate.Month))
-                .ToListAsync();
-        }
+       
     }
 }

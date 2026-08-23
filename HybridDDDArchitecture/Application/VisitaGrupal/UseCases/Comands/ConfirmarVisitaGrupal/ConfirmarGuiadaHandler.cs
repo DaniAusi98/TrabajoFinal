@@ -9,8 +9,7 @@ namespace Application.VisitaGrupal.UseCases.Comands.ConfirmarVisitaGrupal
         private readonly IRepositorioVisitaGuiada _repositorioVisitaGuiada = repositorioVisitaGuiada ?? throw new ArgumentNullException(nameof(repositorioVisitaGuiada));
         public async Task Handle(ConfirmarGuiadaCommand request, CancellationToken cancellationToken)
         {
-            var guiada = await _repositorioVisitaGuiada.FindOneAsync(request.ReservationId);
-
+            var guiada = await _repositorioVisitaGuiada.FindOneAsync(request.ReservationId) ?? throw new Exception($"No se encontró la visita guiada con ID {request.ReservationId}");
             guiada.Confirmar();
             _repositorioVisitaGuiada.Update(request.ReservationId, guiada);
 

@@ -5,10 +5,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.Reportes.UseCases.Queries.ReporteVisitaGrupal
 {
-    public class ReporteGeneralVisitaGrupalQuery:IRequestQuery<ReporteGridDto>
+    public class ReporteGeneralVisitaGrupalQuery:IRequestQuery<ReporteVisitasGrupalesDto>
     {
         [Required]
-        public DateOnly MesReporte { get; set; }
+        public DateTime Desde { get; set; }
+        [Required]
+        public DateTime Hasta { get; set; }
 
         public ReporteGeneralVisitaGrupalQuery()
         {

@@ -12,7 +12,6 @@ namespace Application.VisitaGrupal.Repositories
         Task<List<VisitaGrupalGuiada>> GetAllGroupVisitAsync(DateTime fechaDesde, DateTime fechaHasta);
         Task<List<VisitaGrupalGuiada>> ObtenerPorUsuarioIdAsync(string usuarioId,DateTime fechaActual);
         Task<VisitaGrupalGuiada> FindByIdWithActividadAsync(string id);
-        Task<List<VisitaGrupalGuiada>> GetGuidedToursByMonth(DateOnly monthDate);
 
 
 

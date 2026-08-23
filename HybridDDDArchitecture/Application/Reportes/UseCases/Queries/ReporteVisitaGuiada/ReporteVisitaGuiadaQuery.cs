@@ -8,7 +8,9 @@ namespace Application.Reportes.UseCases.Queries.ReporteVisitaGuiada
     public class ReporteVisitaGuiadaQuery : IRequestQuery<ReporteVisitaGuiadaDto>
     {
         [Required]
-        public DateOnly MesReporte { get; set; }
+        public DateTime Desde { get; set; }
+        [Required]
+        public DateTime Hasta { get; set; }
 
         public ReporteVisitaGuiadaQuery()
         {

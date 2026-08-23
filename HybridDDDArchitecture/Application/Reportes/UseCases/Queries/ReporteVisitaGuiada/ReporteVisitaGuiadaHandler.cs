@@ -23,10 +23,10 @@ namespace Application.Reportes.UseCases.Queries.ReporteVisitaGuiada
             ?? throw new ArgumentNullException(nameof(guidedAvailabilityProducer));
         public async Task<ReporteVisitaGuiadaDto> Handle(ReporteVisitaGuiadaQuery request, CancellationToken cancellationToken)
         {
-            var visitasguiadas =await _repositorioVisitaGuiada.GetGuidedToursByMonth(request.MesReporte);
+            var visitasguiadas =await _repositorioVisitaGuiada.GetAllGroupVisitAsync(request.Desde, request.Hasta);
             var TurnosDisponibles = await _guidedAvailabilityProducer.GetAvailableTurnsAsync(
-                request.MesReporte.ToDateTime(new TimeOnly(0, 0)),
-                request.MesReporte.AddMonths(1).ToDateTime(new TimeOnly(0, 0))
+                request.Desde,
+                request.Hasta
                 );
             int totalCapacidadDisponible = TurnosDisponibles.Sum(t => t.CapacidadMaxima);
             var reporte = ServicioReporteVisitasGuiadas.ReporteVisitasGuiadas(

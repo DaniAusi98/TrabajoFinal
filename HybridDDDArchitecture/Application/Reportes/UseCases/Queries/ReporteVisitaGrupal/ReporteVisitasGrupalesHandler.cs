@@ -8,7 +8,7 @@ namespace Application.Reportes.UseCases.Queries.ReporteVisitaGrupal
     internal sealed class ReporteVisitasGrupalesHandler(
         IRepositorioVisitaGrupalAutoguiada repositorioVisitaGrupalAutoguiada, 
         IRepositorioVisitaGuiada repositorioVisitaGuiada
-        ) : IRequestQueryHandler<ReporteGeneralVisitaGrupalQuery, ReporteGridDto>
+        ) : IRequestQueryHandler<ReporteGeneralVisitaGrupalQuery, ReporteVisitasGrupalesDto>
     {
         private readonly IRepositorioVisitaGrupalAutoguiada 
             _repositorioVisitaGrupalAutoguiada= 
@@ -20,15 +20,15 @@ namespace Application.Reportes.UseCases.Queries.ReporteVisitaGrupal
             repositorioVisitaGuiada 
             ?? throw new ArgumentNullException(nameof(repositorioVisitaGuiada));
 
-        public async Task<ReporteGridDto> Handle(ReporteGeneralVisitaGrupalQuery request, CancellationToken cancellationToken)
+        public async Task<ReporteVisitasGrupalesDto> Handle(ReporteGeneralVisitaGrupalQuery request, CancellationToken cancellationToken)
         {
-            var visitasguiadas = await _repositorioVisitaGuiada.GetGuidedToursByMonth(request.MesReporte);
-            var visitasAutoguiadas = await _repositorioVisitaGrupalAutoguiada.GetSelfGuidedToursByMonth(request.MesReporte);
+            var visitasguiadas = await _repositorioVisitaGuiada.GetAllGroupVisitAsync(request.Desde, request.Hasta);
+            var visitasAutoguiadas = await _repositorioVisitaGrupalAutoguiada.GetAllGroupVisitAuAsync(request.Desde, request.Hasta);
             var reporte = ServicioReporteVisitasGrupales.GenerarReporteGeneralVisitasGrupales(
                 visitasAutoguiadas,
                 visitasguiadas
                 );
-            return reporte.To<ReporteGridDto>();
+            return reporte.To<ReporteVisitasGrupalesDto>();
         }
     }
 }

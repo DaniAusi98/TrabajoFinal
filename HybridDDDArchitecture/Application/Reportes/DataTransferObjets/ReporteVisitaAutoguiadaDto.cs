@@ -8,7 +8,7 @@ namespace Application.Reportes.DataTransferObjets
 {
     public class ReporteVisitaAutoguiadaDto
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public int ReservasTotales { get; private set; }
         public int VisitanteTotales { get; private set; }
         public int VisitasConfirmadas { get; private set; }

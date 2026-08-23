@@ -17,8 +17,8 @@ namespace Application.VisitaGrupal.UseCases.Queries.GetConfiguracionVisitasGrupa
             return new ConfiguracionVisitasGrupalesGuiadasDto
             {
                 Id = config.Id,
-                MinGuiasParaCapacidadCompleta = config.MinGuiasParaCapacidadCompleta,
                 CapacidadPorGuia = config.CapacidadPorGuia,
+                MaximoVisitasSimultaneas= config.MaximoVisitasSimultaneas,
                 CapacidadMaximaPorTurno = config.CapacidadMaximaPorTurno,
                 DiasDisponibles = config.DiasDisponibles.Dias.ToList(),
                 Turnos = config.Turnos.Select(t => new TurnoDto
