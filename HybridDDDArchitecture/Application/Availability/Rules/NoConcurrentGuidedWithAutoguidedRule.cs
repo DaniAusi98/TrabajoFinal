@@ -1,58 +1,92 @@
-using System.Linq;
-using System.Threading.Tasks;
-using Application.Availability;
-using Domain.ActividadMuseo.Entities;
+using Application.Availability.Models;
 using Domain.VisitasGrupales.Entities;
 using Domain.VisitasGrupales.Entities.GrupalGuiada;
 using Microsoft.Extensions.Logging;
 
 namespace Application.Availability.Rules
 {
-    /// <summary>
-    /// Regla que impide la convivencia entre visitas guiadas y visitas grupales autoguiadas
-    /// en el mismo intervalo horario / sala.
-    /// </summary>
-    public class NoConcurrentGuidedWithAutoguidedRule : IAvailabilityRule
+    public class NoConcurrentGuidedWithAutoguidedRule
+        : IAvailabilityRule
     {
-        private readonly ILogger<NoConcurrentGuidedWithAutoguidedRule> _logger;
+        private readonly ILogger<NoConcurrentGuidedWithAutoguidedRule>
+            _logger;
 
-        public NoConcurrentGuidedWithAutoguidedRule(ILogger<NoConcurrentGuidedWithAutoguidedRule> logger)
+        public NoConcurrentGuidedWithAutoguidedRule(
+            ILogger<NoConcurrentGuidedWithAutoguidedRule> logger)
         {
             _logger = logger;
         }
 
-        public Task<AvailabilityResult> CheckAsync(AvailabilityContext ctx, Domain.ActividadMuseo.Entities.ActividadMuseo candidate)
+        public Task<AvailabilityResult> CheckAsync(
+            AvailabilityContext ctx,
+            CandidateEntry entry)
         {
-            // Aplica sólo a actividades grupales
-            if (candidate is not VisitaGrupalGuiada && candidate is not VisitaGrupalAutoguiada)
-                return Task.FromResult(AvailabilityResult.Ok());
+            var candidate = entry.Candidate;
 
-            var candidateType = candidate is VisitaGrupalGuiada ? "Guiada" : "Autoguiada";
-            _logger.LogDebug("Checking concurrent visits for {CandidateType} candidate {CandidateId}",
-                candidateType, candidate.Id);
+            // Esta regla sólo aplica a visitas grupales.
+            if (candidate is not VisitaGrupalGuiada &&
+                candidate is not VisitaGrupalAutoguiada)
+            {
+                return Task.FromResult(
+                    AvailabilityResult.Ok());
+            }
 
-            var candidateSlots = candidate.TimeSlots.ToList();
+            var candidateType =
+                candidate is VisitaGrupalGuiada
+                    ? "Guiada"
+                    : "Autoguiada";
 
-            // Buscar en las actividades existentes solapamientos con el tipo contrario
-            var conflict = ctx.ExistingActivities
-                .Where(a => a != null)
-                .Any(existing =>
+            _logger.LogDebug(
+                "Checking concurrent visits for {CandidateType} candidate {CandidateId}",
+                candidateType,
+                candidate.Id);
+
+            // Cada candidato puede tener uno o varios TimeSlots.
+            foreach (var candidateSlot in entry.TimeSlots)
+            {
+                var conflict = ctx.ExistingActivities.Any(existing =>
                 {
-                    // Si candidate es guiada, buscamos autoguiadas; y viceversa
-                    if (candidate is VisitaGrupalGuiada && existing is VisitaGrupalAutoguiada) return candidateSlots.Any(cs => existing.TimeSlots.Any(es => cs.SeSolapaCon(es)));
-                    if (candidate is VisitaGrupalAutoguiada && existing is VisitaGrupalGuiada) return candidateSlots.Any(cs => existing.TimeSlots.Any(es => cs.SeSolapaCon(es)));
+                    var existingActivity = existing.Actividad;
+
+                    // Guiada contra autoguiada
+                    if (candidate is VisitaGrupalGuiada &&
+                        existingActivity is VisitaGrupalAutoguiada)
+                    {
+                        return existing.TimeSlots.Any(existingSlot =>
+                            candidateSlot.SeSolapaCon(existingSlot));
+                    }
+
+                    // Autoguiada contra guiada
+                    if (candidate is VisitaGrupalAutoguiada &&
+                        existingActivity is VisitaGrupalGuiada)
+                    {
+                        return existing.TimeSlots.Any(existingSlot =>
+                            candidateSlot.SeSolapaCon(existingSlot));
+                    }
+
                     return false;
                 });
 
-            if (conflict)
-            {
-                _logger.LogDebug("Concurrent visit conflict detected for {CandidateType} candidate {CandidateId}",
-                    candidateType, candidate.Id);
-                return Task.FromResult(AvailabilityResult.Fail("No se permiten visitas guiadas y autoguiadas en el mismo horario."));
+                if (conflict)
+                {
+                    _logger.LogDebug(
+                        "Concurrent visit conflict detected for {CandidateType} candidate {CandidateId}",
+                        candidateType,
+                        candidate.Id);
+
+                    return Task.FromResult(
+                        AvailabilityResult.Fail(
+                            "No se permiten visitas guiadas y autoguiadas en el mismo horario."));
+                }
             }
 
-            _logger.LogDebug("No concurrent visit conflicts for candidate {CandidateId}", candidate.Id);
-            return Task.FromResult(AvailabilityResult.Ok());
+            _logger.LogDebug(
+                "No concurrent visit conflicts for {CandidateType} candidate {CandidateId}",
+                candidateType,
+                candidate.Id);
+
+            return Task.FromResult(
+                AvailabilityResult.Ok());
         }
     }
 }

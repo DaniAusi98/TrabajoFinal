@@ -9,7 +9,7 @@ namespace Application.Common.ApplicationServices
 {
     public interface IConsultarLocalidades
     {
-        Task<List<Localidad>> ObtenerLocalidadesArgentinaAsync();
+        Task<List<LocalidadArg>> ObtenerLocalidadesArgentinaAsync();
 
 
     }

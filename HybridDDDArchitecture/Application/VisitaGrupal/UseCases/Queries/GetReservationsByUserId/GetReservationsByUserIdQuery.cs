@@ -1,15 +1,7 @@
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using Application.VisitaGrupal.DataTransferObjets;
-
 using Core.Application;
 
-namespace Application.VisitaGrupal.UseCases.Queries.GetReservationsById
+namespace Application.VisitaGrupal.UseCases.Queries.GetReservationsByUserId
 {
     public class GetReservationsByUserIdQuery : QueryRequest<QueryResult<GuidedTourReservationDto>>
     {

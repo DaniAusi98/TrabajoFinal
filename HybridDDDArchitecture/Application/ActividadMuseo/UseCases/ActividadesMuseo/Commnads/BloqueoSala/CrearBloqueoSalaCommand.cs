@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using static Domain.ActividadMuseo.Enums.Enums;
+using static Domain.Common.Enums.Enums;
 
 namespace Application.ActividadMuseo.UseCases.ActividadesMuseo.Commnads.BloqueoSala
 {

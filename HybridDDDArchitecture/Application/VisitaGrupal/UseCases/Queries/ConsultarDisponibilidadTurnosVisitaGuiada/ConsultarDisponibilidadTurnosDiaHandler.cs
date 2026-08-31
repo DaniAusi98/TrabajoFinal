@@ -18,13 +18,19 @@ namespace Application.VisitaGrupal.UseCases.Queries.ConsultarDisponibilidadTurno
             mapper ?? throw new ArgumentNullException(nameof(mapper));
 
         public async Task<QueryResult<TurnoDisponibleDto>> Handle(
-            ConsultarDisponibilidadTurnosDiaQuery request,
-            CancellationToken cancellationToken)
+      ConsultarDisponibilidadTurnosDiaQuery request,
+      CancellationToken cancellationToken)
         {
+            var desde = request.FechaDesde.Date;
+            var hasta = request.FechaHasta.Date;
+
+            if (desde == hasta)
+            {
+                hasta = hasta.AddDays(1);
+            }
+
             var turnosDisponibles = await _guidedAvailabilityProducer
-                .GetAvailableTurnsAsync(
-                    request.FechaDesde,
-                    request.FechaHasta);
+                .GetAvailableTurnsAsync(desde, hasta);
 
             return new QueryResult<TurnoDisponibleDto>(
                 turnosDisponibles.To<TurnoDisponibleDto>(),

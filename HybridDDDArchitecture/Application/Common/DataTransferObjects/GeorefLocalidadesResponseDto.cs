@@ -31,9 +31,9 @@ namespace Application.Common.DataTransferObjects
 
 
 
-        public Localidad MapToDomain()
+        public LocalidadArg MapToDomain()
         {
-            return new Localidad(Id,DepartamentoId, ProvinciaId, Nombre);
+            return new LocalidadArg(Id,DepartamentoId, ProvinciaId, Nombre);
         }
     }
 }

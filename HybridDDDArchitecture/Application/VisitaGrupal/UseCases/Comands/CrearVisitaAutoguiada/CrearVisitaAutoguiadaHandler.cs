@@ -1,7 +1,6 @@
 ﻿using Application.ApplicationMuseo.Constants;
 using Application.Exceptions;
 using Application.MuseumResources.Repositories;
-using Application.MuseumResources.UseCases.MuseumGallery.Queries.GetAllSalas;
 using Application.VisitaGrupal.Repositories;
 using Core.Application;
 using Domain.Common.ValueObjets;
@@ -46,8 +45,8 @@ namespace Application.VisitaGrupal.UseCases.Comands.CrearVisitaAutoguiada
                 usuarioVisitanteId: request.UsuarioVisitanteId,
                 institucion: request.Institucion,
                 emailInstitucion: new Email(request.EmailInstitucion),
+                paisInstitucion: request.PaisInstitucion,
                 provinciaInstitucion: request.ProvinciaInstitucion,
-                departamentoInstitucion: request.DepartamentoInstitucion,
                 ciudadInstitucion: request.LocalidadInstitucion,
                 descripcionDiversidad: request.DiversidadFuncionalDescripcion,
                 observaciones: request.Observaciones,
@@ -55,7 +54,7 @@ namespace Application.VisitaGrupal.UseCases.Comands.CrearVisitaAutoguiada
                 salas: salas,
                 tematicas: tematicas,
 
-                timeSlots: [timeSlot]
+                horario: timeSlot
             );
             try
             {

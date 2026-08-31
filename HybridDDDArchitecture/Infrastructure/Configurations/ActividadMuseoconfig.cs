@@ -12,8 +12,8 @@ namespace Infrastructure.Configurations
         {
             builder.ToTable("ActividadesMuseo");
 
-            builder.HasKey(x => x.Id)
-            ;
+            builder.HasKey(x => x.Id);
+
             builder.Property(x => x.CategoriaActividad)
                 .HasConversion<string>()
                 .HasMaxLength(50)
@@ -32,25 +32,95 @@ namespace Infrastructure.Configurations
             builder.Property(x => x.CantidadPersonas)
                 .IsRequired(false);
 
-            builder.OwnsMany(x => x.TimeSlots, ts =>
+
+            // =========================
+            // HORARIO
+            // =========================
+
+            builder.OwnsOne(x => x.Horario, h =>
             {
-                ts.ToTable("ActividadTimeSlots");
+                h.ToTable("ActividadTimeSlots");
 
-                ts.WithOwner()
-                  .HasForeignKey("ActividadMuseoId");
+                h.WithOwner()
+                    .HasForeignKey("ActividadMuseoId");
 
-                ts.Property<int>("Id");
+                h.Property<int>("Id");
 
-                ts.HasKey("Id");
+                h.HasKey("Id");
 
-                ts.Property(x => x.Inicio)
-                  .HasColumnType("datetime");
+                h.Property(x => x.Inicio)
+                    .HasColumnType("datetime");
 
-                ts.Property(x => x.Fin)
-                  .HasColumnType("datetime");
+                h.Property(x => x.Fin)
+                    .HasColumnType("datetime");
             });
 
-         
+
+            // =========================
+            // RECURRENCIA
+            // =========================
+
+            builder.OwnsOne(x => x.Recurrence, r =>
+            {
+                r.ToTable("ActividadRecurrencias");
+
+                r.WithOwner()
+                    .HasForeignKey("ActividadMuseoId");
+
+                r.Property(x => x.StartDate)
+                    .HasColumnType("date")
+                    .IsRequired();
+
+                r.Property(x => x.EndDate)
+                    .HasColumnType("date")
+                    .IsRequired(false);
+
+                r.Property(x => x.Frequency)
+                    .HasConversion<string>()
+                    .HasMaxLength(20)
+                    .IsRequired();
+
+                r.Property(x => x.Interval)
+                    .IsRequired();
+
+                r.Property(x => x.ByDays)
+                    .HasConversion(
+                        v => v == null
+                            ? null
+                            : System.Text.Json.JsonSerializer.Serialize(
+                                v,
+                                (System.Text.Json.JsonSerializerOptions?)null),
+
+                        v => string.IsNullOrEmpty(v)
+                            ? null
+                            : System.Text.Json.JsonSerializer.Deserialize<DayOfWeek[]>(
+                                v,
+                                (System.Text.Json.JsonSerializerOptions?)null)
+                    )
+                    .HasColumnType("json")
+                    .IsRequired(false);
+
+                r.Property(x => x.MonthDay)
+                    .IsRequired(false);
+
+                r.Property(x => x.WeekOfMonth)
+                    .IsRequired(false);
+            });
+
+
+            // =========================
+            // EXCEPCIONES
+            // =========================
+
+            builder.HasMany(x => x.Exceptions)
+                .WithOne()
+                .HasForeignKey(x => x.ActividadMuseoId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+            // =========================
+            // SALAS
+            // =========================
 
             builder.HasMany(x => x.Salas)
                 .WithMany()
@@ -71,12 +141,14 @@ namespace Infrastructure.Configurations
                     });
 
 
-            builder.HasMany(x => x.Recursos)
-                   .WithOne(x => x.Actividad)
-                   .HasForeignKey(x => x.ActividadId)
-                   .OnDelete(DeleteBehavior.Cascade); // Si se borra la actividad, se desasignan sus recursos
+            // =========================
+            // RECURSOS
+            // =========================
 
-     
+            builder.HasMany(x => x.Recursos)
+                .WithOne(x => x.Actividad)
+                .HasForeignKey(x => x.ActividadId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

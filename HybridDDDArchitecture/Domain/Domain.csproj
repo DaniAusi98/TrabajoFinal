@@ -27,10 +27,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ActividadMuseo\Entities\Guia\" />
     <Folder Include="ActividadMuseo\DomainServices\" />
+    <Folder Include="ActividadMuseo\Others\" />
+    <Folder Include="ActividadMuseo\ValueObjets\" />
     <Folder Include="Common\DomainServices\" />
     <Folder Include="Common\Others\Helpers\" />
+    <Folder Include="Eventos\Constants\" />
+    <Folder Include="Eventos\DomainServices\" />
+    <Folder Include="Eventos\Entities\" />
+    <Folder Include="Eventos\Enums\" />
+    <Folder Include="Eventos\ValueObjets\" />
+    <Folder Include="Eventos\Others\" />
     <Folder Include="Reportes\DomainServices\VisitaGrupalGuiada\" />
     <Folder Include="Reportes\Enums\" />
     <Folder Include="Reportes\Constants\" />

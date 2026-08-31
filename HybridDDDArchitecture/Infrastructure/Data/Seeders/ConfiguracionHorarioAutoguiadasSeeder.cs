@@ -1,6 +1,6 @@
 ﻿using Application.ActividadMuseo.Repositories;
 using Application.VisitaGrupal.Repositories;
-using Domain.ActividadMuseo.ValueObjets;
+using Domain.Common.ValueObjets;
 using Domain.VisitasGrupales.Entities;
 using Domain.VisitasGrupales.Factories;
 using Microsoft.Extensions.DependencyInjection;

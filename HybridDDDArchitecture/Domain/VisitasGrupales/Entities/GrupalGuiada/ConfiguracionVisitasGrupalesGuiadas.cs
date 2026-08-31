@@ -1,8 +1,8 @@
 using Core.Domain.Entities;
-using Domain.ActividadMuseo.Entities;
 using Domain.Common.Exceptions;
-using Domain.ActividadMuseo.ValueObjets;
 using Domain.VisitasGrupales.ValueObjects;
+using Domain.Common.Entities;
+using Domain.Common.ValueObjets;
 
 namespace Domain.VisitasGrupales.Entities.GrupalGuiada
 {

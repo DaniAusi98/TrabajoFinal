@@ -1,5 +1,5 @@
 using Application.ActividadMuseo.UseCases.ActividadesMuseo.Commnads.DiaCierreMuseo;
-
+using Application.Common.UseCases.ActividadesMuseo.Commnads.DiaCierreMuseo;
 using FluentValidation;
 
 namespace Application.ActividadMuseo.UseCases.ActividadesMuseo.Commnads.DiaCierreMuseo

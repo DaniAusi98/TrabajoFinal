@@ -1,4 +1,4 @@
-using Domain.ActividadMuseo.Entities;
+using Domain.Common.Entities;
 using Domain.RecursoMuseo.Entities.Guia;
 using Domain.VisitasGrupales.Entities.GrupalGuiada;
 

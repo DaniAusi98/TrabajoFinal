@@ -15,8 +15,8 @@ namespace Application.Reportes.DataTransferObjets
         public TipoVisitaGrupal Tipo { get; set; }
         public int CantidadPersonas { get; set; }
         public string Institucion { get; set; } = string.Empty;
+        public string Pais { get; set; } = string.Empty;
         public string Provincia { get; set; } = string.Empty;
-        public string Departamento { get; set; } = string.Empty;
         public string Localidad { get; set; } = string.Empty;
         public DateTime? HoraInicio { get; set; }
         public DateTime? HoraFin { get; set; }

@@ -1,5 +1,6 @@
 using Domain.ActividadMuseo.Entities;
 using Domain.Common.Entities;
+using Domain.Common.Entities.Ubicacion;
 using Domain.RecursoMuseo.Entities;
 using Domain.RecursoMuseo.Entities.Guia;
 using Domain.Reportes.Entities;
@@ -7,6 +8,7 @@ using Domain.VisitasGrupales.Entities;
 using Domain.VisitasGrupales.Entities.GrupalGuiada;
 using Infrastructure.Configurations;
 using Infrastructure.Configurations.Reportes;
+using Infrastructure.Configurations.UbicacionMundial;
 using Infrastructure.Configurations.VisitasGrupales;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
@@ -45,12 +47,16 @@ namespace Infrastructure.Repositories.Sql
         public DbSet<ConfiguracionVisitasGrupalesGuiadas> ConfiguracionVisitasGrupalesGuiadas { get; set; }
         public DbSet<Provincia> Provincias { get; set; }
         public DbSet<Departamento> Departamentos { get; set; }
-        public DbSet<Localidad> Localidades { get; set; }
+        public DbSet<LocalidadArg> Localidades { get; set; }
         public DbSet<CalendarioMuseo> CalendarioMuseo { get; set; }
         public DbSet<ConfiguracionHorarioAutoguiada> ConfiguracionHorarioVisitaAutoguiada { get; set; }
         public DbSet<ReporteVisitasGuiadas> ReporteVisitasGuiadas { get; set; }
         public DbSet<ReporteVisitasAutoguiadas> ReporteVisitasAutoguiadas { get; set; }
         public DbSet<ReporteGeneralVisitasGrupales> ReporteGeneralVisitas { get; set; }
+
+        public DbSet<Pais> Paises { get; set; }
+        public DbSet<DivisionAdministrativa> DivisionesAdministrativas { get; set; }
+        public DbSet<Localidad> Localidad { get; set; }
 
 
         /*public DbSet<PersonalInterno> PersonalInterno { get; set; }
@@ -96,6 +102,9 @@ namespace Infrastructure.Repositories.Sql
             modelBuilder.ApplyConfiguration(new ReporteVisitaGrupalConfig());
             modelBuilder.ApplyConfiguration(new ReporteVisitaGuiadaConfig());
             modelBuilder.ApplyConfiguration(new ReporteVisitaAutoguiadaConfig());
+            modelBuilder.ApplyConfiguration(new PaisConfiguration());
+            modelBuilder.ApplyConfiguration(new DivisionAdministrativaConfiguration());
+            modelBuilder.ApplyConfiguration(new LocalidadMundialConfiguration());
 
             // ... Aquí tienes tus configuraciones actuales de tablas (Entidades, Claves, etc.) ...
 

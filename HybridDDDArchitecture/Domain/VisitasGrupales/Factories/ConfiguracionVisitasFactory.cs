@@ -1,5 +1,5 @@
-using Domain.ActividadMuseo.Entities;
-using Domain.ActividadMuseo.ValueObjets;
+using Domain.Common.Entities;
+using Domain.Common.ValueObjets;
 using Domain.VisitasGrupales.Entities.GrupalGuiada;
 using Domain.VisitasGrupales.ValueObjects;
 
@@ -27,9 +27,10 @@ namespace Domain.VisitasGrupales.Factories
             };
 
             var configuracion = new ConfiguracionVisitasGrupalesGuiadas(
-                minGuias: 2,
                 capacidadPorGuia: 25,
+
                 capacidadMaxima: 50,
+                maximoVisitasSimultaneas: 1,
                 diasDisponibles: diasDisponibles,
                 turnos: turnos
             );

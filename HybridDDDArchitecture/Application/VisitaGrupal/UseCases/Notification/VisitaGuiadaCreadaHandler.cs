@@ -35,9 +35,11 @@ namespace Application.VisitaGrupal.UseCases.Notification
                 datosEducativosHtml.Append($"<p><strong>Nivel Educativo:</strong> {notification.NivelEducativo.Value}</p>");
             }
 
-            if (notification.AnioGrado.HasValue)
+            if (!string.IsNullOrWhiteSpace(notification.AnioGrado))
             {
-                datosEducativosHtml.Append($"<p><strong>Año / Grado:</strong> {notification.AnioGrado.Value}° Año</p>");
+                datosEducativosHtml.Append(
+                    $"<p><strong>Sala / Año / Grado:</strong> {notification.AnioGrado}</p>"
+                );
             }
 
             // 4. Formatear las marcas de tiempo para una lectura natural

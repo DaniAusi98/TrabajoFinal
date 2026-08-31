@@ -16,7 +16,7 @@ namespace Application.VisitaGrupal.UseCases.Comands.CrearVisitaGuiada
 
         public NivelEducativo? NivelEducativo { get; set; }
 
-        public int? AnioGrado { get; set; }
+        public string? AnioGrado { get; set; }
 
         [Required]
         public string EmailInstitucion { get; set; }
@@ -25,10 +25,10 @@ namespace Application.VisitaGrupal.UseCases.Comands.CrearVisitaGuiada
         public string TelefonoInstitucion { get; set; }
 
         [Required]
-        public string ProvinciaInstitucion { get; set; }
+        public string PaisInstitucion { get; set; }
 
         [Required]
-        public string DepartamentoInstitucion { get; set; }
+        public string ProvinciaInstitucion { get; set; }
 
         [Required]
         public string LocalidadInstitucion { get; set; }

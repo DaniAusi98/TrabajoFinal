@@ -3,7 +3,7 @@ using Application.ActividadMuseo.Repositories;
 using Application.Exceptions;
 using Core.Application;
 using Domain.VisitasGrupales.ValueObjects;
-using Domain.ActividadMuseo.ValueObjets;
+using Domain.Common.ValueObjets;
 
 namespace Application.VisitaGrupal.UseCases.Commands.UpdateConfiguracionVisitasGrupalesGuiadas
 {

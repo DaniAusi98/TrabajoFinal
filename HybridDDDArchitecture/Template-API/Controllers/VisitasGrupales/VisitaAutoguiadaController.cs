@@ -1,5 +1,7 @@
 ﻿using Application.VisitaGrupal.UseCases.Comands.CrearVisitaAutoguiada;
 using Application.VisitaGrupal.UseCases.Comands.CrearVisitaGuiada;
+using Application.VisitaGrupal.UseCases.Queries.GetReservationById;
+using Application.VisitaGrupal.UseCases.Queries.GetReservationsByUserId;
 using Core.Application;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -45,6 +47,35 @@ namespace Controllers.VisitasGrupales
 
             return Ok(visitas);
         }
+
+
         //GET /api/Visitas/DisponibilidadTurnosVisitasAutoguiadas?fechaDesde=2026-08-10&fechaHasta=2026-08-15&salaIds=1&salaIds=3&salaIds=5&pageIndex=1&pageSize=10
+
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("reservations")]
+        public async Task<IActionResult> GetReservations()
+        {
+            var usuarioId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(usuarioId)) return Unauthorized();
+
+            var visitas = await _commandQueryBus.Send(
+                new GetSelfGuidedByUserIdQuery
+                {
+                    UsuarioVisitanteId = usuarioId
+                });
+
+            return Ok(visitas);
+        }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetReservationById(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                return BadRequest();
+            var entity = await _commandQueryBus.Send(new GetSelfGuidedByIdQuery { VisitaId = id });
+            return Ok(entity);
+        }
     }
+
 }

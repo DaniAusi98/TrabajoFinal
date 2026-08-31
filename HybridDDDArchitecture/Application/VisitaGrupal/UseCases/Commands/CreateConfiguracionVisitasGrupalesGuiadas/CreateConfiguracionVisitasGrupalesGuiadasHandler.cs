@@ -2,7 +2,7 @@ using Application.ActividadMuseo.Repositories;
 using Application.Exceptions;
 using Application.VisitaGrupal.Repositories;
 using Core.Application;
-using Domain.ActividadMuseo.ValueObjets;
+using Domain.Common.ValueObjets;
 using Domain.VisitasGrupales.Entities;
 using Domain.VisitasGrupales.Entities.GrupalGuiada;
 using Domain.VisitasGrupales.ValueObjects;

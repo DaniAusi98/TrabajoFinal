@@ -5,13 +5,12 @@ namespace Domain.VisitasGrupales.Entities.GrupalGuiada.ReglasDisponibilidad;
 
 public class MotorDisponibilidadVisitasGuiadas
 {
-    private readonly IReadOnlyCollection<
-        IReglaDisponibilidadVisitaGuiada> _reglas;
+    private readonly IReadOnlyCollection<IReglaDisponibilidadVisitaGuiada> _reglas;
 
     public MotorDisponibilidadVisitasGuiadas(
-        IReadOnlyCollection<IReglaDisponibilidadVisitaGuiada> reglas)
+        IEnumerable<IReglaDisponibilidadVisitaGuiada> reglas)
     {
-        _reglas = reglas;
+        _reglas = reglas.ToList().AsReadOnly();
     }
 
     public ResultadoDisponibilidad Evaluar(

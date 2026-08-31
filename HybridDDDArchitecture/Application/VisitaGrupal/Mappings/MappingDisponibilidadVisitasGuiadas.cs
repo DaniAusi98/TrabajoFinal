@@ -13,7 +13,7 @@ namespace Application.VisitaGrupal.Mappings
         {
             CreateMap<TurnoDisponible, TurnoDisponibleDto>()
                 .ForMember(dest => dest.HorarioTurno, opt => opt.MapFrom(src => src.HorarioTurno))
-                .ForMember(dest => dest.CapacidadMaxima, opt => opt.MapFrom(src => src.CapacidadMaxima))
+                .ForMember(dest => dest.CuposDisponibles, opt => opt.MapFrom(src => src.CuposDisponibles))
                 .ForMember(dest => dest.EstadoTurno, opt => opt.MapFrom(src => src.EstadoTurno.ToString()));
             CreateMap<SlotDisponibleVisitaAutoguiada, SlotDisponibleDto>()
                 .ForMember(dest => dest.HorarioSlot, opt => opt.MapFrom(src => src.HorarioSlot))
@@ -39,8 +39,8 @@ namespace Application.VisitaGrupal.Mappings
                 .ForMember(dest => dest.UsuarioVisitanteId, opt => opt.MapFrom(src => src.UsuarioVisitanteId))
                 .ForMember(dest => dest.Institucion, opt => opt.MapFrom(src => src.Institucion))
                 .ForMember(dest => dest.EmailInstitucion, opt => opt.MapFrom(src => src.EmailInstitucion.Valor))
+                .ForMember(dest => dest.PaisInstitucion, opt => opt.MapFrom(src => src.PaisInstitucion))
                 .ForMember(dest => dest.ProvinciaInstitucion, opt => opt.MapFrom(src => src.ProvinciaInstitucion))
-                .ForMember(dest => dest.DepartamentoInstitucion, opt => opt.MapFrom(src => src.DepartamentoInstitucion))
                 .ForMember(dest => dest.CiudadInstitucion, opt => opt.MapFrom(src => src.LocalidadInstitucion))
                 .ForMember(dest => dest.NivelCurso, opt => opt.MapFrom(src => src.NivelEducativo))
                 .ForMember(dest => dest.AnioCurso, opt => opt.MapFrom(src => src.AnioGrado))
@@ -48,10 +48,12 @@ namespace Application.VisitaGrupal.Mappings
                 .ForMember(dest => dest.MotivoVisita, opt => opt.MapFrom(src => src.MotivoRelacionVisita))
                 .ForMember(dest => dest.Observaciones, opt => opt.MapFrom(src => src.Observaciones))
                 .ForMember(dest => dest.TematicasDto, opt => opt.MapFrom(src => src.Tematicas))
-                .ForMember(dest => dest.FechaInicio, opt => opt.MapFrom(src => src.TimeSlots.Select(t => t.Inicio).FirstOrDefault()))
-                .ForMember(dest => dest.FechaFin, opt => opt.MapFrom(src => src.TimeSlots.Select(t => t.Fin).FirstOrDefault()))
+                .ForMember(dest => dest.FechaInicio, opt => opt.MapFrom(src => src.Horario.Inicio))
+                .ForMember(dest => dest.FechaFin, opt => opt.MapFrom(src => src.Horario.Fin))
                 .ForMember(dest => dest.CantidadPersonas, opt => opt.MapFrom(src => src.CantidadPersonas))
-                .ForMember(dest => dest.EstadoConfirmacion, opt => opt.MapFrom(src => src.EstadoConfirmacion));
+                .ForMember(dest => dest.EstadoConfirmacion, opt => opt.MapFrom(src => src.EstadoConfirmacion))
+                .ForMember(dest => dest.Estado ,opt => opt.MapFrom(src => src.Estado));
+
 
             CreateMap<VisitaGrupalGuiada,VisitaGuiadaCreated>()
                 .ForMember(dest => dest.VisitaId, opt => opt.MapFrom(src => src.Id))
@@ -60,8 +62,8 @@ namespace Application.VisitaGrupal.Mappings
                 .ForMember(dest => dest.NivelEducativo, opt => opt.MapFrom(src => src.NivelEducativo))
                 .ForMember(dest => dest.AnioGrado, opt => opt.MapFrom(src => src.AnioGrado))
                 .ForMember(dest => dest.CantidadPersonas, opt => opt.MapFrom(src => src.CantidadPersonas))
-                .ForMember(dest => dest.Inicio, opt => opt.MapFrom(src => src.TimeSlots.Select(t => t.Inicio).FirstOrDefault()))
-                .ForMember(dest => dest.Fin, opt => opt.MapFrom(src => src.TimeSlots.Select(t => t.Fin).FirstOrDefault()));
+                .ForMember(dest => dest.Inicio, opt => opt.MapFrom(src => src.Horario.Inicio))
+                .ForMember(dest => dest.Fin, opt => opt.MapFrom(src => src.Horario.Fin));
 
 
             CreateMap<VisitaGrupalAutoguiada, VisitaAutoguiadaDto>()
@@ -69,15 +71,16 @@ namespace Application.VisitaGrupal.Mappings
                 .ForMember(dest => dest.UsuarioVisitanteId, opt => opt.MapFrom(src => src.UsuarioVisitanteId))
                 .ForMember(dest => dest.Institucion, opt => opt.MapFrom(src => src.Institucion))
                 .ForMember(dest => dest.EmailInstitucion, opt => opt.MapFrom(src => src.EmailInstitucion.Valor))
+                .ForMember(dest => dest.PaisInstitucion, opt => opt.MapFrom(src => src.PaisInstitucion))
                 .ForMember(dest => dest.ProvinciaInstitucion, opt => opt.MapFrom(src => src.ProvinciaInstitucion))
-                .ForMember(dest => dest.DepartamentoInstitucion, opt => opt.MapFrom(src => src.DepartamentoInstitucion))
                 .ForMember(dest => dest.CiudadInstitucion, opt => opt.MapFrom(src => src.LocalidadInstitucion))
                 .ForMember(dest => dest.DescripcionDiscapacidad, opt => opt.MapFrom(src => src.DiversidadFuncional))
                 .ForMember(dest => dest.Observaciones, opt => opt.MapFrom(src => src.Observaciones))
-                .ForMember(dest => dest.FechaInicio, opt => opt.MapFrom(src => src.TimeSlots.Select(t => t.Inicio).FirstOrDefault()))
-                .ForMember(dest => dest.FechaFin, opt => opt.MapFrom(src => src.TimeSlots.Select(t => t.Fin).FirstOrDefault()))
+                .ForMember(dest => dest.FechaInicio, opt => opt.MapFrom(src => src.Horario.Inicio))
+                .ForMember(dest => dest.FechaFin, opt => opt.MapFrom(src => src.Horario.Fin))
                 .ForMember(dest => dest.CantidadPersonas, opt => opt.MapFrom(src => src.CantidadPersonas))
-                .ForMember(dest => dest.EstadoConfirmacion, opt => opt.MapFrom(src => src.EstadoConfirmacion));
+                .ForMember(dest => dest.EstadoConfirmacion, opt => opt.MapFrom(src => src.EstadoConfirmacion))
+                .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => src.Estado));
 
         }   
     }

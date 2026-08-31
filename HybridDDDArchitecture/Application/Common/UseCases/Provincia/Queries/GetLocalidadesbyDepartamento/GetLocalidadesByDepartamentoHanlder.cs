@@ -13,7 +13,7 @@ namespace Application.ApplicationMuseo.UseCases.Provincia.Queries.GetLocalidades
     {
         public async Task<QueryResult<LocalidadDto>> Handle(GetLocalidadesByDepartamentoQuery request, CancellationToken cancellationToken)
         {
-            IList<Domain.Common.Entities.Localidad> entities = await context.GetByDepartamentoIdAsync(request.DepartamentoId, cancellationToken);
+            IList<Domain.Common.Entities.LocalidadArg> entities = await context.GetByDepartamentoIdAsync(request.DepartamentoId, cancellationToken);
             return new QueryResult<LocalidadDto>(entities.To<LocalidadDto>(), entities.Count, request.PageIndex, request.PageSize);
         }
     

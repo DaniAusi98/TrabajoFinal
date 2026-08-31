@@ -8,12 +8,12 @@ namespace Application.VisitaGrupal.DataTransferObjets
 {
     public class VisitaAutoguiadaDto
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string UsuarioVisitanteId { get; set; } = default!;
         public string Institucion { get; set; } = string.Empty;
         public string EmailInstitucion { get; set; } = string.Empty;
+        public string PaisInstitucion { get; set; } = string.Empty;
         public string ProvinciaInstitucion { get; set; } = string.Empty;
-        public string DepartamentoInstitucion { get; set; } = string.Empty;
         public string CiudadInstitucion { get; set; } = string.Empty;
         public string DescripcionDiscapacidad { get; set; } = string.Empty;
         public string Observaciones { get; set; } = string.Empty;
@@ -22,5 +22,6 @@ namespace Application.VisitaGrupal.DataTransferObjets
         public DateTime FechaFin { get; set; }
         public int CantidadPersonas { get; set; }
         public string EstadoConfirmacion { get; set; } = string.Empty;
+        public string Estado { get; set; } = string.Empty;
     }
 }

@@ -1,6 +1,4 @@
-
-using Domain.ActividadMuseo.Entities;
-
+using Domain.Common.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

@@ -7,8 +7,8 @@ namespace Application.VisitaGrupal.DataTransferObjets
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public TipoVisitaGrupal Tipo { get; set; }
+        public string Pais { get; set; } = string.Empty;
         public string Provincia { get; set; } = string.Empty;
-        public string Departamento { get; set; } = string.Empty;
         public string Localidad { get; set; } = string.Empty;
         public int CantidadPersonas { get; set; }
         public string Institucion { get; set; } = string.Empty;

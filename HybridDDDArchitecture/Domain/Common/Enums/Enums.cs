@@ -24,13 +24,48 @@ namespace Domain.Common.Enums
             MONGODB
         }
 
-        public enum Frecuencia
+        
+        public enum NivelBloqueo
         {
-            Diaria,
-            Semanal,
-            Mensual,
-            RangoFechas,
-            DiasHabiles
+            BloqueoParcialMuseo,
+            BloqueoTotalMuseo
+
+        }
+
+        public enum BloqueoTipo
+        {
+            DiaCompleto,
+            IntervaloFechas,
+            SlotHorario
+        }
+
+
+
+
+        public enum AlcanceBloqueo
+        {
+            Total,
+            Parcial,
+
+        }
+
+        public enum TipoBloqueoSala
+        {
+            Mantenimiento,
+            EventoInstitucional,
+            MontajeMuestraTemporal,
+            DesmontajeMuestraTemporal,
+            Otro
+        }
+
+
+        public enum MotivoCierreMuseo
+        {
+            MantenimientoyRefacciones,
+            Feriado,
+            DiasFestivos,
+            EventosInstitucionales,
+            Otro
         }
     }
 }

@@ -1,11 +1,10 @@
 using Application.ApplicationMuseo.ApplicationServices;
 using Application.VisitaGrupal.DataTransferObjets;
 using Application.VisitaGrupal.Repositories;
-
 using Core.Application;
 using Domain.VisitasGrupales.Entities.GrupalGuiada;
 
-namespace Application.VisitaGrupal.UseCases.Queries.GetReservationsById
+namespace Application.VisitaGrupal.UseCases.Queries.GetReservationsByUserId
 {
     internal class GetReservationsByUserIdHanlder(IRepositorioVisitaGuiada repositorioVisitaGuiada,IClock clock ) : IRequestQueryHandler<GetReservationsByUserIdQuery, QueryResult<GuidedTourReservationDto>>
     {

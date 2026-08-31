@@ -1,8 +1,6 @@
-using Core.Domain.Entities;
 using Domain.Common.Exceptions;
 using Domain.Common.ValueObjets;
 using Domain.RecursoMuseo.Entities;
-
 using static Domain.ActividadMuseo.Enums.Enums;
 using static Domain.VisitasGrupales.Enums.Enums;
 
@@ -16,16 +14,13 @@ namespace Domain.VisitasGrupales.Entities.GrupalGuiada
 
         public NivelEducativo? NivelEducativo { get; private set; }
 
-        public int? AnioGrado { get; private set; }
+        public string? AnioGrado { get; private set; }
 
         public Email EmailInstitucion { get; private set; }
 
         public Telefono TelefonoInstitucion { get; private set; }
-
+        public string PaisInstitucion { get; private set; }
         public string ProvinciaInstitucion { get; private set; }
-
-        public string DepartamentoInstitucion { get; private set; }
-
         public string LocalidadInstitucion { get; private set; }
 
         public string DiversidadFuncionalDescripcion { get; private set; } = string.Empty;
@@ -48,18 +43,18 @@ namespace Domain.VisitasGrupales.Entities.GrupalGuiada
         public VisitaGrupalGuiada(
             string usuarioVisitanteId,
             NivelEducativo? nivelEducativo,
-            int? anioGrado,
+            string? anioGrado,
             int cantidadPersonas,
             string institucion,
             Email emailInstitucion,
             Telefono telefonoInstitucion,
+            string paisInstitucion,
             string provinciaInstitucion,
-            string departamentoInstitucion,
             string ciudadInstitucion,
             string descripcionDiversidad,
             string motivoVisita,
             string observaciones,
-            IEnumerable<TimeSlot> timeSlots,
+            TimeSlot horario,
             IEnumerable<TematicaVisita> tematicas,
             IEnumerable<Sala> salas
         )
@@ -67,7 +62,7 @@ namespace Domain.VisitasGrupales.Entities.GrupalGuiada
             CategoriaActividad.VisitaGrupal,
             TipoActividad.VisitaGrupalGuiada,
             cantidadPersonas,
-            timeSlots,
+            horario,
             salas)
         {
             ValidarNivelEducativo(
@@ -87,9 +82,9 @@ namespace Domain.VisitasGrupales.Entities.GrupalGuiada
 
             TelefonoInstitucion = telefonoInstitucion;
 
-            ProvinciaInstitucion = provinciaInstitucion;
+            PaisInstitucion = paisInstitucion;
 
-            DepartamentoInstitucion = departamentoInstitucion;
+            ProvinciaInstitucion = provinciaInstitucion;
 
             LocalidadInstitucion = ciudadInstitucion;
 
@@ -130,6 +125,15 @@ namespace Domain.VisitasGrupales.Entities.GrupalGuiada
 
             EmailInstitucion = nuevoEmail;
         }
+        public void ActualizarPais(string nuevoPais)
+        {
+            if (string.IsNullOrWhiteSpace(nuevoPais))
+                throw new DomainException(
+                    "El pais de la institución es obligatoria.");
+
+            PaisInstitucion  = nuevoPais.Trim();
+        }
+
 
 
         public void ActualizarProvincia(string nuevaProvincia)
@@ -142,15 +146,7 @@ namespace Domain.VisitasGrupales.Entities.GrupalGuiada
         }
 
 
-        public void ActualizarDepartamento(string nuevoDepartamento)
-        {
-            if (string.IsNullOrWhiteSpace(nuevoDepartamento))
-                throw new DomainException(
-                    "El departamento de la institución es obligatorio.");
-
-            DepartamentoInstitucion = nuevoDepartamento.Trim();
-        }
-
+       
 
         public void ActualizarLocalidad(string nuevaLocalidad)
         {
@@ -180,16 +176,11 @@ namespace Domain.VisitasGrupales.Entities.GrupalGuiada
         }
         private static void ValidarNivelEducativo(
             NivelEducativo? nivel,
-            int? anioGrado)
+            string? anioGrado)
         {
             if (nivel != null && anioGrado == null)
                 throw new DomainException(
                     "Debe especificar el año o grado.");
-
-            if (nivel != null &&
-                (anioGrado < 1 || anioGrado > 8))
-                throw new DomainException(
-                    "El año/grado debe estar entre 1 y 8.");
 
             if (nivel == null && anioGrado != null)
                 throw new DomainException(

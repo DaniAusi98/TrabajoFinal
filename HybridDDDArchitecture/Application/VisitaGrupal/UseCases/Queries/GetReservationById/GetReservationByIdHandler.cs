@@ -1,12 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using Application.VisitaGrupal.DataTransferObjets;
 using Application.VisitaGrupal.Repositories;
-
 using Core.Application;
 using Domain.VisitasGrupales.Entities.GrupalGuiada;
 
@@ -19,7 +12,9 @@ namespace Application.VisitaGrupal.UseCases.Queries.GetReservationById
         {
             VisitaGrupalGuiada visitaGrupal = await _repositorioVisitaGuiada.FindByIdWithActividadAsync(request.ReservationId);
 
-            return visitaGrupal.To<GuidedTourReservationDto>();
+            return visitaGrupal == null
+                ? throw new Exception($"No se encontró la visita grupal con ID: {request.ReservationId}")
+                : visitaGrupal.To<GuidedTourReservationDto>();
         }
     }
 }

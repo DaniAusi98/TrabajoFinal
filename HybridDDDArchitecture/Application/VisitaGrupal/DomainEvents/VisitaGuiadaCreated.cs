@@ -9,7 +9,7 @@ namespace Application.VisitaGrupal.DomainEvents
         public string UsuarioVisitanteId { get; set; }
         public string NombreInstitucion { get; set; }
         public NivelEducativo? NivelEducativo { get; set; }
-        public int ? AnioGrado { get; set; }
+        public string? AnioGrado { get; set; }
         public int CantidadPersonas { get; set; }
         public DateTime Inicio { get; set; }
         public DateTime Fin { get; set; }

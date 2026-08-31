@@ -8,16 +8,16 @@ namespace Infrastructure.Repositories.Sql.Ubicacion
     /// <summary>
     /// Repositorio SQL para Localidad
     /// </summary>
-    internal sealed class LocalidadRepository(MuseoDbContext context) : BaseRepository<Localidad>(context), ILocalidadRepository
+    internal sealed class LocalidadRepository(MuseoDbContext context) : BaseRepository<LocalidadArg>(context), ILocalidadRepository
     {
-        public async Task<List<Localidad>> GetByDepartamentoIdAsync(string departamentoId,CancellationToken cancellationToken = default)
+        public async Task<List<LocalidadArg>> GetByDepartamentoIdAsync(string departamentoId,CancellationToken cancellationToken = default)
         {
             return await context.Localidades
                 .Where(x => x.DepartamentoId == departamentoId)
                 .OrderBy(x => x.Nombre)
                 .ToListAsync(cancellationToken);
         }
-        public async Task<List<Localidad>> GetByIdsAsync(IEnumerable<string> ids)
+        public async Task<List<LocalidadArg>> GetByIdsAsync(IEnumerable<string> ids)
         {
             var listaIds = ids?.Where(id => !string.IsNullOrWhiteSpace(id)).Distinct().ToList() ?? [];
             if (listaIds.Count == 0) return [];

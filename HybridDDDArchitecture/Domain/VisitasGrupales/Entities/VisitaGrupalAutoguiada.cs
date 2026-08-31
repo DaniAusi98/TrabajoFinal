@@ -9,21 +9,13 @@ namespace Domain.VisitasGrupales.Entities
     public class VisitaGrupalAutoguiada : ActividadMuseo.Entities.ActividadMuseo
     {
         public string UsuarioVisitanteId { get; private set; }
-
         public string Institucion { get; private set; }
-
         public Email EmailInstitucion { get; private set; }
-
+        public string PaisInstitucion { get; private set; }
         public string ProvinciaInstitucion { get; private set; }
-
-        public string DepartamentoInstitucion { get; private set; }
-
         public string LocalidadInstitucion { get; private set; }
-
         public string DiversidadFuncional { get; private set; } = string.Empty;
-
         public string Observaciones { get; private set; } = string.Empty;
-
         public EstadoConfirmacionVisita EstadoConfirmacion { get; private set; }
         public List<TematicaVisita> Tematicas { get; private set; } = [];
 
@@ -39,12 +31,12 @@ namespace Domain.VisitasGrupales.Entities
             int cantidadPersonas,
             string institucion,
             Email emailInstitucion,
+            string paisInstitucion,
             string provinciaInstitucion,
-            string departamentoInstitucion,
             string ciudadInstitucion,
             string descripcionDiversidad,
             string observaciones,
-            IEnumerable<TimeSlot> timeSlots,
+            TimeSlot horario,
             IEnumerable<TematicaVisita> tematicas,
             IEnumerable<Sala> salas
         )
@@ -52,7 +44,7 @@ namespace Domain.VisitasGrupales.Entities
             CategoriaActividad.VisitaGrupal,
             TipoActividad.VisitaGrupalAutoguiada,
             cantidadPersonas,
-            timeSlots,
+            horario,
             salas)
         {
 
@@ -67,16 +59,16 @@ namespace Domain.VisitasGrupales.Entities
 
 
             ArgumentNullException.ThrowIfNull(emailInstitucion);
-
+            if (string.IsNullOrWhiteSpace(paisInstitucion))
+                throw new DomainException(
+                    "El país de la institución es obligatorio.");
 
             if (string.IsNullOrWhiteSpace(provinciaInstitucion))
                 throw new DomainException(
                     "La provincia de la institución es obligatoria.");
 
 
-            if (string.IsNullOrWhiteSpace(departamentoInstitucion))
-                throw new DomainException(
-                    "El departamento de la institución es obligatorio.");
+
 
 
             if (string.IsNullOrWhiteSpace(ciudadInstitucion))
@@ -89,10 +81,10 @@ namespace Domain.VisitasGrupales.Entities
             Institucion = institucion.Trim();
 
             EmailInstitucion = emailInstitucion;
+            PaisInstitucion = paisInstitucion.Trim();
 
             ProvinciaInstitucion = provinciaInstitucion.Trim();
 
-            DepartamentoInstitucion = departamentoInstitucion.Trim();
 
             LocalidadInstitucion = ciudadInstitucion.Trim();
 
@@ -143,13 +135,12 @@ namespace Domain.VisitasGrupales.Entities
         }
 
 
-        public void ActualizarDepartamento(string nuevoDepartamento)
+        public void ActualizarPais(string nuevoPais)
         {
-            if (string.IsNullOrWhiteSpace(nuevoDepartamento))
+            if (string.IsNullOrWhiteSpace(nuevoPais))
                 throw new DomainException(
-                    "El departamento de la institución es obligatorio.");
-
-            DepartamentoInstitucion = nuevoDepartamento.Trim();
+                    "El país de la institución es obligatorio.");
+            PaisInstitucion = nuevoPais.Trim();
         }
 
 

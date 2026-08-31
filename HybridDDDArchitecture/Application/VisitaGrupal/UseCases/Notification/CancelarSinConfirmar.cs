@@ -1,4 +1,4 @@
-﻿using Application.VisitaGrupal.DomainEvents;
+﻿/*using Application.VisitaGrupal.DomainEvents;
 using Application.VisitaGrupal.Repositories;
 using MediatR;
 
@@ -13,3 +13,7 @@ namespace Application.VisitaGrupal.UseCases.Notification
         }
     }
 }
+*/
+
+
+

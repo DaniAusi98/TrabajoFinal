@@ -1,26 +1,22 @@
-using System.Reflection;
-
 using Application.ApplicationMuseo.ApplicationServices;
 using Application.ApplicationMuseo.Integrations.Events;
 using Application.ApplicationMuseo.Integrations.Handlers.Publishers;
 using Application.ApplicationMuseo.Integrations.Handlers.Subscribers;
+using Application.Availability;
+using Application.Availability.Producers;
+using Application.Behaivors;
 using Application.Usuario.ApplicationServices.ApplicationServiceInterfaces;
 using Application.Usuario.UseCases.Commands.UpdateUsuario;
 using Core.Application;
-using Domain.ActividadMuseo.Entities;
-using FluentValidation;
-
-using MediatR;
-using Scrutor;
-
 using Domain.VisitasGrupales.DomainServices;
-
+using Domain.VisitasGrupales.Entities.GrupalGuiada;
+using Domain.VisitasGrupales.Entities.GrupalGuiada.ReglasDisponibilidad;
+using FluentValidation;
+using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Application.Availability;
-using Application.Availability.Producers;
-using Domain.Reportes.DomainServices;
-using Application.Behaivors;
+using Scrutor;
+using System.Reflection;
 
 namespace Application.Registrations
 {
@@ -55,6 +51,15 @@ namespace Application.Registrations
             /* Application Services */
             services.AddScoped<IDummyEntityApplicationService, DummyEntityApplicationService>();
             //services.AddScoped<IUsuarioApplicationService,UsuarioVisitanteApplicationService>();
+
+            // Disponibilidad de visitas guiadas
+            services.AddScoped<MotorDisponibilidadVisitasGuiadas>();
+            services.Scan(scan => scan
+                .FromAssemblyOf<MotorDisponibilidadVisitasGuiadas>()
+                .AddClasses(classes =>
+                    classes.AssignableTo<IReglaDisponibilidadVisitaGuiada>())
+                .AsImplementedInterfaces()
+                .WithScopedLifetime());
 
 
             // Register availability service (now uses ConfiguracionVisitasGrupalesGuiadas entity from database)

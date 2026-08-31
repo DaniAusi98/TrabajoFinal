@@ -34,61 +34,14 @@ namespace Domain.ActividadMuseo.Enums
             MuestraExposicionTemporal,
             ActividadEspecial
         }
-
-        public enum NivelBloqueo
-        {
-            BloqueoParcialMuseo,
-            BloqueoTotalMuseo
-
-        }
-
-        public enum BloqueoTipo
-        {
-            DiaCompleto,
-            IntervaloFechas,
-            SlotHorario
-        }
-
-        public enum TipoEtapa
-        {
-            MontajeOArmado,
-            Presentacion,
-            DesmontajeODesarmado,
-        }
-
         public enum EstadoActividad
         {
-            
+
             Activa,
             Reprogramada,
             Cancelada
         }
 
-        public enum AlcanceBloqueo
-        {
-            Total,
-            Parcial,
-
-        }
-
-        public enum TipoBloqueoSala
-        {
-            Mantenimiento,
-            EventoInstitucional,
-            MontajeMuestraTemporal,
-            DesmontajeMuestraTemporal,
-            Otro
-        }
-
-
-        public enum MotivoCierreMuseo
-        {
-            MantenimientoyRefacciones,
-            Feriado,
-            DiasFestivos,
-            EventosInstitucionales,
-            Otro
-        }
         public enum CategoriaActividad
         {
             VisitaGrupal,
@@ -96,5 +49,14 @@ namespace Domain.ActividadMuseo.Enums
             ActividadEducativa,
 
         }
+        public enum Frecuencia
+        {
+            Diaria,
+            Semanal,
+            Mensual,
+            RangoFechas,
+            DiasHabiles
+        }
+
     }
 }

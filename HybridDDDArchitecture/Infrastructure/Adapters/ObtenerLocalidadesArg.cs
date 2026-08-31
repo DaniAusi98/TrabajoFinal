@@ -17,14 +17,14 @@ namespace Infrastructure.Adapters
         {
             _httpClient = httpClient;
         }
-        public async Task<List<Localidad>> ObtenerLocalidadesArgentinaAsync()
+        public async Task<List<LocalidadArg>> ObtenerLocalidadesArgentinaAsync()
         {
             string url = "georef/api/localidades?aplanar=true&campos=id%2Cnombre%2Cdepartamento.id%2Cprovincia.id&max=5000&inicio=0&exacto=true&formato=json";
             GeorefLocalidadesResponseDto? response = await _httpClient.GetFromJsonAsync<GeorefLocalidadesResponseDto>(url);
 
             if (response == null || response.Localidades == null)
             {
-                return new List<Localidad>();
+                return new List<LocalidadArg>();
             }
             return response.Localidades
             .Select(dto => dto.MapToDomain())

@@ -1,5 +1,5 @@
 using Domain.Common.Exceptions;
-
+using static Domain.ActividadMuseo.Enums.Enums;
 using static Domain.Common.Enums.Enums;
 
 namespace Domain.Common.ValueObjets

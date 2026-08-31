@@ -1,9 +1,8 @@
 using Core.Domain.Entities;
-using Domain.ActividadMuseo.ValueObjets;
 using Domain.Common.ValueObjets;
 using Domain.Common.Exceptions;
 
-namespace Domain.ActividadMuseo.Entities
+namespace Domain.Common.Entities
 {
     public class CalendarioMuseo : DomainEntity<string>
     {

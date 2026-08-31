@@ -1,7 +1,7 @@
-﻿using Domain.ActividadMuseo.Entities;
-using Domain.ActividadMuseo.ValueObjets;
+﻿using Domain.Common.Entities;
+using Domain.Common.ValueObjets;
 
-namespace Domain.ActividadMuseo.Others.Factories
+namespace Domain.Common.Others.Factories
 {
     public static class CalendarioMuseoFactory
     {

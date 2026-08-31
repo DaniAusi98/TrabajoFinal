@@ -1,6 +1,6 @@
 using Application.ActividadMuseo.Repositories;
 using Core.Infraestructure.Repositories.Sql;
-using Domain.ActividadMuseo.Entities;
+using Domain.Common.Entities;
 using Infrastructure.Repositories.Sql;
 using Microsoft.EntityFrameworkCore;
 

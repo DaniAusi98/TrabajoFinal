@@ -24,13 +24,15 @@ public class CrearVisitaGuiadaCommandValidator
         RuleFor(x => x.TelefonoInstitucion)
             .NotEmpty();
 
+        RuleFor(x => x.PaisInstitucion)
+           .NotEmpty()
+           .MaximumLength(100);
+
         RuleFor(x => x.ProvinciaInstitucion)
             .NotEmpty()
             .MaximumLength(100);
 
-        RuleFor(x => x.DepartamentoInstitucion)
-            .NotEmpty()
-            .MaximumLength(100);
+       ;
 
         RuleFor(x => x.LocalidadInstitucion)
             .NotEmpty()
@@ -46,12 +48,8 @@ public class CrearVisitaGuiadaCommandValidator
             .When(x => x.NivelEducativo.HasValue)
             .WithMessage("Debe indicar el año o grado.");
 
-        RuleFor(x => x.AnioGrado)
-            .InclusiveBetween(1, 8)
-            .When(x => x.AnioGrado.HasValue);
-
         RuleFor(x => x)
-            .Must(x => x.NivelEducativo.HasValue || !x.AnioGrado.HasValue)
+            .Must(x => x.NivelEducativo.HasValue || string.IsNullOrEmpty(x.AnioGrado))
             .WithMessage("No puede indicar año/grado sin nivel educativo.");
 
         RuleFor(x => x.Inicio)

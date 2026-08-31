@@ -1,4 +1,4 @@
-﻿using Domain.ActividadMuseo.Entities;
+﻿using Domain.Common.Entities;
 using Domain.VisitasGrupales.Entities;
 
 namespace Domain.VisitasGrupales.DomainServices

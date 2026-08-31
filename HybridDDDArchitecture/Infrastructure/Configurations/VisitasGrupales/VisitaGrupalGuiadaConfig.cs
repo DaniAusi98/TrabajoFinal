@@ -35,16 +35,13 @@ namespace Infrastructure.Configurations.VisitasGrupales
             builder.Property(x => x.AnioGrado)
                 .IsRequired(false);
 
+            builder.Property(x => x.PaisInstitucion)
+           .HasMaxLength(100)
+           .IsRequired();
 
             builder.Property(x => x.ProvinciaInstitucion)
                 .HasMaxLength(100)
                 .IsRequired();
-
-
-            builder.Property(x => x.DepartamentoInstitucion)
-                .HasMaxLength(100)
-                .IsRequired();
-
 
             builder.Property(x => x.LocalidadInstitucion)
                 .HasMaxLength(100)

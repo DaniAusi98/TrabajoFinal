@@ -13,32 +13,40 @@ namespace Infrastructure.Repositories.Sql.VisitaGrupal
         {
             return Repository
                 .Include(v => v.Tematicas)
-                .Include(v => v.TimeSlots)
+                .Include(v => v.Horario)
                 .Include(v => v.Salas)
                 .FirstOrDefaultAsync(v => v.Id == id);
         }
 
         public async Task<List<VisitaGrupalGuiada>> GetAllGroupVisitAsync(
-            DateTime fechaDesde,
-            DateTime fechaHasta)
+    DateTime fechaDesde,
+    DateTime fechaHasta)
         {
-            try
+            Console.WriteLine("========================================");
+            Console.WriteLine("[RepositorioVisitaGuiada] CONSULTANDO");
+            Console.WriteLine($"Desde: {fechaDesde:O}");
+            Console.WriteLine($"Hasta: {fechaHasta:O}");
+
+            var visitas = await Repository
+                .Include(v => v.Tematicas)
+                .Include(v => v.Salas)
+                .Where(v =>
+                    v.Horario.Inicio < fechaHasta &&
+                    v.Horario.Fin > fechaDesde)
+                .ToListAsync();
+
+            Console.WriteLine(
+                $"[RepositorioVisitaGuiada] Encontradas: {visitas.Count}");
+
+            foreach (var visita in visitas)
             {
-                return await Repository
-                    .Include(v => v.Tematicas)
-                    .Include(v => v.TimeSlots)
-                    .Include(v => v.Salas)
-                    .Where(v =>
-                        v.TimeSlots.Any(ts =>
-                            ts.Inicio >= fechaDesde &&
-                            ts.Fin <= fechaHasta))
-                    .ToListAsync();
+                Console.WriteLine(
+                    $"Visita {visita.Id} | " +
+                    $"Inicio: {visita.Horario.Inicio:O} | " +
+                    $"Fin: {visita.Horario.Fin:O}");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-                throw;
-            }
+
+            return visitas;
         }
 
         public async Task<List<VisitaGrupalGuiada>> ObtenerPorUsuarioIdAsync(
@@ -47,11 +55,11 @@ namespace Infrastructure.Repositories.Sql.VisitaGrupal
         {
             return await Repository
                 .Include(v => v.Tematicas)
-                .Include(v => v.TimeSlots)
+                .Include(v => v.Horario)
                 .Include(v => v.Salas)
                 .Where(v =>
                     v.UsuarioVisitanteId == usuarioId &&
-                    v.TimeSlots.Any(ts => ts.Inicio >= fechaActual))
+                    v.Horario.Inicio >= fechaActual)
                 .ToListAsync();
         }
        

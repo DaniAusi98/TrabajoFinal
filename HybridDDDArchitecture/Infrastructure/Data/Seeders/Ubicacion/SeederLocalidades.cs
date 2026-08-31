@@ -36,7 +36,7 @@ namespace Infrastructure.Data.Seeders.Ubicacion
 
                 logger?.LogInformation(" Conectando con la API de GeoRef para obtener localidades...");
                 // 3. Consumir la API pública (aquí se ejecuta la llamada HTTP y el mapeo a dominio automáticamente)
-                List<Localidad> localidadesApi = await apiService.ObtenerLocalidadesArgentinaAsync();
+                List<LocalidadArg> localidadesApi = await apiService.ObtenerLocalidadesArgentinaAsync();
 
                 if (localidadesApi == null || !localidadesApi.Any())
                 {

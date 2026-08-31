@@ -10,6 +10,7 @@ namespace Domain.ActividadMuseo.Entities
     {
         public CategoriaActividad CategoriaActividad { get; private set; }
         public TipoActividad TipoActividad { get; private set; }
+        public TimeSlot Horario { get;  private set; } 
         public EstadoActividad Estado { get; private set; }
         public int? CantidadPersonas { get; private set; }
 
@@ -17,13 +18,20 @@ namespace Domain.ActividadMuseo.Entities
 
         public  List<RecursoAsignado> Recursos = [];
 
-        public List<TimeSlot> TimeSlots = [];
+        public RecurrenceRule? Recurrence { get; private set; }
+
+        private readonly List<ActividadException> _exceptions = [];
+
+        public IReadOnlyCollection<ActividadException> Exceptions
+            => _exceptions.AsReadOnly();
+
+        
 
         public ActividadMuseo(
             CategoriaActividad categoria,
             TipoActividad tipo,
             int? cantidadAsistentes,
-            IEnumerable<TimeSlot> timeSlots,
+            TimeSlot horario,
             IEnumerable<Sala> salas = null,
             IEnumerable<RecursoAsignado> recursos = null)
         {
@@ -31,13 +39,8 @@ namespace Domain.ActividadMuseo.Entities
             if (cantidadAsistentes is not null && cantidadAsistentes <= 0)
                 throw new DomainException("La cantidad de personas debe ser mayor a cero.");
 
-            ArgumentNullException.ThrowIfNull(timeSlots);
-
-            if (!timeSlots.Any())
-                throw new DomainException("Debe haber al menos un TimeSlot.");
-
-            if (timeSlots.Any(t => t is null))
-                throw new DomainException("No puede haber TimeSlots nulos.");
+            if (horario is null)
+                throw new DomainException("El horario no puede ser nulo.");
 
             if (salas is not null)
             {
@@ -67,7 +70,7 @@ namespace Domain.ActividadMuseo.Entities
             CantidadPersonas = cantidadAsistentes;
             Estado = EstadoActividad.Activa;
 
-            TimeSlots.AddRange(timeSlots);
+            Horario = horario;
 
             if (salas is not null)
                 Salas.AddRange(salas);
@@ -164,17 +167,66 @@ namespace Domain.ActividadMuseo.Entities
             Recursos.AddRange(recursos);
         }
 
-        public void AsignarTimeSlots(IEnumerable<TimeSlot> timeSlots)
+        public void AsignarTimeSlots(TimeSlot horario)
         {
-            ArgumentNullException.ThrowIfNull(timeSlots);
+            ArgumentNullException.ThrowIfNull(horario);
 
-            if (!timeSlots.Any())
-                throw new DomainException("Debe haber al menos un TimeSlot.");
-            if (timeSlots.Any(t => t is null))
-                throw new DomainException("No puede haber TimeSlots nulos.");
+            if (horario is null)
+                throw new DomainException("El horario no puede ser nulo .");
+         
+            Horario = horario;
+        }
+        public void AgregarRecurrencia(RecurrenceRule recurrence)
+        {
+            if (recurrence == null)
+                throw new DomainException(
+                    "La recurrencia no puede ser nula.");
 
-            TimeSlots.Clear();
-            TimeSlots.AddRange(timeSlots);
+            if (Recurrence != null)
+                throw new DomainException(
+                    "La actividad ya tiene una recurrencia.");
+
+            Recurrence = recurrence;
+        }
+
+        public void QuitarRecurrencia()
+        {
+            Recurrence = null;
+            _exceptions.Clear();
+        }
+
+        public void CambiarRecurrencia(RecurrenceRule recurrence)
+        {
+            if (recurrence == null)
+                throw new DomainException(
+                    "La recurrencia no puede ser nula.");
+
+            Recurrence = recurrence;
+            _exceptions.Clear();
+        }
+
+        public void AgregarExcepcion(DateOnly date)
+        {
+            if (Recurrence == null)
+                throw new DomainException(
+                    "No se puede agregar una excepción a una actividad sin recurrencia.");
+
+            if (date < Recurrence.StartDate)
+                throw new DomainException(
+                    "La fecha de la excepción no puede ser anterior al inicio de la recurrencia.");
+
+            if (Recurrence.EndDate.HasValue &&
+                date > Recurrence.EndDate.Value)
+                throw new DomainException(
+                    "La fecha de la excepción no puede ser posterior al fin de la recurrencia.");
+
+            if (_exceptions.Any(x => x.Date == date))
+                throw new DomainException(
+                    "Ya existe una excepción para esa fecha.");
+
+            _exceptions.Add(
+                new ActividadException(Id, date)
+            );
         }
     }
 }

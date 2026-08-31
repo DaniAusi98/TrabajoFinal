@@ -18,7 +18,7 @@ namespace Application.VisitaGrupal.UseCases.Comands.NewFolder
 
         public NivelEducativo? NivelEducativo { get; set; }
 
-        public int? AnioGrado { get; set; }
+        public string? AnioGrado { get; set; }
 
         [Required]
         public string EmailInstitucion { get; set; }

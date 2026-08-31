@@ -138,9 +138,9 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    MinGuiasParaCapacidadCompleta = table.Column<int>(type: "int", nullable: false),
                     CapacidadPorGuia = table.Column<int>(type: "int", nullable: false),
                     CapacidadMaximaPorTurno = table.Column<int>(type: "int", nullable: false),
+                    MaximoVisitasSimultaneas = table.Column<int>(type: "int", nullable: false),
                     DiasDisponibles = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
@@ -174,12 +174,30 @@ namespace Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     NombreCompleto = table.Column<string>(type: "varchar(150)", maxLength: 150, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    PersonalInternoId = table.Column<int>(type: "int", nullable: false),
+                    PersonalInternoId = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Activo = table.Column<bool>(type: "tinyint(1)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Guias", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Paises",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Nombre = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Codigo = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Paises", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -322,6 +340,57 @@ namespace Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "ActividadException",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ActividadMuseoId = table.Column<string>(type: "varchar(255)", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Date = table.Column<DateOnly>(type: "date", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ActividadException", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ActividadException_ActividadesMuseo_ActividadMuseoId",
+                        column: x => x.ActividadMuseoId,
+                        principalTable: "ActividadesMuseo",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "ActividadRecurrencias",
+                columns: table => new
+                {
+                    ActividadMuseoId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    StartDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    EndDate = table.Column<DateOnly>(type: "date", nullable: true),
+                    Frequency = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Interval = table.Column<int>(type: "int", nullable: false),
+                    ByDays = table.Column<string>(type: "json", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    MonthDay = table.Column<int>(type: "int", nullable: true),
+                    WeekOfMonth = table.Column<int>(type: "int", nullable: true),
+                    LastWeekOfMonth = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ActividadRecurrencias", x => x.ActividadMuseoId);
+                    table.ForeignKey(
+                        name: "FK_ActividadRecurrencias_ActividadesMuseo_ActividadMuseoId",
+                        column: x => x.ActividadMuseoId,
+                        principalTable: "ActividadesMuseo",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "ActividadTimeSlots",
                 columns: table => new
                 {
@@ -356,9 +425,9 @@ namespace Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     EmailInstitucion = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ProvinciaInstitucion = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    PaisInstitucion = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    DepartamentoInstitucion = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    ProvinciaInstitucion = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     LocalidadInstitucion = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -393,14 +462,15 @@ namespace Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     NivelEducativo = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    AnioGrado = table.Column<int>(type: "int", nullable: true),
+                    AnioGrado = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     EmailInstitucion = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     TelefonoInstitucion = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ProvinciaInstitucion = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    PaisInstitucion = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    DepartamentoInstitucion = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    ProvinciaInstitucion = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     LocalidadInstitucion = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -704,6 +774,40 @@ namespace Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "DivisionesAdministrativas",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Nombre = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Tipo = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Nivel = table.Column<int>(type: "int", nullable: false),
+                    PaisId = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    PadreId = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DivisionesAdministrativas", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DivisionesAdministrativas_DivisionesAdministrativas_PadreId",
+                        column: x => x.PadreId,
+                        principalTable: "DivisionesAdministrativas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_DivisionesAdministrativas_Paises_PaisId",
+                        column: x => x.PaisId,
+                        principalTable: "Paises",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Departamentos",
                 columns: table => new
                 {
@@ -892,6 +996,35 @@ namespace Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "LocalidadesMundial",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Nombre = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Tipo = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CodigoPostal = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Latitud = table.Column<double>(type: "double", nullable: true),
+                    Longitud = table.Column<double>(type: "double", nullable: true),
+                    DivisionAdministrativaId = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LocalidadesMundial", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LocalidadesMundial_DivisionesAdministrativas_DivisionAdminis~",
+                        column: x => x.DivisionAdministrativaId,
+                        principalTable: "DivisionesAdministrativas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Localidades",
                 columns: table => new
                 {
@@ -923,6 +1056,11 @@ namespace Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ActividadException_ActividadMuseoId",
+                table: "ActividadException",
+                column: "ActividadMuseoId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ActividadRecursosAsignados_ActividadId",
                 table: "ActividadRecursosAsignados",
                 column: "ActividadId");
@@ -940,7 +1078,8 @@ namespace Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_ActividadTimeSlots_ActividadMuseoId",
                 table: "ActividadTimeSlots",
-                column: "ActividadMuseoId");
+                column: "ActividadMuseoId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -1010,6 +1149,16 @@ namespace Infrastructure.Migrations
                 column: "CalendarioMuseoId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DivisionesAdministrativas_PadreId",
+                table: "DivisionesAdministrativas",
+                column: "PadreId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DivisionesAdministrativas_PaisId",
+                table: "DivisionesAdministrativas",
+                column: "PaisId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_HorariosGuia_GuiaId",
                 table: "HorariosGuia",
                 column: "GuiaId");
@@ -1023,6 +1172,11 @@ namespace Infrastructure.Migrations
                 name: "IX_Localidades_ProvinciaId_DepartamentoId_Nombre",
                 table: "Localidades",
                 columns: new[] { "ProvinciaId", "DepartamentoId", "Nombre" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LocalidadesMundial_DivisionAdministrativaId",
+                table: "LocalidadesMundial",
+                column: "DivisionAdministrativaId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Provincias_Nombre",
@@ -1053,6 +1207,12 @@ namespace Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "ActividadException");
+
+            migrationBuilder.DropTable(
+                name: "ActividadRecurrencias");
+
             migrationBuilder.DropTable(
                 name: "ActividadRecursosAsignados");
 
@@ -1102,6 +1262,9 @@ namespace Infrastructure.Migrations
                 name: "Localidades");
 
             migrationBuilder.DropTable(
+                name: "LocalidadesMundial");
+
+            migrationBuilder.DropTable(
                 name: "ReporteVisitaAutoguiada");
 
             migrationBuilder.DropTable(
@@ -1144,6 +1307,9 @@ namespace Infrastructure.Migrations
                 name: "Departamentos");
 
             migrationBuilder.DropTable(
+                name: "DivisionesAdministrativas");
+
+            migrationBuilder.DropTable(
                 name: "Salas");
 
             migrationBuilder.DropTable(
@@ -1160,6 +1326,9 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Provincias");
+
+            migrationBuilder.DropTable(
+                name: "Paises");
 
             migrationBuilder.DropTable(
                 name: "ActividadesMuseo");

@@ -52,12 +52,12 @@ namespace Application.VisitaGrupal.UseCases.Comands.NewFolder
                 emailInstitucion: new Email(request.EmailInstitucion),
                 telefonoInstitucion: new Telefono(request.TelefonoInstitucion),
                 provinciaInstitucion: request.ProvinciaInstitucion,
-                departamentoInstitucion: request.DepartamentoInstitucion,
+                paisInstitucion: request.DepartamentoInstitucion,
                 ciudadInstitucion: request.LocalidadInstitucion,
                 descripcionDiversidad: request.DiversidadFuncionalDescripcion,
                 motivoVisita: request.MotivoRelacionVisita,
                 observaciones: request.Observaciones,
-                timeSlots: [timeSlot],
+                horario: timeSlot,
                 tematicas: tematicas,
                 salas:salas
             );

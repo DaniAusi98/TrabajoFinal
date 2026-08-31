@@ -19,12 +19,10 @@ namespace Infrastructure.Repositories.Sql.VisitaGrupal
             try
             {
                 return await Repository
-                    .Include(v => v.TimeSlots)
                     .Include(v => v.Salas)
                     .Where(v =>
-                        v.TimeSlots.Any(ts =>
-                            ts.Inicio >= fechaDesde &&
-                            ts.Fin <= fechaHasta))
+                        v.Horario.Inicio < fechaHasta &&
+                        v.Horario.Fin > fechaDesde)
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -37,10 +35,22 @@ namespace Infrastructure.Repositories.Sql.VisitaGrupal
         DateOnly monthDate)
         {
             return await Repository
-                .Include(v => v.TimeSlots)
-                .Where(v => v.TimeSlots.Any(ts =>
-                    ts.Inicio.Year == monthDate.Year &&
-                    ts.Fin.Month == monthDate.Month))
+                .Include(v => v.Horario)
+                .Where(v => v.Horario.Inicio.Year == monthDate.Year &&
+                            v.Horario.Fin.Month == monthDate.Month)
+                .ToListAsync();
+        }
+
+        public async Task<List<VisitaGrupalAutoguiada>> ObtenerPorUsuarioIdAsync(
+            string usuarioId,
+            DateTime fechaActual)
+        {
+            return await Repository
+                .Include(v => v.Horario)
+                .Include(v => v.Salas)
+                .Where(v =>
+                    v.UsuarioVisitanteId == usuarioId &&
+                    v.Horario.Inicio >= fechaActual)
                 .ToListAsync();
         }
     }

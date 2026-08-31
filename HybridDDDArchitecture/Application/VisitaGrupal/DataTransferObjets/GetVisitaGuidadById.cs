@@ -12,7 +12,7 @@ namespace Application.VisitaGrupal.DataTransferObjets
         public string DepartamentoInstitucion { get; set; } = string.Empty;
         public string CiudadInstitucion { get; set; } = string.Empty;
         public string? NivelCurso { get; set; }
-        public int? AnioCurso { get; set; }
+        public string? AnioCurso { get; set; }
         public string DescripcionDiscapacidad { get; set; } = string.Empty;
         public string MotivoVisita { get; set; } = string.Empty;
         public string Observaciones { get; set; } = string.Empty;

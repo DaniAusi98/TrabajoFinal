@@ -33,7 +33,7 @@ namespace Application.ActividadMuseo.Mappings
                 .ForMember(dest => dest.CategoriaActividad, opt => opt.MapFrom(src => src.CategoriaActividad.ToString()))
                 .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => src.Estado.ToString()))
                 .ForMember(dest => dest.CantidadPersonas, opt => opt.MapFrom(src => src.CantidadPersonas))
-                .ForMember(dest => dest.TimeSlots, opt => opt.MapFrom(src => src.TimeSlots))
+                .ForMember(dest => dest.TimeSlots, opt => opt.MapFrom(src => src.Horario))
                 .ForMember(dest => dest.Salas, opt => opt.MapFrom(src => src.Salas))
                 .ForMember(dest => dest.Recursos, opt => opt.MapFrom(src => src.Recursos));
 

@@ -14,9 +14,10 @@ namespace Application.VisitaGrupal.UseCases.Comands.CrearVisitaAutoguiada
         [Required]
         public string EmailInstitucion { get; set; }
         [Required]
-        public string ProvinciaInstitucion { get; set; }
+        public string PaisInstitucion { get; set; }
         [Required]
-        public string DepartamentoInstitucion { get; set; }
+        public string ProvinciaInstitucion { get; set; }
+       
         [Required]
         public string LocalidadInstitucion { get; set; }
         public string DiversidadFuncionalDescripcion { get; set; } = string.Empty;

@@ -3,13 +3,13 @@ using Domain.Common.Exceptions;
 
 namespace Domain.Common.Entities
 {
-    public class Localidad : DomainEntity<string>
+    public class LocalidadArg : DomainEntity<string>
     {
         public string ProvinciaId { get; private set; }
         public string DepartamentoId { get; private set; }
         public string Nombre { get; private set; }
 
-        public Localidad(string id, string departamentoId, string provinciaId, string nombre)
+        public LocalidadArg(string id, string departamentoId, string provinciaId, string nombre)
         {
             Id = id;
 
@@ -27,7 +27,7 @@ namespace Domain.Common.Entities
         }
 
         // Para EF Core
-        protected Localidad() { }
+        protected LocalidadArg() { }
 
         public void CambiarNombre(string nuevoNombre)
         {

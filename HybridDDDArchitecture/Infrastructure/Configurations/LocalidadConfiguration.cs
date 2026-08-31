@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Configurations
 {
-    public class LocalidadConfiguration : IEntityTypeConfiguration<Localidad>
+    public class LocalidadConfiguration : IEntityTypeConfiguration<LocalidadArg>
     {
-        public void Configure(EntityTypeBuilder<Localidad> builder)
+        public void Configure(EntityTypeBuilder<LocalidadArg> builder)
         {
             builder.ToTable("Localidades");
 

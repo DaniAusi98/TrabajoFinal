@@ -3,10 +3,10 @@ using Domain.Common.Entities;
 
 namespace Application.Common.Repositories
 {
-    public interface ILocalidadRepository : IRepository<Localidad>
+    public interface ILocalidadRepository : IRepository<LocalidadArg>
     {
-        Task<List<Localidad>> GetByDepartamentoIdAsync(string departamentoId,CancellationToken cancellationToken = default);
-        Task<List<Localidad>> GetByIdsAsync(IEnumerable<string> ids);
+        Task<List<LocalidadArg>> GetByDepartamentoIdAsync(string departamentoId,CancellationToken cancellationToken = default);
+        Task<List<LocalidadArg>> GetByIdsAsync(IEnumerable<string> ids);
 
     }
 }

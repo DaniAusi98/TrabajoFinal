@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.ActividadMuseo.Others
+namespace Domain.Common.Others
 {
     public static class HoraMuseo
     {

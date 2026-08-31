@@ -1,5 +1,5 @@
 ﻿using Application.ActividadMuseo.Repositories;
-using Domain.ActividadMuseo.Others.Factories;
+using Domain.Common.Others.Factories;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 

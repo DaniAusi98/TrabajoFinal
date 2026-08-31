@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 using Application.Repositories;
 
 using Core.Infraestructure.Repositories.Sql;
-
-using Domain.ActividadMuseo.Entities;
+using Domain.Common.Entities;
 
 namespace Infrastructure.Repositories.Sql.DisponibilidadActividades
 {

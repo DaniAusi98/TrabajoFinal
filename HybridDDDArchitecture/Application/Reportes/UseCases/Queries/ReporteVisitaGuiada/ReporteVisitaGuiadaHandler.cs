@@ -28,7 +28,7 @@ namespace Application.Reportes.UseCases.Queries.ReporteVisitaGuiada
                 request.Desde,
                 request.Hasta
                 );
-            int totalCapacidadDisponible = TurnosDisponibles.Sum(t => t.CapacidadMaxima);
+            int totalCapacidadDisponible = TurnosDisponibles.Sum(t => t.cuposDisponibles);
             var reporte = ServicioReporteVisitasGuiadas.ReporteVisitasGuiadas(
                 visitasguiadas,
                 totalCapacidadDisponible

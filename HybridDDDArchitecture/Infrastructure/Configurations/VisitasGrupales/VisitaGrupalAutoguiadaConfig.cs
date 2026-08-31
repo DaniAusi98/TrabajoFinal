@@ -21,13 +21,15 @@ namespace Infrastructure.Configurations.VisitasGrupales
                 .HasMaxLength(200)
                 .IsRequired();
 
+
+            builder.Property(x => x.PaisInstitucion)
+                .HasMaxLength(100)
+                .IsRequired();
+
             builder.Property(x => x.ProvinciaInstitucion)
                 .HasMaxLength(100)
                 .IsRequired();
 
-            builder.Property(x => x.DepartamentoInstitucion)
-                .HasMaxLength(100)
-                .IsRequired();
 
             builder.Property(x => x.LocalidadInstitucion)
                 .HasMaxLength(100)

@@ -26,7 +26,7 @@ namespace Application.ApplicationMuseo.Mappings
 
             CreateMap<Provincia, ProvinciaDto>().ReverseMap();
             CreateMap<Departamento, DepartamentoDto>().ReverseMap();
-            CreateMap<Localidad, LocalidadDto>().ReverseMap();
+            CreateMap<LocalidadArg, LocalidadDto>().ReverseMap();
 
         }
     }

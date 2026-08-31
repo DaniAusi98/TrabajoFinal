@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using static Domain.ActividadMuseo.Enums.Enums;
+using static Domain.Common.Enums.Enums;
 
-namespace Application.ActividadMuseo.UseCases.ActividadesMuseo.Commnads.DiaCierreMuseo
+namespace Application.Common.UseCases.ActividadesMuseo.Commnads.DiaCierreMuseo
 {
     public class CrearDiaCierreMuseoCommand
     {

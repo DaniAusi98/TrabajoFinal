@@ -1,4 +1,4 @@
-﻿using Domain.ActividadMuseo.Entities;
+﻿using Domain.Common.Entities;
 using Domain.Common.ValueObjets;
 using Domain.VisitasGrupales.Entities;
 
@@ -169,9 +169,7 @@ namespace Domain.VisitasGrupales.DomainServices
         {
             return visitasAutoguiadas.Count(
                 visita =>
-                    visita.TimeSlots.Any(
-                        timeSlot =>
-                            timeSlot.SeSolapaCon(slot)));
+                    visita.Horario.SeSolapaCon(slot));
         }
     }
 }
