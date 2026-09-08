@@ -5,8 +5,12 @@ using Application.ApplicationMuseo.Integrations.Handlers.Subscribers;
 using Application.Availability;
 using Application.Availability.Producers;
 using Application.Behaivors;
+using Application.Eventos.ApplicationServices;
+using Application.Eventos.Options;
+using Application.Reportes.ApplicationServices;
 using Application.Usuario.ApplicationServices.ApplicationServiceInterfaces;
 using Application.Usuario.UseCases.Commands.UpdateUsuario;
+using Application.VisitaGrupal.ApplicationServices;
 using Core.Application;
 using Domain.VisitasGrupales.DomainServices;
 using Domain.VisitasGrupales.Entities.GrupalGuiada;
@@ -27,6 +31,10 @@ namespace Application.Registrations
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
         {
+            /* Configuraciones de opciones */
+            services.Configure<SalasParaEventosOptions>(
+                configuration.GetSection(SalasParaEventosOptions.SectionName));
+
             /* Automapper */
             services.AddAutoMapper(cfg =>
             {
@@ -50,6 +58,8 @@ namespace Application.Registrations
 
             /* Application Services */
             services.AddScoped<IDummyEntityApplicationService, DummyEntityApplicationService>();
+            services.AddScoped<IEventoApplicationService, EventoApplicationService>();
+
             //services.AddScoped<IUsuarioApplicationService,UsuarioVisitanteApplicationService>();
 
             // Disponibilidad de visitas guiadas
@@ -87,6 +97,10 @@ namespace Application.Registrations
             // Register guided availability producer service
             services.AddScoped<GuidedAvailabilityProducerService>();
             services.AddScoped<SelfGuidedAvailabilityProducerService>();
+
+            // Register event availability producer service
+            services.AddScoped<Application.Eventos.Producers.EventAvailabilityProducerService>();
+
             // Register group availability producer service
            // services.AddScoped<Application.Availability.Producers.GroupAvailabilityProducerService>();
             // Register in-memory recurrence repo for testing (optional)
@@ -100,6 +114,11 @@ namespace Application.Registrations
 
 
             // services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+            services.AddScoped<IVisitaGuiadaSinConfirmacion, VisitaGuiadaSinConfirmar>();
+            services.AddScoped<IServicioReporteVisitasGrupales,ServicioReporteVisitasGrupales>();
+            services.AddScoped<IServicioReporteVisitasGuiadas, ServicioReporteVisitasGuiadas>();
+            services.AddScoped<IServicioReporteVisitasAutoguiadas, ServicioReporteVisitasAutoguiadas>();
 
 
             return services;

@@ -32,7 +32,14 @@ namespace Infrastructure.Configurations
             builder.Property(x => x.CantidadPersonas)
                 .IsRequired(false);
 
-
+            // ==========================================
+            // RECURRENCIA (Mapeo Simple del String RRule)
+            // ==========================================
+            // Se almacena como un VARCHAR/NVARCHAR común en la base de datos
+            builder.Property(x => x.RRule)
+                .HasColumnName("RRule")
+                .HasMaxLength(255)
+                .IsRequired(false); // Es opcional porque hay actividades únicas
             // =========================
             // HORARIO
             // =========================
@@ -55,67 +62,15 @@ namespace Infrastructure.Configurations
                     .HasColumnType("datetime");
             });
 
-
-            // =========================
-            // RECURRENCIA
-            // =========================
-
-            builder.OwnsOne(x => x.Recurrence, r =>
-            {
-                r.ToTable("ActividadRecurrencias");
-
-                r.WithOwner()
-                    .HasForeignKey("ActividadMuseoId");
-
-                r.Property(x => x.StartDate)
-                    .HasColumnType("date")
-                    .IsRequired();
-
-                r.Property(x => x.EndDate)
-                    .HasColumnType("date")
-                    .IsRequired(false);
-
-                r.Property(x => x.Frequency)
-                    .HasConversion<string>()
-                    .HasMaxLength(20)
-                    .IsRequired();
-
-                r.Property(x => x.Interval)
-                    .IsRequired();
-
-                r.Property(x => x.ByDays)
-                    .HasConversion(
-                        v => v == null
-                            ? null
-                            : System.Text.Json.JsonSerializer.Serialize(
-                                v,
-                                (System.Text.Json.JsonSerializerOptions?)null),
-
-                        v => string.IsNullOrEmpty(v)
-                            ? null
-                            : System.Text.Json.JsonSerializer.Deserialize<DayOfWeek[]>(
-                                v,
-                                (System.Text.Json.JsonSerializerOptions?)null)
-                    )
-                    .HasColumnType("json")
-                    .IsRequired(false);
-
-                r.Property(x => x.MonthDay)
-                    .IsRequired(false);
-
-                r.Property(x => x.WeekOfMonth)
-                    .IsRequired(false);
-            });
-
-
-            // =========================
-            // EXCEPCIONES
-            // =========================
-
+            // ==========================================
+            // EXCEPCIONES (Mapeo de Colección Privada Encapsulada)
+            // ==========================================
             builder.HasMany(x => x.Exceptions)
                 .WithOne()
-                .HasForeignKey(x => x.ActividadMuseoId)
+                .HasForeignKey("ActividadMuseoId") // Clave foránea en la tabla ActividadExceptions
                 .OnDelete(DeleteBehavior.Cascade);
+
+          
 
 
             // =========================

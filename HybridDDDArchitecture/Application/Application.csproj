@@ -7,6 +7,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Adapters\**" />
+	  <EmbeddedResource Remove="Adapters\**" />
+	  <None Remove="Adapters\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<ProjectReference Include="..\Core.Application.Adapters\Core.Application.Adapters.Http.csproj" />
 		<ProjectReference Include="..\Core.Application.ComandQueryBus\Core.Application.ComandQueryBus.csproj" />
 		<ProjectReference Include="..\Core.Application.EventBus\Core.Application.EventBus.csproj" />
@@ -17,10 +23,10 @@
 
 	<ItemGroup>
 		<Folder Include="ActividadMuseo\UseCases\ActividadesMuseo\Notifications\" />
-		<Folder Include="Adapters\" />
+		<Folder Include="Availability\Constants\" />
+		<Folder Include="Availability\Recurrence\" />
 		<Folder Include="Common\UseCases\Provincia\Commands\" />
 		<Folder Include="Common\UseCases\Provincia\Notifications\" />
-		<Folder Include="MuseumResources\UseCases\MuseumGallery\Queries\NewFolder\" />
 		<Folder Include="Reportes\Validators\" />
 		<Folder Include="Reportes\Repositories\" />
 		<Folder Include="VisitaGrupal\UseCases\Queries\GetTurnosVisitas\" />

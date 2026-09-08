@@ -16,6 +16,11 @@ namespace Infrastructure.Repositories.Sql.VisitaGrupal
             DateTime fechaDesde,
             DateTime fechaHasta)
         {
+
+            if (fechaDesde == fechaHasta)
+            {
+                fechaHasta = fechaHasta.Date.AddDays(1).AddSeconds(-1); // Ajusta hasta el final del día
+            }
             try
             {
                 return await Repository

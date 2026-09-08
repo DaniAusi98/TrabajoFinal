@@ -13,6 +13,7 @@ namespace Application.VisitaGrupal.DomainEvents
         public int CantidadPersonas { get; set; }
         public DateTime Inicio { get; set; }
         public DateTime Fin { get; set; }
+        public DateTime FechaCreacion { get; set; }
 
     }
 }

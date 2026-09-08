@@ -1,6 +1,7 @@
 using Domain.ActividadMuseo.Entities;
 using Domain.Common.Entities;
 using Domain.Common.Entities.Ubicacion;
+using Domain.Eventos.Entities;
 using Domain.RecursoMuseo.Entities;
 using Domain.RecursoMuseo.Entities.Guia;
 using Domain.Reportes.Entities;
@@ -30,15 +31,13 @@ namespace Infrastructure.Repositories.Sql
         }
 
         public DbSet<VisitaGrupalGuiada> VisitaGuiada { get; set; }
-
         public DbSet<VisitaGrupalAutoguiada> VisitaGrupalAutoguiada { get; set; }
-
         public DbSet<ReporteGeneralVisitasGrupales> ReporteGeneralVisitasGrupales { get; set; }
-
         public DbSet<Domain.ActividadMuseo.Entities.ActividadMuseo> ActividadAgendaMuseo { get; set; }
         public DbSet<RecursoAsignado> RecursoAsignado { get; set; }
         public DbSet<Recurso> RecursoMuseo { get; set; }
         public DbSet<Sala> SalaMuseo { get; set; }
+        public DbSet<ConfiguracionSalaActividad> ConfiguracionesSalaActividad { get; set; }
         public DbSet<Guia> GuiaMuseo { get; set; }
         public DbSet<AusenciaGuia> AusenciasGuia { get; set; }
         public DbSet<DiaCierreMuseo> DiaCierreMuseo { get; set; }
@@ -53,19 +52,11 @@ namespace Infrastructure.Repositories.Sql
         public DbSet<ReporteVisitasGuiadas> ReporteVisitasGuiadas { get; set; }
         public DbSet<ReporteVisitasAutoguiadas> ReporteVisitasAutoguiadas { get; set; }
         public DbSet<ReporteGeneralVisitasGrupales> ReporteGeneralVisitas { get; set; }
-
         public DbSet<Pais> Paises { get; set; }
         public DbSet<DivisionAdministrativa> DivisionesAdministrativas { get; set; }
         public DbSet<Localidad> Localidad { get; set; }
-
-
-        /*public DbSet<PersonalInterno> PersonalInterno { get; set; }
-
-        public DbSet<Area> Area { get; set; }
-
-        public DbSet<AreaPuesto> AreaPuesto { get; set; }
-
-        public DbSet<Puesto> Puesto { get; set; }*/
+        public DbSet<Evento> Evento { get; set; }
+        public DbSet<ActividadException> ActividadException { get; set; }
 
         protected MuseoDbContext()
         {
@@ -105,6 +96,9 @@ namespace Infrastructure.Repositories.Sql
             modelBuilder.ApplyConfiguration(new PaisConfiguration());
             modelBuilder.ApplyConfiguration(new DivisionAdministrativaConfiguration());
             modelBuilder.ApplyConfiguration(new LocalidadMundialConfiguration());
+            modelBuilder.ApplyConfiguration(new EventoConfiguration());
+            modelBuilder.ApplyConfiguration(new ConfiguracionSalaActividadConfig());
+            modelBuilder.ApplyConfiguration(new ActividadExceptionConfiguration());
 
             // ... Aquí tienes tus configuraciones actuales de tablas (Entidades, Claves, etc.) ...
 
@@ -121,3 +115,11 @@ namespace Infrastructure.Repositories.Sql
         }
     }
 }
+
+/*public DbSet<PersonalInterno> PersonalInterno { get; set; }
+
+        public DbSet<Area> Area { get; set; }
+
+        public DbSet<AreaPuesto> AreaPuesto { get; set; }
+
+        public DbSet<Puesto> Puesto { get; set; }*/

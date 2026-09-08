@@ -1,8 +1,9 @@
 ﻿
 namespace Application.Reportes.ApplicationServices
 {
-    internal interface IApplicationServiceReport
+    public interface IApplicationServiceReport
     {
+
 
     }
 }

@@ -45,8 +45,11 @@ namespace Infrastructure.Migrations
                     b.Property<string>("ActividadMuseoId")
                         .HasColumnType("varchar(255)");
 
-                    b.Property<DateOnly>("Date")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("FechaExcluir")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Motivo")
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -72,6 +75,11 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
+
+                    b.Property<string>("RRule")
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("RRule");
 
                     b.Property<string>("TipoActividad")
                         .IsRequired()
@@ -101,9 +109,10 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ActividadId");
-
                     b.HasIndex("RecursoId");
+
+                    b.HasIndex("ActividadId", "RecursoId")
+                        .IsUnique();
 
                     b.ToTable("ActividadRecursosAsignados", (string)null);
                 });
@@ -351,6 +360,37 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Paises", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.RecursoMuseo.Entities.ConfiguracionSalaActividad", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<int?>("CapacidadMaxima")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Habilitada")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("SalaId")
+                        .IsRequired()
+                        .HasMaxLength(36)
+                        .HasColumnType("varchar(36)");
+
+                    b.Property<int>("TipoActividad")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SalaId");
+
+                    b.HasIndex("TipoActividad");
+
+                    b.HasIndex("SalaId", "TipoActividad")
+                        .IsUnique();
+
+                    b.ToTable("ConfiguracionesSalaActividad", (string)null);
                 });
 
             modelBuilder.Entity("Domain.RecursoMuseo.Entities.Guia.AusenciaGuia", b =>
@@ -903,6 +943,54 @@ namespace Infrastructure.Migrations
                     b.ToTable("VisitaGuiadaTematicas");
                 });
 
+            modelBuilder.Entity("Domain.Eventos.Entities.Evento", b =>
+                {
+                    b.HasBaseType("Domain.ActividadMuseo.Entities.ActividadMuseo");
+
+                    b.Property<int?>("CantidadEstimada")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DescripcionEvento")
+                        .HasMaxLength(2000)
+                        .HasColumnType("varchar(2000)");
+
+                    b.Property<string>("FundamentacionEvento")
+                        .HasMaxLength(2000)
+                        .HasColumnType("varchar(2000)");
+
+                    b.Property<string>("Institucion")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("NombreyApellidoSolicitante")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<bool>("RequiereDifusion")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("TipoEvento")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("TipoPublico")
+                        .IsRequired()
+                        .HasColumnType("json");
+
+                    b.Property<string>("TituloEvento")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("UrlImagenes")
+                        .HasColumnType("json");
+
+                    b.ToTable("Eventos", (string)null);
+                });
+
             modelBuilder.Entity("Domain.VisitasGrupales.Entities.GrupalGuiada.VisitaGrupalGuiada", b =>
                 {
                     b.HasBaseType("Domain.ActividadMuseo.Entities.ActividadMuseo");
@@ -1030,45 +1118,6 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.ActividadMuseo.Entities.ActividadMuseo", b =>
                 {
-                    b.OwnsOne("Domain.ActividadMuseo.Entities.RecurrenceRule", "Recurrence", b1 =>
-                        {
-                            b1.Property<string>("ActividadMuseoId")
-                                .HasColumnType("varchar(255)");
-
-                            b1.Property<string>("ByDays")
-                                .HasColumnType("json");
-
-                            b1.Property<DateOnly?>("EndDate")
-                                .HasColumnType("date");
-
-                            b1.Property<string>("Frequency")
-                                .IsRequired()
-                                .HasMaxLength(20)
-                                .HasColumnType("varchar(20)");
-
-                            b1.Property<int>("Interval")
-                                .HasColumnType("int");
-
-                            b1.Property<bool>("LastWeekOfMonth")
-                                .HasColumnType("tinyint(1)");
-
-                            b1.Property<int?>("MonthDay")
-                                .HasColumnType("int");
-
-                            b1.Property<DateOnly>("StartDate")
-                                .HasColumnType("date");
-
-                            b1.Property<int?>("WeekOfMonth")
-                                .HasColumnType("int");
-
-                            b1.HasKey("ActividadMuseoId");
-
-                            b1.ToTable("ActividadRecurrencias", (string)null);
-
-                            b1.WithOwner()
-                                .HasForeignKey("ActividadMuseoId");
-                        });
-
                     b.OwnsOne("Domain.Common.ValueObjets.TimeSlot", "Horario", b1 =>
                         {
                             b1.Property<int>("Id")
@@ -1099,8 +1148,6 @@ namespace Infrastructure.Migrations
                         });
 
                     b.Navigation("Horario");
-
-                    b.Navigation("Recurrence");
                 });
 
             modelBuilder.Entity("Domain.ActividadMuseo.Entities.RecursoAsignado", b =>
@@ -1547,6 +1594,57 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Domain.Eventos.Entities.Evento", b =>
+                {
+                    b.HasOne("Domain.ActividadMuseo.Entities.ActividadMuseo", null)
+                        .WithOne()
+                        .HasForeignKey("Domain.Eventos.Entities.Evento", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("Domain.Common.ValueObjets.Email", "EmailSolicitante", b1 =>
+                        {
+                            b1.Property<string>("EventoId")
+                                .HasColumnType("varchar(255)");
+
+                            b1.Property<string>("Valor")
+                                .IsRequired()
+                                .HasMaxLength(150)
+                                .HasColumnType("varchar(150)")
+                                .HasColumnName("EmailSolicitante");
+
+                            b1.HasKey("EventoId");
+
+                            b1.ToTable("Eventos");
+
+                            b1.WithOwner()
+                                .HasForeignKey("EventoId");
+                        });
+
+                    b.OwnsOne("Domain.Common.ValueObjets.Telefono", "TelefonoSolicitante", b1 =>
+                        {
+                            b1.Property<string>("EventoId")
+                                .HasColumnType("varchar(255)");
+
+                            b1.Property<string>("Valor")
+                                .IsRequired()
+                                .HasMaxLength(20)
+                                .HasColumnType("varchar(20)")
+                                .HasColumnName("TelefonoSolicitante");
+
+                            b1.HasKey("EventoId");
+
+                            b1.ToTable("Eventos");
+
+                            b1.WithOwner()
+                                .HasForeignKey("EventoId");
+                        });
+
+                    b.Navigation("EmailSolicitante");
+
+                    b.Navigation("TelefonoSolicitante");
+                });
+
             modelBuilder.Entity("Domain.VisitasGrupales.Entities.GrupalGuiada.VisitaGrupalGuiada", b =>
                 {
                     b.HasOne("Domain.ActividadMuseo.Entities.ActividadMuseo", null)
@@ -1554,25 +1652,6 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("Domain.VisitasGrupales.Entities.GrupalGuiada.VisitaGrupalGuiada", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.OwnsOne("Domain.Common.ValueObjets.Telefono", "TelefonoInstitucion", b1 =>
-                        {
-                            b1.Property<string>("VisitaGrupalGuiadaId")
-                                .HasColumnType("varchar(255)");
-
-                            b1.Property<string>("Valor")
-                                .IsRequired()
-                                .HasMaxLength(50)
-                                .HasColumnType("varchar(50)")
-                                .HasColumnName("TelefonoInstitucion");
-
-                            b1.HasKey("VisitaGrupalGuiadaId");
-
-                            b1.ToTable("VisitasGrupalesGuiadas");
-
-                            b1.WithOwner()
-                                .HasForeignKey("VisitaGrupalGuiadaId");
-                        });
 
                     b.OwnsOne("Domain.Common.ValueObjets.Email", "EmailInstitucion", b1 =>
                         {
@@ -1584,6 +1663,25 @@ namespace Infrastructure.Migrations
                                 .HasMaxLength(200)
                                 .HasColumnType("varchar(200)")
                                 .HasColumnName("EmailInstitucion");
+
+                            b1.HasKey("VisitaGrupalGuiadaId");
+
+                            b1.ToTable("VisitasGrupalesGuiadas");
+
+                            b1.WithOwner()
+                                .HasForeignKey("VisitaGrupalGuiadaId");
+                        });
+
+                    b.OwnsOne("Domain.Common.ValueObjets.Telefono", "TelefonoInstitucion", b1 =>
+                        {
+                            b1.Property<string>("VisitaGrupalGuiadaId")
+                                .HasColumnType("varchar(255)");
+
+                            b1.Property<string>("Valor")
+                                .IsRequired()
+                                .HasMaxLength(50)
+                                .HasColumnType("varchar(50)")
+                                .HasColumnName("TelefonoInstitucion");
 
                             b1.HasKey("VisitaGrupalGuiadaId");
 

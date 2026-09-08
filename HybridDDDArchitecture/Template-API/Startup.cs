@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Infrastructure.Identity;
+
 namespace API
 {
     public class Startup
@@ -116,8 +117,13 @@ namespace API
             app.SeedSalasMuseo();
             app.SeedTematicasVisitas();
             app.SeedGuiasMuseo();
+            app.SeedConfiguracionUsoSalas();
+          
+
 
             app.UseHttpsRedirection();
+
+            app.UseStaticFiles();
 
             app.UseRouting();
 

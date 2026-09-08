@@ -203,7 +203,14 @@ namespace Domain.VisitasGrupales.Entities
             EstadoConfirmacion = EstadoConfirmacionVisita.Confirmada;
         }
 
+        public void CambiarEstadoAReprogramada()
+        {
+            if (Estado == EstadoActividad.Cancelada)
+                throw new DomainException(
+                    "No se puede reprogramar una visita cancelada.");
 
+            MarcarComoActividadReprogramada();
+        }
 
         public void Rechazar()
         {

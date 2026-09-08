@@ -47,6 +47,7 @@ namespace Domain.ActividadMuseo.Enums
             VisitaGrupal,
             EventoActividadExterna,
             ActividadEducativa,
+            EventosEspeciales
 
         }
         public enum Frecuencia

@@ -24,11 +24,6 @@ namespace Application.VisitaGrupal.UseCases.Queries.ConsultarDisponibilidadTurno
             var desde = request.FechaDesde.Date;
             var hasta = request.FechaHasta.Date;
 
-            if (desde == hasta)
-            {
-                hasta = hasta.AddDays(1);
-            }
-
             var turnosDisponibles = await _guidedAvailabilityProducer
                 .GetAvailableTurnsAsync(desde, hasta);
 

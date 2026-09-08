@@ -16,36 +16,26 @@ namespace Application.Availability.Producers
     /// Producer que genera bloques horarios para visitas grupales autoguiadas
     /// y valida las candidatas contra el AvailabilityEngine.
     /// </summary>
-    public class SelfGuidedAvailabilityProducerService
+    public class SelfGuidedAvailabilityProducerService(
+        IRepositorioVisitaGrupalAutoguiada repositorioVisitaGrupalAutoguiada,
+        IRepositorioConfiguracionHorarioAutoguiada repositorioConfiguracionHorarioAutoguiada,
+        ActividadMuseo.Repositories.IRepositorioCalendarioMuseo repositorioCalendario,
+        ActividadMuseo.Repositories.IRepositorioActividadMuseo repositorioActividadMuseo,
+        IServicioDisponibilidadSlotsAutoguiadas servicioDisponibilidadSlotsAutoguiadas,
+        IRepositorioSala repositorioSala,
+        ActivityAvailabilityFactory availabilityFactory,
+        IRepositorioTematicas tematicaRepository,
+        AvailabilityEngine engine)
     {
-        private readonly IRepositorioVisitaGrupalAutoguiada _repositorioVisitaGrupalAutoguiada;
-        private readonly ActividadMuseo.Repositories.IRepositorioActividadMuseo _repositorioActividadMuseo;
-        private readonly IRepositorioConfiguracionHorarioAutoguiada _repositorioConfiguracionHorarioAutoguiada;
-        private readonly ActividadMuseo.Repositories.IRepositorioCalendarioMuseo _repositorioCalendario;
-        private readonly IRepositorioSala _repositorioSala;
-        private readonly IServicioDisponibilidadSlotsAutoguiadas _servicioDisponibilidadSlotsAutoguiadas;
-        private readonly AvailabilityEngine _engine;
-        private readonly IRepositorioTematicas _tematicaRepository;
-
-        public SelfGuidedAvailabilityProducerService(
-            IRepositorioVisitaGrupalAutoguiada repositorioVisitaGrupalAutoguiada,
-            IRepositorioConfiguracionHorarioAutoguiada repositorioConfiguracionHorarioAutoguiada,
-            ActividadMuseo.Repositories.IRepositorioCalendarioMuseo repositorioCalendario,
-            ActividadMuseo.Repositories.IRepositorioActividadMuseo repositorioActividadMuseo,
-            IServicioDisponibilidadSlotsAutoguiadas servicioDisponibilidadSlotsAutoguiadas,
-            IRepositorioSala repositorioSala,
-            IRepositorioTematicas tematicaRepository,
-            AvailabilityEngine engine)
-        {
-            _repositorioVisitaGrupalAutoguiada = repositorioVisitaGrupalAutoguiada;
-            _repositorioConfiguracionHorarioAutoguiada = repositorioConfiguracionHorarioAutoguiada;
-            _repositorioCalendario = repositorioCalendario;
-            _repositorioActividadMuseo = repositorioActividadMuseo;
-            _servicioDisponibilidadSlotsAutoguiadas = servicioDisponibilidadSlotsAutoguiadas;
-            _repositorioSala = repositorioSala;
-            _tematicaRepository = tematicaRepository;
-            _engine = engine;
-        }
+        private readonly IRepositorioVisitaGrupalAutoguiada _repositorioVisitaGrupalAutoguiada = repositorioVisitaGrupalAutoguiada;
+        private readonly ActividadMuseo.Repositories.IRepositorioActividadMuseo _repositorioActividadMuseo = repositorioActividadMuseo;
+        private readonly IRepositorioConfiguracionHorarioAutoguiada _repositorioConfiguracionHorarioAutoguiada = repositorioConfiguracionHorarioAutoguiada;
+        private readonly ActividadMuseo.Repositories.IRepositorioCalendarioMuseo _repositorioCalendario = repositorioCalendario;
+        private readonly IRepositorioSala _repositorioSala = repositorioSala;
+        private readonly IServicioDisponibilidadSlotsAutoguiadas _servicioDisponibilidadSlotsAutoguiadas = servicioDisponibilidadSlotsAutoguiadas;
+        private readonly AvailabilityEngine _engine = engine;
+        private readonly ActivityAvailabilityFactory _availabilityFactory; // <--- 1) AGREGAMOS EL CAMPO
+        private readonly IRepositorioTematicas _tematicaRepository = tematicaRepository;
 
         public async Task<List<SlotDisponibleVisitaAutoguiada>> GetHourlyBlocksAsync(
             DateTime desde,
@@ -120,17 +110,13 @@ namespace Application.Availability.Producers
             //
             // ============================================================
 
-            var windowStart =
-                DateOnly.FromDateTime(desde);
-
-            var windowEnd =
-                DateOnly.FromDateTime(hasta);
+           
 
             var existingActivities =
-                ActivityAvailabilityFactory.Create(
+                _availabilityFactory.Create(
                     actividadesExistentes,
-                    windowStart,
-                    windowEnd);
+                    desde,
+                    hasta);
 
             // ============================================================
             // 5) CREAR CANDIDATOS

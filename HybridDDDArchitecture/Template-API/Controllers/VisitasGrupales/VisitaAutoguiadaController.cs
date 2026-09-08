@@ -1,5 +1,7 @@
-﻿using Application.VisitaGrupal.UseCases.Comands.CrearVisitaAutoguiada;
+﻿using Application.VisitaGrupal.UseCases.Comands.ConfirmarVisitaGrupal;
+using Application.VisitaGrupal.UseCases.Comands.CrearVisitaAutoguiada;
 using Application.VisitaGrupal.UseCases.Comands.CrearVisitaGuiada;
+using Application.VisitaGrupal.UseCases.Comands.NewFolder;
 using Application.VisitaGrupal.UseCases.Queries.GetReservationById;
 using Application.VisitaGrupal.UseCases.Queries.GetReservationsByUserId;
 using Core.Application;
@@ -48,9 +50,35 @@ namespace Controllers.VisitasGrupales
             return Ok(visitas);
         }
 
+        [HttpPatch("{id}/confirmar")]
+        public async Task<IActionResult> Confirmar(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                return BadRequest();
+            await _commandQueryBus.Send(
+                new ConfirmarAutoguiadaCommand
+                {
+                    ReservationId = id
+                });
+            return NoContent();
+        }
 
         //GET /api/Visitas/DisponibilidadTurnosVisitasAutoguiadas?fechaDesde=2026-08-10&fechaHasta=2026-08-15&salaIds=1&salaIds=3&salaIds=5&pageIndex=1&pageSize=10
 
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPost("{id}/reprogramar")]
+        public async Task<IActionResult> Reprogram(
+       string id,
+       ReprogramarCommand command)
+        {
+            var usuarioId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            command.UsuarioVisitanteId = usuarioId;
+            command.VisitaReprogramadaId = id;
+
+            var nuevaVisitaId = await _commandQueryBus.Send(command);
+
+            return Created($"api/v1/VisitasAutoguiadas/{nuevaVisitaId}", new { Id = nuevaVisitaId });
+        }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("reservations")]

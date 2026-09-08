@@ -34,8 +34,6 @@
     <Folder Include="Common\Others\Helpers\" />
     <Folder Include="Eventos\Constants\" />
     <Folder Include="Eventos\DomainServices\" />
-    <Folder Include="Eventos\Entities\" />
-    <Folder Include="Eventos\Enums\" />
     <Folder Include="Eventos\ValueObjets\" />
     <Folder Include="Eventos\Others\" />
     <Folder Include="Reportes\DomainServices\VisitaGrupalGuiada\" />

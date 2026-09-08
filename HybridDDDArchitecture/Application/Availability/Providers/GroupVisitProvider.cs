@@ -12,18 +12,21 @@ namespace Application.Availability.Providers
     public class GroupVisitProvider : IRuleProvider
     {
         private readonly NoConcurrentGuidedWithAutoguidedRule _noConcurrentRule;
+        private readonly NoActividadConEventoEnHall noActividadConEventoEnHall;
         //private readonly NoGroupIfHallEventOrEducationalRule _hallEventRule;
-       // private readonly NoGroupIfExhibitInMountingOrDisassemblyRule _exhibitRule;
+        // private readonly NoGroupIfExhibitInMountingOrDisassemblyRule _exhibitRule;
 
         public GroupVisitProvider(
-            NoConcurrentGuidedWithAutoguidedRule noConcurrentRule
+            NoConcurrentGuidedWithAutoguidedRule noConcurrentRule,
+            NoActividadConEventoEnHall noActividadConEventoEnHall
            // NoGroupIfHallEventOrEducationalRule hallEventRule,
            // NoGroupIfExhibitInMountingOrDisassemblyRule exhibitRule
            )
         {
             _noConcurrentRule = noConcurrentRule;
-           // _hallEventRule = hallEventRule;
-           // _exhibitRule = exhibitRule;
+            this.noActividadConEventoEnHall = noActividadConEventoEnHall;
+            // _hallEventRule = hallEventRule;
+            // _exhibitRule = exhibitRule;
         }
 
         public bool CanHandle(Domain.ActividadMuseo.Entities.ActividadMuseo candidate)
@@ -37,8 +40,9 @@ namespace Application.Availability.Providers
             Domain.ActividadMuseo.Entities.ActividadMuseo candidate)
         {
             yield return _noConcurrentRule;
-           // yield return _hallEventRule;
-           // yield return _exhibitRule;
+            yield return noActividadConEventoEnHall;
+            // yield return _hallEventRule;
+            // yield return _exhibitRule;
         }
     }
 }

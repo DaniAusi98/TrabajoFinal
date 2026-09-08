@@ -18,9 +18,8 @@ namespace Application.Availability.Producers
         private readonly ActividadMuseo.Repositories.IRepositorioActividadMuseo _repositorioActividadMuseo;
         private readonly IRepositorioConfiguracionVisitasGrupalesGuiadas _repositorioConfiguracion;
         private readonly ActividadMuseo.Repositories.IRepositorioCalendarioMuseo _repositorioCalendario;
-
+        private readonly ActivityAvailabilityFactory _availabilityFactory; // <--- 1) AGREGAMOS EL CAMPO
         private readonly AvailabilityEngine _engine;
-
         private readonly ILogger<GuidedAvailabilityProducerService> _logger;
 
         public GuidedAvailabilityProducerService(
@@ -30,6 +29,8 @@ namespace Application.Availability.Producers
             ActividadMuseo.Repositories.IRepositorioActividadMuseo repositorioActividadMuseo,
             IRepositorioConfiguracionVisitasGrupalesGuiadas repositorioConfiguracion,
             ActividadMuseo.Repositories.IRepositorioCalendarioMuseo repositorioCalendario,
+                        ActivityAvailabilityFactory availabilityFactory, // <--- 2) INYECTAMOS EN EL CONSTRUCTOR
+
             AvailabilityEngine engine,
             ILogger<GuidedAvailabilityProducerService> logger)
         {
@@ -153,14 +154,11 @@ namespace Application.Availability.Producers
             //
             // ============================================================
 
-            var windowStart = DateOnly.FromDateTime(desde);
-            var windowEnd = DateOnly.FromDateTime(hasta);
-
-            var existingActivities =
-                ActivityAvailabilityFactory.Create(
-                 actividadesEnRango,
-                     windowStart,
-                     windowEnd);
+            var existingActivities = _availabilityFactory.Create(
+               [.. actividadesEnRango],
+               desde,
+               hasta
+           );
             _logger.LogInformation(
                 "[GuidedAvailabilityProducer] Existing CandidateEntries preparados: {Cantidad}",
                 existingActivities.Count);

@@ -27,6 +27,11 @@ namespace Infrastructure.Repositories.Sql.VisitaGrupal
             Console.WriteLine($"Desde: {fechaDesde:O}");
             Console.WriteLine($"Hasta: {fechaHasta:O}");
 
+            if (fechaDesde == fechaHasta)
+            {
+                fechaHasta = fechaHasta.Date.AddDays(1).AddSeconds(-1); // Ajusta hasta el final del día
+            }
+
             var visitas = await Repository
                 .Include(v => v.Tematicas)
                 .Include(v => v.Salas)

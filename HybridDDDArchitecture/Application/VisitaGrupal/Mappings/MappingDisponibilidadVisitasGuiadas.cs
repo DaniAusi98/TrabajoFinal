@@ -63,7 +63,8 @@ namespace Application.VisitaGrupal.Mappings
                 .ForMember(dest => dest.AnioGrado, opt => opt.MapFrom(src => src.AnioGrado))
                 .ForMember(dest => dest.CantidadPersonas, opt => opt.MapFrom(src => src.CantidadPersonas))
                 .ForMember(dest => dest.Inicio, opt => opt.MapFrom(src => src.Horario.Inicio))
-                .ForMember(dest => dest.Fin, opt => opt.MapFrom(src => src.Horario.Fin));
+                .ForMember(dest => dest.Fin, opt => opt.MapFrom(src => src.Horario.Fin))
+                .ForMember(dest => dest.FechaCreacion, opt => opt.MapFrom(src => src.FechaCreacion));
 
 
             CreateMap<VisitaGrupalAutoguiada, VisitaAutoguiadaDto>()

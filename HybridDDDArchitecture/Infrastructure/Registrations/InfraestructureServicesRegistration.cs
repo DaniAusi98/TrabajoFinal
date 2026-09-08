@@ -1,10 +1,13 @@
 using Application.ApplicationMuseo.ApplicationServices;
+using Application.Availability.ApplicationServices;
 using Application.Common.ApplicationServices;
 using Application.Usuario.ApplicationServices.ApplicationServiceInterfaces;
 using Application.VisitaGrupal.ApplicationServices;
 using Core.Application.Adapters.Http;
 using Core.Infraestructure;
 using Core.Infraestructure.Adapters.Http;
+using Hangfire;
+using Hangfire.MySql;
 using Infrastructure.Adapters;
 using Infrastructure.Adapters.EmailSender.ResendEmailService;
 using Infrastructure.Adapters.EmailSender.ResendEmailService.ConfirmarVisitaUrl;
@@ -12,19 +15,12 @@ using Infrastructure.Adapters.EmailSender.ResendEmailService.User;
 using Infrastructure.Constants;
 using Infrastructure.Factories;
 using Infrastructure.Identity;
-using Hangfire;
-using Hangfire.MySql;
-using System.Transactions;
-
 using Microsoft.AspNetCore.Builder;
-
-
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
-
 using Microsoft.Extensions.DependencyInjection;
-
 using Resend;
+using System.Transactions;
 
 namespace Infrastructure.Registrations
 {
@@ -69,6 +65,7 @@ namespace Infrastructure.Registrations
                 services.AddHangfireServer();
             }
             /* 🔼 TERMINA HANGFIRE 🔼 */
+            services.AddScoped<IGuidedTourConfirmationExpired, HangfireGuidedTourExpirationScheduler>();
 
 
             /* EventBus */
@@ -92,6 +89,8 @@ namespace Infrastructure.Registrations
             services.AddScoped<JwtTokenService>();
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddScoped<IClock, ArgentinaClock>();
+            services.AddSingleton<IRecurrenceEvaluator, IcalRecurrenceEvaluator>();
+
             services.AddHttpClient<IConsultarProvinciasArgetina, ObtenerProvinciasArgentinaGeoRef>(client =>
             {
                 // Aquí es donde va la base del Curl. Tiene que terminar siempre con una barra diagonal '/'
@@ -193,6 +192,14 @@ namespace Infrastructure.Registrations
         public static void SeedGuiasMuseo(this IApplicationBuilder app)
         {
             Data.Seeders.Ubicacion.SeederGuias
+                .SeedAsync(app.ApplicationServices)
+                .GetAwaiter()
+                .GetResult();
+        }
+
+        public static void SeedConfiguracionUsoSalas(this IApplicationBuilder app)
+        {
+            Data.Seeders.ConfiguracionUsoSalas
                 .SeedAsync(app.ApplicationServices)
                 .GetAwaiter()
                 .GetResult();

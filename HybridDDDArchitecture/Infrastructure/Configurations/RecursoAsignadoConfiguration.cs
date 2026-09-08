@@ -26,6 +26,12 @@ namespace Infrastructure.Configurations
                 .HasForeignKey(x => x.RecursoId)
                 .OnDelete(DeleteBehavior.Restrict); // Evita borrar un Recurso base si está asignado a una actividad
 
+            builder.HasIndex(x => new { x.ActividadId, x.RecursoId })
+                .IsUnique();
+
+            builder.Property(x => x.CantidadAsignada)
+                .IsRequired();
+
        
         }
     }

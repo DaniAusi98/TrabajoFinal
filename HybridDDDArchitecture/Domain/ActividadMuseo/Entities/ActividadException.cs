@@ -5,15 +5,16 @@ namespace Domain.ActividadMuseo.Entities
     public class ActividadException:DomainEntity<string>
     {
 
-        public string ActividadMuseoId { get; private set; }
-
-        public DateOnly Date { get; private set; }
+        public string ActividadMuseoId { get; private set;}
+        public DateTime FechaExcluir { get; private set;}
+        public string? Motivo { get;private set;}
 
         private ActividadException() { }
 
         public ActividadException(
             string actividadMuseoId,
-            DateOnly date)
+            DateTime fechaExcluir,
+            string? motivo)
         {
             if (string.IsNullOrWhiteSpace(actividadMuseoId))
                 throw new DomainException(
@@ -22,8 +23,8 @@ namespace Domain.ActividadMuseo.Entities
             Id = Guid.NewGuid().ToString();
 
             ActividadMuseoId = actividadMuseoId;
-
-            Date = date;
+            FechaExcluir = fechaExcluir;   
+            Motivo = motivo;
         }
     }
 }

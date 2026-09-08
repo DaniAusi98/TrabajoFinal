@@ -13,6 +13,7 @@ namespace Controllers.VisitasGrupales
     public class ReportesVisitasGrupalesController(ICommandQueryBus commandQueryBus) : BaseController
     {
         private readonly ICommandQueryBus _commandQueryBus = commandQueryBus;
+        // REPORTE SUMMARY CARDS
 
         [HttpGet("reportSummaryCards")]
         public async Task<IActionResult> ReporteVisitasGrupales (
@@ -31,6 +32,12 @@ namespace Controllers.VisitasGrupales
 
             return Ok(reporteGeneral);
         }
+
+
+        // ======================================================
+        // VISITAS GUIADAS
+        // ======================================================
+
         [HttpGet("reporteVisitaGuiada")]
         public async Task<IActionResult> ReporteVisitasGuiadas(
 
@@ -48,6 +55,9 @@ namespace Controllers.VisitasGrupales
 
             return Ok(reporte);
         }
+        // ======================================================
+        // VISITAS AUTOGUIADAS
+        // ======================================================
         [HttpGet("reporteVisitaAutoguiada")]
         public async Task<IActionResult> ReporteVisitasAutoguiadas(
 

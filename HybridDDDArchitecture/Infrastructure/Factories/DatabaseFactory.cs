@@ -1,11 +1,13 @@
 using Application.ActividadMuseo.Repositories;
 using Application.Common.Repositories;
+using Application.Eventos.Repositories;
 using Application.MuseumResources.Repositories;
 using Application.Repositories;
 using Application.VisitaGrupal.Repositories;
 using Domain.Common.Others.Utils;
 using Infrastructure.Constants;
 using Infrastructure.Repositories.Sql.ActividadMuseo;
+using Infrastructure.Repositories.Sql.Eventos;
 using Infrastructure.Repositories.Sql.RecursosMuseo;
 using Infrastructure.Repositories.Sql.Ubicacion;
 using Infrastructure.Repositories.Sql.VisitaGrupal;
@@ -102,12 +104,12 @@ namespace Infrastructure.Factories
             services.AddTransient<IRepositorioCalendarioMuseo, RepositorioCalendarioMuseo>();
             services.AddTransient<IRepositorioVisitaGrupalAutoguiada, RepositorioVisitaGrupalAutoguiada>();
             services.AddTransient<IRepositorioSala, RepositorioSalaMuseo>();
+            services.AddTransient<IRepositorioConfiguracionSalaActividad, RepositorioConfiguracionSalaActividad>();
             services.AddTransient<IRepositorioRecurso, RepositorioRecursoMuseo>();
             services.AddTransient<IDepartamentoRepository,DepartamentoRepository>();
             services.AddTransient<ILocalidadRepository, LocalidadRepository>();
             services.AddTransient<IRepositorioConfiguracionHorarioAutoguiada, RepositorioConfiguracionHorarioAutoguiada>();
-
-
+            services.AddTransient<IRepositorioEvento, RepositorioEvento>();
             services.AddTransient<IProvinciaRepository, ProvinciaRepository>();
            
 
