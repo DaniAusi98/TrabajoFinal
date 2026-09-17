@@ -7,6 +7,7 @@ using Application.VisitaGrupal.UseCases.Queries.GetAllGroupVisitCalendar;
 using Application.VisitaGrupal.UseCases.Queries.GetReservationById;
 using Application.VisitaGrupal.UseCases.Queries.GetReservationsByUserId;
 using Application.VisitaGrupal.UseCases.Queries.GetTematicaVisitaGrupal;
+using Application.VisitaGrupal.UseCases.Queries.ReporteVisitaGuiada;
 using Core.Application;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -145,6 +146,20 @@ public class VisitasGuiadasController(ICommandQueryBus commandQueryBus) : Contro
 
         var groupVisits = await _commandQueryBus.Send(new GetAllGroupVisitCalendarQuery(fechaDesde.Value, fechaHasta.Value));
         return Ok(groupVisits);
+    }
+    [HttpGet("reporteguiadas")]
+    public async Task<IActionResult> GetReporteVisitaGuiada(
+        [FromQuery] DateTime desde,
+        [FromQuery] DateTime hasta)
+    {
+        if (desde == default || hasta == default)
+        {
+            return BadRequest("Parámetros 'desde' y 'hasta' requeridos en la query. Formato ISO: yyyy-MM-dd o yyyy-MM-ddTHH:mm:ss");
+        }
+
+        var reporte = await _commandQueryBus.Send(new GetReportAllGuidedToursQuery(desde, hasta));
+      
+        return Ok(reporte);
     }
 
 

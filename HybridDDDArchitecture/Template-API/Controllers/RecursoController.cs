@@ -5,6 +5,7 @@ using Application.MuseumResources.UseCases.Recurso.Queries.GetRecursoBy;
 using Application.MuseumResources.UseCases.Recurso.Commands.UpdateRecurso;
 using Application.MuseumResources.UseCases.Recurso.Commands.DeleteRecurso;
 using Microsoft.AspNetCore.Mvc;
+using Application.MuseumResources.UseCases.Recurso.Queries.DisponibilidadRecursos;
 
 namespace Controllers
 {
@@ -29,6 +30,25 @@ namespace Controllers
             var entity = await _commandQueryBus.Send(new GetRecursoByQuery { RecursoId = id });
 
             return Ok(entity);
+        }
+        [HttpGet("api/v1/[Controller]/disponibilidad")]
+        public async Task<IActionResult> GetDisponibilidad(
+           [FromQuery] DateTime inicio,
+           [FromQuery] DateTime fin,
+           [FromQuery] string? rrule)
+        {
+            if (fin <= inicio)
+                return BadRequest("La fecha de fin debe ser posterior a la fecha de inicio.");
+
+            var resultado = await _commandQueryBus.Send(
+                new GetDisponibilidadRecursosPorActividadQuery
+                {
+                    Inicio = inicio,
+                    Fin = fin,
+                    RRule = rrule
+                });
+
+            return Ok(resultado);
         }
 
         [HttpPost("api/v1/[Controller]")]

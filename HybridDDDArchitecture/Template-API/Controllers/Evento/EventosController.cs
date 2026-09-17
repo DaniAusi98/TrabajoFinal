@@ -1,5 +1,6 @@
 ﻿using Application.Eventos.UseCases.Commands;
 using Application.Eventos.UseCases.Queries;
+using Application.Eventos.UseCases.Queries.ReporteEventos;
 using Application.MuseumResources.UseCases.Commands.ConfigurarSalaActividades;
 using Core.Application;
 using Microsoft.AspNetCore.Mvc;
@@ -80,7 +81,23 @@ namespace Controllers.Evento
 
             return Ok(resultado);
         }
+        [HttpGet("validar-recurrencia")]
+        public async Task<IActionResult> ValidarRecurrenciaEvento(
+            [FromQuery] DateTime inicio,
+            [FromQuery] DateTime fin,
+            [FromQuery] List<string> salasIds,
+            [FromQuery] string rrule)
+        {
+            var query = new ValidarRecurrenciaEventoQuery(
+                inicio,
+                fin,
+                salasIds,
+                rrule);
 
+            var resultado = await _commandQueryBus.Send(query);
+
+            return Ok(resultado);
+        }
         [HttpPost("salas/{salaId}/configurar-actividades")]
         public async Task<IActionResult> ConfigurarSalaActividades(
             string salaId,
@@ -93,6 +110,20 @@ namespace Controllers.Evento
             var resultado = await _commandQueryBus.Send(command);
             return Ok(new { exito = resultado });
         }
+    [HttpGet("reporteEventos")]
+    public async Task<IActionResult> GetReporteVisitaGuiada(
+        [FromQuery] DateTime desde,
+        [FromQuery] DateTime hasta)
+    {
+        if (desde == default || hasta == default)
+        {
+            return BadRequest("Parámetros 'desde' y 'hasta' requeridos en la query. Formato ISO: yyyy-MM-dd o yyyy-MM-ddTHH:mm:ss");
+        }
+
+        var reporte = await _commandQueryBus.Send(new EventsReportTableQuery(desde, hasta));
+      
+        return Ok(reporte);
+    }
 
         private string BuildPublicImageUrl(string fileName)
         {

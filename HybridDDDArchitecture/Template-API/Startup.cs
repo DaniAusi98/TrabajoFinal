@@ -118,7 +118,8 @@ namespace API
             app.SeedTematicasVisitas();
             app.SeedGuiasMuseo();
             app.SeedConfiguracionUsoSalas();
-          
+            app.SeedRecursosMuseo();
+
 
 
             app.UseHttpsRedirection();
