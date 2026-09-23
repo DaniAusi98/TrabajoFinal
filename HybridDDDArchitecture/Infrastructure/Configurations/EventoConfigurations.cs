@@ -46,7 +46,8 @@ namespace Infrastructure.Configurations
 
             builder.Property(x => x.RequiereDifusion)
                 .IsRequired();
-
+            builder.Property(x => x.SolicitaFlyer)
+                .IsRequired();
 
             // =========================
             // TIPO PUBLICO (lista de enum)

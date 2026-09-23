@@ -27,6 +27,11 @@ namespace Application.Availability.ApplicationServices
                 int durationMinutes,
                 DateTime windowStart,
                 DateTime windowEnd);
+
+            DateTime GetWindowEnd(
+                string rrule,
+                DateTime eventStart,
+                int durationMinutes);
         }
     
 

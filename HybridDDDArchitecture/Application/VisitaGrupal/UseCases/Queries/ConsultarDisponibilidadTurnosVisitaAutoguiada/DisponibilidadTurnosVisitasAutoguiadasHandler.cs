@@ -3,6 +3,7 @@ using Application.MuseumResources.Repositories;
 using Application.VisitaGrupal.DataTransferObjets;
 using Application.VisitaGrupal.UseCases.Queries.ConsultarDisponibilidadTurnosVisitaGuiada;
 using Core.Application;
+using Core.Application.Mapping;
 
 namespace Application.VisitaGrupal.UseCases.Queries.ConsultarDisponibilidadTurnosVisitaAutoguiada
 {

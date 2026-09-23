@@ -1,9 +1,7 @@
 ﻿using Application.Availability.ApplicationServices;
 using Application.Availability.Models;
 using Domain.Common.ValueObjets;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+
 
 namespace Application.Availability.Factories
 {
@@ -30,8 +28,7 @@ namespace Application.Availability.Factories
                 else
                 {
                     // 1. Calculamos la duración base original en minutos crudos
-                    int duracionMinutos = (int)(actividad.Horario.Inicio - actividad.Horario.Fin).TotalMinutes;
-
+                    int duracionMinutos = (int)(actividad.Horario.Fin - actividad.Horario.Inicio).TotalMinutes;
                     // 2. Expandimos todas las ocurrencias matemáticas usando el evaluador de infraestructura
                     List<TimeSlot> todosLosSlotsCalculados = _recurrenceEvaluator.ExpandRule(
                         actividad.RRule!,

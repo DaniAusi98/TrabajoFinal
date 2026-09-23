@@ -1,7 +1,7 @@
 using AutoMapper;
 using Core.Domain.Entities;
 
-namespace Core.Application
+namespace Core.Application.Mapping
 {
     public static class CustomMapper
     {

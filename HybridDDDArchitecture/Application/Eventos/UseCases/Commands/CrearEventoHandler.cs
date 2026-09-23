@@ -2,13 +2,13 @@
 using Application.Exceptions;
 using Application.Eventos.Repositories;
 using Application.MuseumResources.Repositories;
-using Application.Eventos.ApplicationServices; // <--- Importas el namespace de tu servicio
 using Core.Application;
 using Domain.ActividadMuseo.Entities;
 using Domain.Common.ValueObjets;
 using Domain.Eventos.Entities;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Eventos.ApplicationServices;
 
 namespace Application.Eventos.UseCases.Commands
 {
@@ -16,7 +16,7 @@ namespace Application.Eventos.UseCases.Commands
         IRepositorioEvento repositorioEvento,
         IRepositorioSala repositorioSala,
         IRepositorioRecurso repositorioRecurso,
-        IEventoApplicationService eventoApplicationService) // <--- INYECTAMOS TU NUEVO GUARDIÁN AQUÍ
+        IEventoApplicationService eventoApplicationService) 
         : IRequestCommandHandler<CrearEventoCommand, string>
     {
         private readonly IRepositorioEvento _repositorioEvento = repositorioEvento ?? throw new ArgumentNullException(nameof(repositorioEvento));
@@ -45,7 +45,7 @@ namespace Application.Eventos.UseCases.Commands
                 throw new BussinessException("Uno o más recursos no existen.");
 
             var recursosAsignados = request.Recursos
-                .Select(r => new RecursoAsignado(r.RecursoId, r.CantidadAsignada))
+                .Select(r => new RecursoAsignado(r.RecursoId, r.CantidadAsignada, request.Inicio, request.Fin))
                 .ToList();
 
             // ============================================================
@@ -75,6 +75,7 @@ namespace Application.Eventos.UseCases.Commands
                 horario: horario,
                 salas: salas,
                 requiereDifusion: request.RequiereDifusion,
+                solicitaFlyer: request.SolicitarAsistenciaDifusion,
                 recursos: recursosAsignados,
                 urlImagenes: request.UrlImagenes,
                 recurrenceRule: request.RRule

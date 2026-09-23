@@ -49,7 +49,8 @@ namespace Domain.RecursoMuseo.Enums
         {
             Disponible,
             Prestado,
-            EnMantenimiento
+            EnMantenimiento,
+            NoDisponible
         }
     }
 }

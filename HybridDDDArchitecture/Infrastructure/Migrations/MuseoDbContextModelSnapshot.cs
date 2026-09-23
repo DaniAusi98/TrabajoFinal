@@ -40,22 +40,30 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.ActividadMuseo.Entities.ActividadException", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("varchar(255)");
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("ActividadMuseoId")
-                        .HasColumnType("varchar(255)");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("ActividadMuseoId");
 
                     b.Property<DateTime>("FechaExcluir")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("datetime")
+                        .HasColumnName("FechaExcluir");
 
                     b.Property<string>("Motivo")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("Motivo");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ActividadMuseoId");
+                    b.HasIndex("ActividadMuseoId", "FechaExcluir")
+                        .HasDatabaseName("IX_ActividadExceptions_ActividadId_Fecha");
 
-                    b.ToTable("ActividadException");
+                    b.ToTable("ActividadExceptions", (string)null);
                 });
 
             modelBuilder.Entity("Domain.ActividadMuseo.Entities.ActividadMuseo", b =>
@@ -103,6 +111,12 @@ namespace Infrastructure.Migrations
 
                     b.Property<int>("CantidadAsignada")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("Fin")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("Inicio")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("RecursoId")
                         .HasColumnType("varchar(255)");
@@ -971,6 +985,9 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("RequiereDifusion")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<bool>("SolicitaFlyer")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("TipoEvento")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -1113,7 +1130,8 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.ActividadMuseo.Entities.ActividadMuseo", null)
                         .WithMany("Exceptions")
                         .HasForeignKey("ActividadMuseoId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.ActividadMuseo.Entities.ActividadMuseo", b =>

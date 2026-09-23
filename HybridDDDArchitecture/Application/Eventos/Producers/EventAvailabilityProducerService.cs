@@ -4,7 +4,6 @@ using Application.Availability.Factories; // Inyectamos la ubicación del Factory
 using Application.Availability.Models;
 using Application.Eventos.DataTransferObjets;
 using Application.MuseumResources.Repositories;
-using Domain.ActividadMuseo.Entities;
 using Domain.Common.Entities;
 using Domain.Common.ValueObjets;
 using Domain.Eventos.Entities;
@@ -204,7 +203,7 @@ namespace Application.Eventos.Producers
         private async Task<Evento> CrearEventoFicticio(TimeSlot timeSlot, List<string> salasIds)
         {
             var salas = await _repositorioSalaMuseo.ObtenerSalasporIdsAsync(salasIds);
-            var evento = new Evento(nombreyApellidoSolicitante: "Disponibilidad", telefonoSolicitante: new Telefono("3511234567"), emailSolicitante: new Email("disponibilidad@museo.com"), institucion: "Museo", tipoEvento: TipoEvento.Conferencia, tituloEvento: "Evento ficticio", descripcionEvento: "", fundamentacionEvento: "", tipoPublico: new List<TipoPublico> { TipoPublico.General }, concurrenciaEstimada: 1, horario: timeSlot, salas: salas, requiereDifusion: false, recurrenceRule: null); // Se pasa nulo porque el candidato hora por hora evalúa bloques únicos);
+            var evento = new Evento(nombreyApellidoSolicitante: "Disponibilidad", telefonoSolicitante: new Telefono("3511234567"), emailSolicitante: new Email("disponibilidad@museo.com"), institucion: "Museo", tipoEvento: TipoEvento.Conferencia, tituloEvento: "Evento ficticio", descripcionEvento: "", fundamentacionEvento: "", tipoPublico: new List<TipoPublico> { TipoPublico.General }, concurrenciaEstimada: 1, horario: timeSlot, salas: salas, requiereDifusion: false, solicitaFlyer: false, recurrenceRule: null); // Se pasa nulo porque el candidato hora por hora evalúa bloques únicos);
                 return evento;
         }
     }

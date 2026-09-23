@@ -29,7 +29,7 @@ namespace Application.Availability.Producers
             ActividadMuseo.Repositories.IRepositorioActividadMuseo repositorioActividadMuseo,
             IRepositorioConfiguracionVisitasGrupalesGuiadas repositorioConfiguracion,
             ActividadMuseo.Repositories.IRepositorioCalendarioMuseo repositorioCalendario,
-                        ActivityAvailabilityFactory availabilityFactory, // <--- 2) INYECTAMOS EN EL CONSTRUCTOR
+            ActivityAvailabilityFactory availabilityFactory, // <--- 2) INYECTAMOS EN EL CONSTRUCTOR
 
             AvailabilityEngine engine,
             ILogger<GuidedAvailabilityProducerService> logger)
@@ -40,6 +40,7 @@ namespace Application.Availability.Producers
             _repositorioActividadMuseo = repositorioActividadMuseo;
             _repositorioConfiguracion = repositorioConfiguracion;
             _repositorioCalendario = repositorioCalendario;
+            _availabilityFactory = availabilityFactory; // <--- 3) ASIGNAMOS EL CAMPO
             _engine = engine;
             _logger = logger;
         }
@@ -79,7 +80,7 @@ namespace Application.Availability.Producers
             if (configuracion == null)
             {
                 throw new InvalidOperationException(
-                    "No hay configuración activa para visitas guiadas.");
+                    "No hay configuraciï¿½n activa para visitas guiadas.");
             }
 
             if (calendario == null)
@@ -102,7 +103,7 @@ namespace Application.Availability.Producers
                     calendario);
 
             _logger.LogInformation(
-                "[GuidedAvailabilityProducer] Servicio devolvió {Cantidad} turnos",
+                "[GuidedAvailabilityProducer] Servicio devolviï¿½ {Cantidad} turnos",
                 candidatosTurnos.Count);
 
             candidatosTurnos = candidatosTurnos
@@ -110,7 +111,7 @@ namespace Application.Availability.Producers
                 .ToList();
 
             _logger.LogInformation(
-                "[GuidedAvailabilityProducer] Turnos disponibles después del filtro: {Cantidad}",
+                "[GuidedAvailabilityProducer] Turnos disponibles despuï¿½s del filtro: {Cantidad}",
                 candidatosTurnos.Count);
 
             // ============================================================
@@ -124,7 +125,7 @@ namespace Application.Availability.Producers
             // - Exceptions
             //
             // RecurrenceRule es parte de la actividad, no necesita Include
-            // si está configurada como owned/value object.
+            // si estï¿½ configurada como owned/value object.
             // ============================================================
 
             var actividadesEnRango =
@@ -138,7 +139,7 @@ namespace Application.Availability.Producers
             // ============================================================
             // 4) PREPARAR ACTIVIDADES EXISTENTES PARA EL ENGINE
             //
-            // Acá ocurre:
+            // Acï¿½ ocurre:
             //
             // Sin recurrencia:
             //      Actividad + 1 slot
@@ -234,7 +235,7 @@ namespace Application.Availability.Producers
             // ============================================================
             // 6) CONTEXTO BASE
             //
-            // Ahora ExistingActivities ya no debería ser la fuente
+            // Ahora ExistingActivities ya no deberï¿½a ser la fuente
             // principal para solapamientos.
             //
             // El engine necesita trabajar con existingEntries.
@@ -266,7 +267,7 @@ namespace Application.Availability.Producers
                     entries);
 
             _logger.LogInformation(
-                "[GuidedAvailabilityProducer] AvailabilityEngine devolvió {Cantidad} resultados",
+                "[GuidedAvailabilityProducer] AvailabilityEngine devolviï¿½ {Cantidad} resultados",
                 results.Count);
 
             // ============================================================
@@ -282,7 +283,7 @@ namespace Application.Availability.Producers
                     out var result))
                 {
                     _logger.LogWarning(
-                        "[GuidedAvailabilityProducer] No se encontró resultado para {Id}",
+                        "[GuidedAvailabilityProducer] No se encontrï¿½ resultado para {Id}",
                         entry.Id);
 
                     continue;

@@ -3,6 +3,7 @@ using Application.Common.Repositories;
 using Application.Exceptions;
 
 using Core.Application;
+using Core.Application.Mapping;
 
 namespace Application.ApplicationMuseo.UseCases.DummyEntity.Queries.GetDummyEntityBy
 {

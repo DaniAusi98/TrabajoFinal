@@ -1,6 +1,7 @@
 ﻿using Application.VisitaGrupal.DataTransferObjets;
 using Application.VisitaGrupal.Repositories;
 using Core.Application;
+using Core.Application.Mapping;
 
 
 namespace Application.VisitaGrupal.UseCases.Queries.GetReservationById

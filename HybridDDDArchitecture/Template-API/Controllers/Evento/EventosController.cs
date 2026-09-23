@@ -2,6 +2,7 @@
 using Application.Eventos.UseCases.Queries;
 using Application.Eventos.UseCases.Queries.ReporteEventos;
 using Application.MuseumResources.UseCases.Commands.ConfigurarSalaActividades;
+
 using Core.Application;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -124,6 +125,36 @@ namespace Controllers.Evento
       
         return Ok(reporte);
     }
+    [HttpGet("reporteEventoPorSala")]
+    public async Task<IActionResult> GetReporteEventoPorSala(
+        [FromQuery] DateTime desde,
+        [FromQuery] DateTime hasta)
+    {
+        if (desde == default || hasta == default)
+        {
+            return BadRequest("Parámetros 'desde' y 'hasta' requeridos en la query. Formato ISO: yyyy-MM-dd o yyyy-MM-ddTHH:mm:ss");
+        }
+
+        var reporte = await _commandQueryBus.Send(new ReporteEventosPorSalaQuery(desde, hasta));
+      
+        return Ok(reporte);
+    }
+
+    [HttpGet("reporteEventoPorTipo")]
+    public async Task<IActionResult> GetReporteEventoPorTipo(
+        [FromQuery] DateTime desde,
+        [FromQuery] DateTime hasta)
+    {
+        if (desde == default || hasta == default)
+        {
+            return BadRequest("Parámetros 'desde' y 'hasta' requeridos en la query. Formato ISO: yyyy-MM-dd o yyyy-MM-ddTHH:mm:ss");
+        }
+
+        var reporte = await _commandQueryBus.Send(new ReporteEventosPorTipoQuery(desde, hasta));
+      
+        return Ok(reporte);
+    }
+    
 
         private string BuildPublicImageUrl(string fileName)
         {

@@ -34,9 +34,8 @@ namespace Application.Availability.Producers
         private readonly IRepositorioSala _repositorioSala = repositorioSala;
         private readonly IServicioDisponibilidadSlotsAutoguiadas _servicioDisponibilidadSlotsAutoguiadas = servicioDisponibilidadSlotsAutoguiadas;
         private readonly AvailabilityEngine _engine = engine;
-        private readonly ActivityAvailabilityFactory _availabilityFactory; // <--- 1) AGREGAMOS EL CAMPO
-        private readonly IRepositorioTematicas _tematicaRepository = tematicaRepository;
-
+        private readonly ActivityAvailabilityFactory _availabilityFactory = availabilityFactory;        private readonly IRepositorioTematicas _tematicaRepository = tematicaRepository;
+        
         public async Task<List<SlotDisponibleVisitaAutoguiada>> GetHourlyBlocksAsync(
             DateTime desde,
             DateTime hasta)
@@ -60,7 +59,7 @@ namespace Application.Availability.Producers
             if (configuracion == null)
             {
                 throw new InvalidOperationException(
-                    "No hay configuración activa para visitas autoguiadas.");
+                    "No hay configuraciï¿½n activa para visitas autoguiadas.");
             }
 
             if (calendario == null)
@@ -106,7 +105,7 @@ namespace Application.Availability.Producers
             //          ?
             //      RecurrenceExpander
             //          ?
-            //      múltiples TimeSlots
+            //      mï¿½ltiples TimeSlots
             //
             // ============================================================
 

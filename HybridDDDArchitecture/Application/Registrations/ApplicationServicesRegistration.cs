@@ -3,10 +3,12 @@ using Application.ApplicationMuseo.Integrations.Events;
 using Application.ApplicationMuseo.Integrations.Handlers.Publishers;
 using Application.ApplicationMuseo.Integrations.Handlers.Subscribers;
 using Application.Availability;
+using Application.Availability.Factories;
 using Application.Availability.Producers;
 using Application.Behaivors;
 using Application.Eventos.ApplicationServices;
 using Application.Eventos.Options;
+using Application.MuseumResources.ApplicationServices;
 using Application.Reportes.ApplicationServices;
 using Application.Usuario.ApplicationServices.ApplicationServiceInterfaces;
 using Application.Usuario.UseCases.Commands.UpdateUsuario;
@@ -19,7 +21,6 @@ using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Scrutor;
 using System.Reflection;
 
 namespace Application.Registrations
@@ -97,14 +98,15 @@ namespace Application.Registrations
             // Register guided availability producer service
             services.AddScoped<GuidedAvailabilityProducerService>();
             services.AddScoped<SelfGuidedAvailabilityProducerService>();
-
+            services.AddTransient<ActivityAvailabilityFactory>();
             // Register event availability producer service
-            services.AddScoped<Application.Eventos.Producers.EventAvailabilityProducerService>();
+            services.AddScoped<Eventos.Producers.EventAvailabilityProducerService>();
+            services.AddScoped<IEventRecurrenceAvailabilityService, EventRecurrenceAvailabilityService>();
 
             // Register group availability producer service
-           // services.AddScoped<Application.Availability.Producers.GroupAvailabilityProducerService>();
+            // services.AddScoped<Application.Availability.Producers.GroupAvailabilityProducerService>();
             // Register in-memory recurrence repo for testing (optional)
-           // services.AddSingleton<Application.Availability.Recurrence.IRecurrenceRuleRepository, Application.Availability.Recurrence.InMemoryRecurrenceRuleRepository>();
+            // services.AddSingleton<Application.Availability.Recurrence.IRecurrenceRuleRepository, Application.Availability.Recurrence.InMemoryRecurrenceRuleRepository>();
 
             services.AddValidatorsFromAssemblyContaining<CrearVisitaGuiadaCommandValidator>();
 
@@ -119,6 +121,8 @@ namespace Application.Registrations
             services.AddScoped<IServicioReporteVisitasGrupales,ServicioReporteVisitasGrupales>();
             services.AddScoped<IServicioReporteVisitasGuiadas, ServicioReporteVisitasGuiadas>();
             services.AddScoped<IServicioReporteVisitasAutoguiadas, ServicioReporteVisitasAutoguiadas>();
+
+            services.AddScoped<IDisponibilidadRecursosService, DisponibilidadRecursosService>();
 
 
             return services;

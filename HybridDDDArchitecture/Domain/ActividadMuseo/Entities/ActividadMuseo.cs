@@ -42,9 +42,9 @@ namespace Domain.ActividadMuseo.Entities
             TipoActividad tipo,
             int? cantidadAsistentes,
             TimeSlot horario,
-            IEnumerable<Sala>? salas = null,
-            IEnumerable<RecursoAsignado>? recursos = null,
-            string? rrule = null
+            IEnumerable<Sala> salas = null,
+            IEnumerable<RecursoAsignado> recursos = null,
+            string rrule = null
         )
         {
             if (cantidadAsistentes is not null && cantidadAsistentes <= 0)
@@ -74,50 +74,17 @@ namespace Domain.ActividadMuseo.Entities
 
         // --- MÉTODOS DE NEGOCIO PARA RECURRENCIA Y EXCEPCIONES ---
 
-        public void AgregarRecurrencia(string rrule)
+        public void ActualizarExceptions(IEnumerable<ActividadException>? exceptions)
         {
-            if (string.IsNullOrWhiteSpace(rrule))
-                throw new DomainException("La regla de recurrencia (RRule) no puede ser nula o vacía.");
+            _exceptions.Clear();
 
-            if (EsRecurrencia)
-                throw new DomainException("La actividad ya cuenta con una regla de recurrencia asignada.");
-
-            RRule = rrule;
-        }
-
-        public void QuitarRecurrencia()
-        {
-            RRule = null;
-            _exceptions.Clear(); // Al remover la recurrencia, sus excepciones de fecha dejan de existir
-        }
-
-        public void CambiarRecurrencia(string nuevaRrule)
-        {
-            if (string.IsNullOrWhiteSpace(nuevaRrule))
-                throw new DomainException("La nueva regla de recurrencia no puede ser vacía.");
-
-            RRule = nuevaRrule;
-            _exceptions.Clear(); // Las excepciones antiguas pierden validez matemática con la nueva regla
-        }
-
-        public void AgregarExcepcion(DateTime date,string? motivo = null)
-        {
-            if (!EsRecurrencia)
-                throw new DomainException("No se puede añadir una excepción a una actividad que no es recurrente.");
-
-            // Regla de Negocio: No se puede cancelar una ocurrencia anterior al inicio de la actividad
-            if (date < Horario.Inicio)
-                throw new DomainException("La fecha de la excepción no puede ser anterior al inicio de la actividad.");
-
-            if (_exceptions.Any(x => x.FechaExcluir == date))
-                throw new DomainException("Ya existe una excepción registrada para esa fecha.");
-
-            _exceptions.Add(new ActividadException(Id, date, motivo));
+            if (exceptions is not null)
+                _exceptions.AddRange(exceptions);
         }
 
         // --- COMPORTAMIENTOS Y VALIDACIONES DE LA ENTIDAD ---
 
-        private static void ValidarSalasYRecursos(IEnumerable<Sala>? salas, IEnumerable<RecursoAsignado>? recursos)
+        private static void ValidarSalasYRecursos(IEnumerable<Sala> salas, IEnumerable<RecursoAsignado> recursos)
         {
             if (salas is not null)
             {
@@ -184,6 +151,8 @@ namespace Domain.ActividadMuseo.Entities
             Salas.AddRange(salas);
         }
 
+   
+
         public void AsignarRecursos(IEnumerable<RecursoAsignado> recursos)
         {
             ArgumentNullException.ThrowIfNull(recursos);
@@ -192,11 +161,18 @@ namespace Domain.ActividadMuseo.Entities
             Recursos.Clear();
             Recursos.AddRange(recursos);
         }
-
+    
         public void AsignarTimeSlots(TimeSlot horario)
         {
             ArgumentNullException.ThrowIfNull(horario);
             Horario = horario;
+        }
+        public void ActualizarRRule(string? nuevaRRule)
+        {
+            if (string.IsNullOrWhiteSpace(nuevaRRule))
+                throw new DomainException("La nueva regla de recurrencia no puede ser vacía.");
+            RRule = nuevaRRule;
+            _exceptions.Clear(); // Las excepciones antiguas pierden validez matemática con la nueva regla
         }
     }
 }

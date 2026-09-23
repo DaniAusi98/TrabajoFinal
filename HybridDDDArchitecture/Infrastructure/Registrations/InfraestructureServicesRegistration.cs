@@ -204,5 +204,13 @@ namespace Infrastructure.Registrations
                 .GetAwaiter()
                 .GetResult();
         }
+        public static void SeedRecursosMuseo(this IApplicationBuilder app)
+        {
+            Data.Seeders.RecursoSeeder
+                .SeedAsync(app.ApplicationServices)
+                .GetAwaiter()
+                .GetResult();
+        }
+
     }
 }

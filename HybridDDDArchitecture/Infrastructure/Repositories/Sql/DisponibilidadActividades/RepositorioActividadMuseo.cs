@@ -17,11 +17,11 @@ namespace Infrastructure.Repositories.Sql.DisponibilidadActividades
         {
             if (fechaDesde == fechaHasta)
             {
-                fechaHasta = fechaHasta.Date.AddDays(1).AddSeconds(-1); // Ajusta hasta el final del día
+                fechaHasta = fechaHasta.Date.AddDays(1).AddSeconds(-1); // Ajusta hasta el final del dï¿½a
             }
 
             // ============================================================
-            // CONSULTA ÚNICA OPTIMIZADA: Trae candidatos potenciales
+            // CONSULTA OPTIMIZADA: Trae candidatos potenciales
             // ============================================================
             var actividadesEnRango = await Repository
                 .Include(a => a.Salas)
@@ -33,14 +33,14 @@ namespace Infrastructure.Repositories.Sql.DisponibilidadActividades
                     (!string.IsNullOrEmpty(a.RRule) && a.Horario.Inicio < fechaHasta && a.Horario.Fin > fechaDesde) ||
 
                     // Caso B: Actividades recurrentes que YA empezaron en el pasado o empiezan ahora.
-                    // Si su primera cita histórica empezó después de 'fechaHasta', es imposible que generen ocurrencias hoy.
+                    // Si su primera cita histï¿½rica empezï¿½ despuï¿½s de 'fechaHasta', es imposible que generen ocurrencias hoy.
                     (string.IsNullOrEmpty(a.RRule) && a.Horario.Inicio <= fechaHasta))
                 .ToListAsync();
 
-            // NOTA TÁCTICA: Si una actividad recurrente tiene una fecha límite de finalización (UNTIL) 
-            // que quedó en el pasado (ej: terminó el año pasado), tu 'ActivityAvailabilityFactory' 
-            // al ejecutar el Engine e invocar a 'ExpandRule' generará una lista vacía de slots (0 elementos),
-            // descartándola automáticamente del cálculo en memoria de forma ultra rápida y segura.
+            // NOTA Tï¿½CTICA: Si una actividad recurrente tiene una fecha lï¿½mite de finalizaciï¿½n (UNTIL) 
+            // que quedï¿½ en el pasado (ej: terminï¿½ el aï¿½o pasado), tu 'ActivityAvailabilityFactory' 
+            // al ejecutar el Engine e invocar a 'ExpandRule' generarï¿½ una lista vacï¿½a de slots (0 elementos),
+            // descartï¿½ndola automï¿½ticamente del cï¿½lculo en memoria de forma ultra rï¿½pida y segura.
 
             return actividadesEnRango;
         }

@@ -1,4 +1,3 @@
-using Domain.ActividadMuseo.Entities;
 using Domain.Common.ValueObjets;
 
 namespace Application.Availability.Models

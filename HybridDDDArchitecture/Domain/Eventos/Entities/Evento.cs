@@ -21,6 +21,7 @@ namespace Domain.Eventos.Entities
         public int? CantidadEstimada { get; private set; }
         public bool RequiereDifusion { get; private set; }
         public List<string> UrlImagenes { get; private set; } = [];
+        public bool SolicitaFlyer { get; private set; }
 
 
 
@@ -43,9 +44,11 @@ namespace Domain.Eventos.Entities
             TimeSlot horario,
             IEnumerable<Sala> salas,
             bool requiereDifusion,
+            bool solicitaFlyer,
             IEnumerable<RecursoAsignado>? recursos = null,
             IEnumerable<string?>? urlImagenes = null,
-            string? recurrenceRule = null)
+            string? recurrenceRule = null
+            )
              : base(
             CategoriaActividad.EventoActividadExterna,
             TipoActividad.Evento,
@@ -83,7 +86,8 @@ namespace Domain.Eventos.Entities
                 .Select(x => x!)
                 .ToList()
                 ?? [];
-        }
+            SolicitaFlyer = solicitaFlyer;
+         }
 
         public void Actualizar(
             string nombreyApellidoSolicitante,
@@ -97,6 +101,7 @@ namespace Domain.Eventos.Entities
             List<TipoPublico> tipoPublico,
             int ConcurrenciaEstimada,
             bool requiereDifusion,
+            bool solicitaFlyer,
             IEnumerable<string?>? urlImagenes = null)
         {
             if (string.IsNullOrWhiteSpace(nombreyApellidoSolicitante))
@@ -120,6 +125,7 @@ namespace Domain.Eventos.Entities
             TipoPublico = tipoPublico.ToList();
             CantidadEstimada = ConcurrenciaEstimada; // puede ser null
             RequiereDifusion = requiereDifusion;
+            SolicitaFlyer = solicitaFlyer;
             UrlImagenes = urlImagenes?
                 .Where(x => !string.IsNullOrWhiteSpace(x))
                 .Select(x => x!)

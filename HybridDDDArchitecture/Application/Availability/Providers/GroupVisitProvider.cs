@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Application.Availability.Rules;
-using Domain.ActividadMuseo.Entities;
 using Domain.VisitasGrupales.Entities.GrupalGuiada;
 
 namespace Application.Availability.Providers

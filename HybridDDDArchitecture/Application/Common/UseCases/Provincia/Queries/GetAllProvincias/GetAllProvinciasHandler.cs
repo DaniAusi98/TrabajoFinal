@@ -1,6 +1,7 @@
 ﻿using Application.ApplicationMuseo.DataTransferObjects;
 using Application.Common.Repositories;
 using Core.Application;
+using Core.Application.Mapping;
 
 
 namespace Application.ApplicationMuseo.UseCases.Provincia.Queries.GetAllProvincias

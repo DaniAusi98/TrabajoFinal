@@ -3,7 +3,7 @@ using Application.Exceptions;
 using Application.VisitaGrupal.DomainEvents;
 using Application.VisitaGrupal.Repositories;
 using Core.Application;
-
+using Core.Application.Mapping;
 using Domain.Common.ValueObjets;
 using Domain.VisitasGrupales.Entities;
 using Domain.VisitasGrupales.Entities.GrupalGuiada;

@@ -99,6 +99,7 @@ namespace Application.Eventos.ApplicationServices
                 horario: horarioBasePropuesto,
                 salas: salas,
                 requiereDifusion: false,
+                solicitaFlyer: false,
                 recurrenceRule: rrulePropuesta // Tu entidad almacena el string
             );
 

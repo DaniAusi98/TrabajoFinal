@@ -19,7 +19,7 @@ namespace Infrastructure.Repositories.Sql.VisitaGrupal
 
             if (fechaDesde == fechaHasta)
             {
-                fechaHasta = fechaHasta.Date.AddDays(1).AddSeconds(-1); // Ajusta hasta el final del día
+                fechaHasta = fechaHasta.Date.AddDays(1).AddSeconds(-1); // Ajusta hasta el final del dï¿½a
             }
             try
             {
@@ -28,6 +28,7 @@ namespace Infrastructure.Repositories.Sql.VisitaGrupal
                     .Where(v =>
                         v.Horario.Inicio < fechaHasta &&
                         v.Horario.Fin > fechaDesde)
+                    .OrderBy(v => v.Horario.Inicio)
                     .ToListAsync();
             }
             catch (Exception ex)

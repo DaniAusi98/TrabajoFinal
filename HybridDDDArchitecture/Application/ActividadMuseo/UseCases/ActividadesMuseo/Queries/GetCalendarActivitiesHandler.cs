@@ -8,6 +8,7 @@ using Application.ActividadMuseo.DataTransferObjets;
 using Application.ActividadMuseo.Repositories;
 
 using Core.Application;
+using Core.Application.Mapping;
 
 namespace Application.ActividadMuseo.UseCases.ActividadesMuseo.Queries
 {

@@ -1,10 +1,10 @@
-﻿using Domain.Common.ValueObjets; // Aquí vive tu TimeSlot corporativo
+﻿using Application.Availability.ApplicationServices;
+using Application.Eventos.DataTransferObjets;
+using Domain.Common.ValueObjets;
 using Ical.Net;
 using Ical.Net.CalendarComponents;
 using Ical.Net.DataTypes;
-using Application.Availability.ApplicationServices;
 
-// Nota el alias para evitar conflictos si en tu proyecto se cruza con otros tipos de datos
 using IcalDuration = Ical.Net.DataTypes.Duration;
 
 namespace Infrastructure.Adapters
@@ -19,35 +19,34 @@ namespace Infrastructure.Adapters
             DateTime windowEnd)
         {
             var slots = new List<TimeSlot>();
-            var pattern = new RecurrencePattern(rrule);
-            var iCalStart = new CalDateTime(eventStart);
 
-            // SOLUCIÓN: Usamos IcalDuration.FromMinutes en vez de TimeSpan
+            var pattern = new RecurrencePattern(rrule);
+
             var virtualEvent = new CalendarEvent
             {
-                Start = iCalStart,
+                Start = new CalDateTime(eventStart),
                 Duration = IcalDuration.FromMinutes(durationMinutes),
                 RecurrenceRule = pattern
             };
 
             var iCalWindowEnd = new CalDateTime(windowEnd);
-            IEnumerable<Occurrence> occurrences = virtualEvent
+
+            var occurrences = virtualEvent
                 .GetOccurrences()
                 .TakeWhileBefore(iCalWindowEnd);
 
             foreach (var occurrence in occurrences)
             {
-                DateTime slotStart = occurrence.Period.StartTime.Value;
+                var slotStart = occurrence.Period.StartTime.Value;
 
-                // Filtrado manual para ignorar las que queden antes de la ventana inicial
+                // Ignorar ocurrencias anteriores al comienzo de la ventana.
                 if (slotStart < windowStart)
                 {
                     continue;
                 }
 
-                DateTime slotEnd = slotStart.AddMinutes(durationMinutes);
+                var slotEnd = slotStart.AddMinutes(durationMinutes);
 
-                // Instanciamos tu objeto de negocio
                 slots.Add(new TimeSlot(slotStart, slotEnd));
             }
 
@@ -58,15 +57,48 @@ namespace Infrastructure.Adapters
         {
             var pattern = new RecurrencePattern(rrule);
 
-            // En Ical.Net v5, si no hay límite UNTIL, la propiedad es simplemente null
             if (pattern.Until == null)
             {
                 return false;
             }
 
-            // pattern.Until.Value extrae el DateTime interno para poder usar .Date de forma segura
             return date.Date > pattern.Until.Value.Date;
         }
+        public DateTime GetWindowEnd(
+            string rrule,
+            DateTime inicio,
+            int duracionMinutos)
+        {
+            var pattern = new RecurrencePattern(rrule);
 
+            if (pattern.Until != null)
+            {
+                return pattern.Until.Value;
+            }
+
+            if (pattern.Count.HasValue)
+            {
+                var calendarEvent = new CalendarEvent
+                {
+                    Start = new CalDateTime(inicio),
+                    Duration = IcalDuration.FromMinutes(duracionMinutos),
+                    RecurrenceRule = pattern
+                };
+
+                var occurrences = calendarEvent
+                    .GetOccurrences()
+                    .Take(pattern.Count.Value)
+                    .ToList();
+
+                if (occurrences.Count > 0)
+                {
+                    var ultima = occurrences.Last().Period.StartTime.Value;
+
+                    return ultima.AddMinutes(duracionMinutos);
+                }
+            }
+
+            return inicio.AddYears(1);
+        }
     }
 }

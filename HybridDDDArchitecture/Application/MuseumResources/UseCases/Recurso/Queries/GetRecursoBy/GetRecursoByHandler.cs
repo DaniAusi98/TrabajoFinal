@@ -4,6 +4,7 @@ using Application.Exceptions;
 using Application.MuseumResources.DataTransferObjects;
 using Application.MuseumResources.Repositories;
 using Core.Application;
+using Core.Application.Mapping;
 
 namespace Application.MuseumResources.UseCases.Recurso.Queries.GetRecursoBy
 {

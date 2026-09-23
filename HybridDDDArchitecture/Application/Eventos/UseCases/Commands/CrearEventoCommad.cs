@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Core.Application;
 using static Domain.Eventos.Enums.Enums;
+
 
 namespace Application.Eventos.UseCases.Commands
 {
@@ -56,6 +55,7 @@ namespace Application.Eventos.UseCases.Commands
         public List<RecursoAsignadoDto> Recursos { get; set; } = [];
 
         public List<string> UrlImagenes { get; set; } = [];
+        public bool SolicitarAsistenciaDifusion { get; set; }
 
         // ============================================================
         // NUEVA RECURRENCIA SIMPLIFICADA
